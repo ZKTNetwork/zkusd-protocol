@@ -38,5 +38,15 @@
     "multiSigAddress": "",
     "treasuryAddress": "",
     "useMock": true
+  },
+  "neondev": {
+    "V2Factory": "",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x11adC2d986E334137b9ad0a0F290771F31e9517F",
+    "bountyAddress": "",
+    "multiSigAddress": "",
+    "treasuryAddress": "",
+    "useMock": true
   }
 }
