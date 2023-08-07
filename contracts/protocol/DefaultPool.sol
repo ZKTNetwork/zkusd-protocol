@@ -8,10 +8,10 @@ import "../dependencies/CheckContract.sol";
 import "../interfaces/IDefaultPool.sol";
 
 /*
- * The Default Pool holds the ETH and ZKUSD debt (but not ZKUSD tokens) from liquidations that have been redistributed
+ * The Default Pool holds the NEON and ZKUSD debt (but not ZKUSD tokens) from liquidations that have been redistributed
  * to active troves but not yet "applied", i.e. not yet recorded on a recipient active trove's struct.
  *
- * When a trove makes an operation that applies its pending ETH and ZKUSD debt, its pending ETH and ZKUSD debt is moved
+ * When a trove makes an operation that applies its pending NEON and ZKUSD debt, its pending NEON and ZKUSD debt is moved
  * from the Default Pool to the Active Pool.
  */
 contract DefaultPool is Ownable, CheckContract, IDefaultPool {
@@ -21,7 +21,7 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
 
     address public troveManagerAddress;
     address public activePoolAddress;
-    uint256 internal ETH; // deposited ETH tracker
+    uint256 internal NEON; // deposited NEON tracker
     uint256 internal ZKUSDDebt; // debt
 
     // --- Dependency setters ---
@@ -45,12 +45,12 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
     // --- Getters for public variables. Required by IPool interface ---
 
     /*
-     * Returns the ETH state variable.
+     * Returns the NEON state variable.
      *
-     * Not necessarily equal to the the contract's raw ETH balance - ETH can be forcibly sent to contracts.
+     * Not necessarily equal to the the contract's raw NEON balance - NEON can be forcibly sent to contracts.
      */
-    function getETH() external view override returns (uint256) {
-        return ETH;
+    function getNEON() external view override returns (uint256) {
+        return NEON;
     }
 
     function getZKUSDDebt() external view override returns (uint256) {
@@ -59,15 +59,15 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
 
     // --- Pool functionality ---
 
-    function sendETHToActivePool(uint256 _amount) external override {
+    function sendNEONToActivePool(uint256 _amount) external override {
         _requireCallerIsTroveManager();
         address activePool = activePoolAddress; // cache to save an SLOAD
-        ETH = ETH.sub(_amount);
-        emit DefaultPoolETHBalanceUpdated(ETH);
+        NEON = NEON.sub(_amount);
+        emit DefaultPoolNEONBalanceUpdated(NEON);
         emit ConfluxSent(activePool, _amount);
 
         (bool success, ) = activePool.call{value: _amount}("");
-        require(success, "DefaultPool: sending ETH failed");
+        require(success, "DefaultPool: sending NEON failed");
     }
 
     function increaseZKUSDDebt(uint256 _amount) external override {
@@ -102,7 +102,7 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
 
     receive() external payable {
         _requireCallerIsActivePool();
-        ETH = ETH.add(msg.value);
-        emit DefaultPoolETHBalanceUpdated(ETH);
+        NEON = NEON.add(msg.value);
+        emit DefaultPoolNEONBalanceUpdated(NEON);
     }
 }

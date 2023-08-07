@@ -14,15 +14,15 @@ interface IZKTStaking {
     event StakingGainsWithdrawn(
         address indexed staker,
         uint256 ZKUSDGain,
-        uint256 ETHGain
+        uint256 NEONGain
     );
-    event F_ETHUpdated(uint256 _F_ETH);
+    event F_NEONUpdated(uint256 _F_NEON);
     event F_ZKUSDUpdated(uint256 _F_ZKUSD);
     event TotalZKTStakedUpdated(uint256 _totalZKTStaked);
-    event EtherSent(address _account, uint256 _amount);
+    event NeonSent(address _account, uint256 _amount);
     event StakerSnapshotsUpdated(
         address _staker,
-        uint256 _F_ETH,
+        uint256 _F_NEON,
         uint256 _F_ZKUSD
     );
 
@@ -40,11 +40,11 @@ interface IZKTStaking {
 
     function unstake(uint256 _ZKTamount) external;
 
-    function increaseF_ETH(uint256 _ETHFee) external;
+    function increaseF_NEON(uint256 _NEONFee) external;
 
     function increaseF_ZKUSD(uint256 _ZKTFee) external;
 
-    function getPendingETHGain(address _user) external view returns (uint256);
+    function getPendingNEONGain(address _user) external view returns (uint256);
 
     function getPendingZKUSDGain(address _user) external view returns (uint256);
 }

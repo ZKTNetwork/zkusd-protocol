@@ -2,6 +2,8 @@ import "ts-mocha";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "solidity-coverage";
+import "typechain"
+import "@typechain/hardhat"
 import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
 import "@matterlabs/hardhat-zksync-chai-matchers";
@@ -84,13 +86,22 @@ const config =  {
           ? []
           : [process.env.pk_lineatest],
     },
+    neondev: {
+      url: "https://devnet.neonevm.org",
+      chainId: 245022926,
+      zksync: false,
+      accounts:
+          process.env.pk_neondev === undefined
+              ? []
+              : [process.env.pk_neondev],
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.NEONERSCAN_API_KEY,
   },
   abiExporter: {
     runOnCompile: true,

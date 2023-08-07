@@ -16,8 +16,8 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
     address public troveManagerAddress;
     address public activePoolAddress;
 
-    // Deposited ETH tracker
-    uint256 internal ETH;
+    // Deposited NEON tracker
+    uint256 internal NEON;
     // Collateral surplus claimable by trove owners
     mapping(address => uint256) internal balances;
 
@@ -43,10 +43,10 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
         //renounceOwnership();
     }
 
-    /* Returns the ETH state variable at ActivePool address.
-    Not necessarily equal to the raw ETH balance - ETH can be forcibly sent to contracts. */
-    function getETH() external view override returns (uint256) {
-        return ETH;
+    /* Returns the NEON state variable at ActivePool address.
+    Not necessarily equal to the raw NEON balance - NEON can be forcibly sent to contracts. */
+    function getNEON() external view override returns (uint256) {
+        return NEON;
     }
 
     function getCollateral(
@@ -80,11 +80,11 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
         balances[_account] = 0;
         emit CollBalanceUpdated(_account, 0);
 
-        ETH = ETH.sub(claimableColl);
-        emit EtherSent(_account, claimableColl);
+        NEON = NEON.sub(claimableColl);
+        emit NeonSent(_account, claimableColl);
 
         (bool success, ) = _account.call{value: claimableColl}("");
-        require(success, "CollSurplusPool: sending ETH failed");
+        require(success, "CollSurplusPool: sending NEON failed");
     }
 
     // --- 'require' functions ---
@@ -114,6 +114,6 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
 
     receive() external payable {
         _requireCallerIsActivePool();
-        ETH = ETH.add(msg.value);
+        NEON = NEON.add(msg.value);
     }
 }

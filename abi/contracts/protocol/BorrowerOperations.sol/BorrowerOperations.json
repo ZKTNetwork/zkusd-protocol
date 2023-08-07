@@ -499,7 +499,7 @@
         "type": "address"
       }
     ],
-    "name": "moveETHGainToTrove",
+    "name": "moveNEONGainToTrove",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"

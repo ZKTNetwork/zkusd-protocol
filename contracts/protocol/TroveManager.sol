@@ -98,22 +98,22 @@ contract TroveManager is
     uint256 public totalCollateralSnapshot;
 
     /*
-     * L_ETH and L_ZKUSDDebt track the sums of accumulated liquidation rewards per unit staked. During its lifetime, each stake earns:
+     * L_NEON and L_ZKUSDDebt track the sums of accumulated liquidation rewards per unit staked. During its lifetime, each stake earns:
      *
-     * A ETH gain of ( stake * [L_ETH - L_ETH(0)] )
+     * A NEON gain of ( stake * [L_NEON - L_NEON(0)] )
      * A ZKUSDDebt increase  of ( stake * [L_ZKUSDDebt - L_ZKUSDDebt(0)] )
      *
-     * Where L_ETH(0) and L_ZKUSDDebt(0) are snapshots of L_ETH and L_ZKUSDDebt for the active Trove taken at the instant the stake was made
+     * Where L_NEON(0) and L_ZKUSDDebt(0) are snapshots of L_NEON and L_ZKUSDDebt for the active Trove taken at the instant the stake was made
      */
-    uint256 public L_ETH;
+    uint256 public L_NEON;
     uint256 public L_ZKUSDDebt;
 
     // Map addresses with active troves to their RewardSnapshot
     mapping(address => RewardSnapshot) public rewardSnapshots;
 
-    // Object containing the ETH and ZKUSD snapshots for a given active trove
+    // Object containing the NEON and ZKUSD snapshots for a given active trove
     struct RewardSnapshot {
-        uint256 ETH;
+        uint256 NEON;
         uint256 ZKUSDDebt;
     }
 
@@ -121,7 +121,7 @@ contract TroveManager is
     address[] public TroveOwners;
 
     // Error trackers for the trove redistribution calculation
-    uint256 public lastETHError_Redistribution;
+    uint256 public lastNEONError_Redistribution;
     uint256 public lastZKUSDDebtError_Redistribution;
 
     /*
@@ -193,9 +193,9 @@ contract TroveManager is
     struct RedemptionTotals {
         uint256 remainingZKUSD;
         uint256 totalZKUSDToRedeem;
-        uint256 totalETHDrawn;
-        uint256 ETHFee;
-        uint256 ETHToSendToRedeemer;
+        uint256 totalNEONDrawn;
+        uint256 NEONFee;
+        uint256 NEONToSendToRedeemer;
         uint256 decayedBaseRate;
         uint256 price;
         uint256 totalZKUSDSupplyAtStart;
@@ -203,7 +203,7 @@ contract TroveManager is
 
     struct SingleRedemptionValues {
         uint256 ZKUSDLot;
-        uint256 ETHLot;
+        uint256 NEONLot;
         bool cancelledPartial;
     }
 
@@ -530,7 +530,7 @@ contract TroveManager is
     }
 
     /*
-     *  Get its offset coll/debt and ETH gas comp, and close the trove.
+     *  Get its offset coll/debt and NEON gas comp, and close the trove.
      */
     function _getCappedOffsetVals(
         uint256 _entireTroveDebt,
@@ -603,7 +603,7 @@ contract TroveManager is
             "TroveManager: nothing to liquidate"
         );
 
-        // Move liquidated ETH and ZKUSD to the appropriate pools
+        // Move liquidated NEON and ZKUSD to the appropriate pools
         stabilityPoolCached.offset(
             totals.totalDebtToOffset,
             totals.totalCollToSendToSP
@@ -615,7 +615,7 @@ contract TroveManager is
             totals.totalCollToRedistribute
         );
         if (totals.totalCollSurplus > 0) {
-            contractsCache.activePool.sendETH(
+            contractsCache.activePool.sendNEON(
                 address(collSurplusPool),
                 totals.totalCollSurplus
             );
@@ -828,7 +828,7 @@ contract TroveManager is
             "TroveManager: nothing to liquidate"
         );
 
-        // Move liquidated ETH and ZKUSD to the appropriate pools
+        // Move liquidated NEON and ZKUSD to the appropriate pools
         stabilityPoolCached.offset(
             totals.totalDebtToOffset,
             totals.totalCollToSendToSP
@@ -840,7 +840,7 @@ contract TroveManager is
             totals.totalCollToRedistribute
         );
         if (totals.totalCollSurplus > 0) {
-            activePoolCached.sendETH(
+            activePoolCached.sendNEON(
                 address(collSurplusPool),
                 totals.totalCollSurplus
             );
@@ -1044,14 +1044,14 @@ contract TroveManager is
         IActivePool _activePool,
         address _liquidator,
         uint256 _ZKUSD,
-        uint256 _ETH
+        uint256 _NEON
     ) internal {
         if (_ZKUSD > 0) {
             zkusdToken.returnFromPool(gasPoolAddress, _liquidator, _ZKUSD);
         }
 
-        if (_ETH > 0) {
-            _activePool.sendETH(_liquidator, _ETH);
+        if (_NEON > 0) {
+            _activePool.sendNEON(_liquidator, _NEON);
         }
     }
 
@@ -1060,11 +1060,11 @@ contract TroveManager is
         IActivePool _activePool,
         IDefaultPool _defaultPool,
         uint256 _ZKUSD,
-        uint256 _ETH
+        uint256 _NEON
     ) internal {
         _defaultPool.decreaseZKUSDDebt(_ZKUSD);
         _activePool.increaseZKUSDDebt(_ZKUSD);
-        _defaultPool.sendETHToActivePool(_ETH);
+        _defaultPool.sendNEONToActivePool(_NEON);
     }
 
     // --- Redemption functions ---
@@ -1085,17 +1085,17 @@ contract TroveManager is
             Troves[_borrower].debt.sub(ZKUSD_GAS_COMPENSATION)
         );
 
-        // Get the ETHLot of equivalent value in USD
-        singleRedemption.ETHLot = singleRedemption
+        // Get the NEONLot of equivalent value in USD
+        singleRedemption.NEONLot = singleRedemption
             .ZKUSDLot
             .mul(DECIMAL_PRECISION)
             .div(_price);
 
-        // Decrease the debt and collateral of the current Trove according to the ZKUSD lot and corresponding ETH to send
+        // Decrease the debt and collateral of the current Trove according to the ZKUSD lot and corresponding NEON to send
         uint256 newDebt = (Troves[_borrower].debt).sub(
             singleRedemption.ZKUSDLot
         );
-        uint256 newColl = (Troves[_borrower].coll).sub(singleRedemption.ETHLot);
+        uint256 newColl = (Troves[_borrower].coll).sub(singleRedemption.NEONLot);
 
         if (newDebt == ZKUSD_GAS_COMPENSATION) {
             // No debt left in the Trove (except for the liquidation reserve), therefore the trove gets closed
@@ -1150,26 +1150,26 @@ contract TroveManager is
 
     /*
      * Called when a full redemption occurs, and closes the trove.
-     * The redeemer swaps (debt - liquidation reserve) ZKUSD for (debt - liquidation reserve) worth of ETH, so the ZKUSD liquidation reserve left corresponds to the remaining debt.
+     * The redeemer swaps (debt - liquidation reserve) ZKUSD for (debt - liquidation reserve) worth of NEON, so the ZKUSD liquidation reserve left corresponds to the remaining debt.
      * In order to close the trove, the ZKUSD liquidation reserve is burned, and the corresponding debt is removed from the active pool.
      * The debt recorded on the trove's struct is zero'd elswhere, in _closeTrove.
-     * Any surplus ETH left in the trove, is sent to the Coll surplus pool, and can be later claimed by the borrower.
+     * Any surplus NEON left in the trove, is sent to the Coll surplus pool, and can be later claimed by the borrower.
      */
     function _redeemCloseTrove(
         ContractsCache memory _contractsCache,
         address _borrower,
         uint256 _ZKUSD,
-        uint256 _ETH
+        uint256 _NEON
     ) internal {
         _contractsCache.zkusdToken.burn(gasPoolAddress, _ZKUSD);
-        // Update Active Pool ZKUSD, and send ETH to account
+        // Update Active Pool ZKUSD, and send NEON to account
         _contractsCache.activePool.decreaseZKUSDDebt(_ZKUSD);
 
-        // send ETH from Active Pool to CollSurplus Pool
-        _contractsCache.collSurplusPool.accountSurplus(_borrower, _ETH);
-        _contractsCache.activePool.sendETH(
+        // send NEON from Active Pool to CollSurplus Pool
+        _contractsCache.collSurplusPool.accountSurplus(_borrower, _NEON);
+        _contractsCache.activePool.sendNEON(
             address(_contractsCache.collSurplusPool),
-            _ETH
+            _NEON
         );
     }
 
@@ -1311,8 +1311,8 @@ contract TroveManager is
             totals.totalZKUSDToRedeem = totals.totalZKUSDToRedeem.add(
                 singleRedemption.ZKUSDLot
             );
-            totals.totalETHDrawn = totals.totalETHDrawn.add(
-                singleRedemption.ETHLot
+            totals.totalNEONDrawn = totals.totalNEONDrawn.add(
+                singleRedemption.NEONLot
             );
 
             totals.remainingZKUSD = totals.remainingZKUSD.sub(
@@ -1321,50 +1321,50 @@ contract TroveManager is
             currentBorrower = nextUserToCheck;
         }
         require(
-            totals.totalETHDrawn > 0,
+            totals.totalNEONDrawn > 0,
             "TroveManager: Unable to redeem any amount"
         );
 
         // Decay the baseRate due to time passed, and then increase it according to the size of this redemption.
         // Use the saved total ZKUSD supply value, from before it was reduced by the redemption.
         _updateBaseRateFromRedemption(
-            totals.totalETHDrawn,
+            totals.totalNEONDrawn,
             totals.price,
             totals.totalZKUSDSupplyAtStart
         );
 
-        // Calculate the ETH fee
-        totals.ETHFee = _getRedemptionFee(totals.totalETHDrawn);
+        // Calculate the NEON fee
+        totals.NEONFee = _getRedemptionFee(totals.totalNEONDrawn);
 
         _requireUserAcceptsFee(
-            totals.ETHFee,
-            totals.totalETHDrawn,
+            totals.NEONFee,
+            totals.totalNEONDrawn,
             _maxFeePercentage
         );
 
-        // Send the ETH fee to the ZKT staking contract
-        contractsCache.activePool.sendETH(
+        // Send the NEON fee to the ZKT staking contract
+        contractsCache.activePool.sendNEON(
             address(contractsCache.zktStaking),
-            totals.ETHFee
+            totals.NEONFee
         );
-        contractsCache.zktStaking.increaseF_ETH(totals.ETHFee);
+        contractsCache.zktStaking.increaseF_NEON(totals.NEONFee);
 
-        totals.ETHToSendToRedeemer = totals.totalETHDrawn.sub(totals.ETHFee);
+        totals.NEONToSendToRedeemer = totals.totalNEONDrawn.sub(totals.NEONFee);
 
         emit Redemption(
             _ZKUSDamount,
             totals.totalZKUSDToRedeem,
-            totals.totalETHDrawn,
-            totals.ETHFee
+            totals.totalNEONDrawn,
+            totals.NEONFee
         );
 
-        // Burn the total ZKUSD that is cancelled with debt, and send the redeemed ETH to msg.sender
+        // Burn the total ZKUSD that is cancelled with debt, and send the redeemed NEON to msg.sender
         contractsCache.zkusdToken.burn(msg.sender, totals.totalZKUSDToRedeem);
-        // Update Active Pool ZKUSD, and send ETH to account
+        // Update Active Pool ZKUSD, and send NEON to account
         contractsCache.activePool.decreaseZKUSDDebt(totals.totalZKUSDToRedeem);
-        contractsCache.activePool.sendETH(
+        contractsCache.activePool.sendNEON(
             msg.sender,
-            totals.ETHToSendToRedeemer
+            totals.NEONToSendToRedeemer
         );
     }
 
@@ -1375,11 +1375,11 @@ contract TroveManager is
         address _borrower
     ) public view override returns (uint256) {
         (
-            uint256 currentETH,
+            uint256 currentNEON,
             uint256 currentZKUSDDebt
         ) = _getCurrentTroveAmounts(_borrower);
 
-        uint256 NICR = FullMath._computeNominalCR(currentETH, currentZKUSDDebt);
+        uint256 NICR = FullMath._computeNominalCR(currentNEON, currentZKUSDDebt);
         return NICR;
     }
 
@@ -1389,26 +1389,26 @@ contract TroveManager is
         uint256 _price
     ) public view override returns (uint256) {
         (
-            uint256 currentETH,
+            uint256 currentNEON,
             uint256 currentZKUSDDebt
         ) = _getCurrentTroveAmounts(_borrower);
 
-        uint256 ICR = FullMath._computeCR(currentETH, currentZKUSDDebt, _price);
+        uint256 ICR = FullMath._computeCR(currentNEON, currentZKUSDDebt, _price);
         return ICR;
     }
 
     function _getCurrentTroveAmounts(
         address _borrower
     ) internal view returns (uint256, uint256) {
-        uint256 pendingETHReward = getPendingETHReward(_borrower);
+        uint256 pendingNEONReward = getPendingNEONReward(_borrower);
         uint256 pendingZKUSDDebtReward = getPendingZKUSDDebtReward(_borrower);
 
-        uint256 currentETH = Troves[_borrower].coll.add(pendingETHReward);
+        uint256 currentNEON = Troves[_borrower].coll.add(pendingNEONReward);
         uint256 currentZKUSDDebt = Troves[_borrower].debt.add(
             pendingZKUSDDebtReward
         );
 
-        return (currentETH, currentZKUSDDebt);
+        return (currentNEON, currentZKUSDDebt);
     }
 
     function applyPendingRewards(address _borrower) external override {
@@ -1426,14 +1426,14 @@ contract TroveManager is
             _requireTroveIsActive(_borrower);
 
             // Compute pending rewards
-            uint256 pendingETHReward = getPendingETHReward(_borrower);
+            uint256 pendingNEONReward = getPendingNEONReward(_borrower);
             uint256 pendingZKUSDDebtReward = getPendingZKUSDDebtReward(
                 _borrower
             );
 
             // Apply pending rewards to trove's state
             Troves[_borrower].coll = Troves[_borrower].coll.add(
-                pendingETHReward
+                pendingNEONReward
             );
             Troves[_borrower].debt = Troves[_borrower].debt.add(
                 pendingZKUSDDebtReward
@@ -1446,7 +1446,7 @@ contract TroveManager is
                 _activePool,
                 _defaultPool,
                 pendingZKUSDDebtReward,
-                pendingETHReward
+                pendingNEONReward
             );
 
             emit TroveUpdated(
@@ -1459,24 +1459,24 @@ contract TroveManager is
         }
     }
 
-    // Update borrower's snapshots of L_ETH and L_ZKUSDDebt to reflect the current values
+    // Update borrower's snapshots of L_NEON and L_ZKUSDDebt to reflect the current values
     function updateTroveRewardSnapshots(address _borrower) external override {
         _requireCallerIsBorrowerOperations();
         return _updateTroveRewardSnapshots(_borrower);
     }
 
     function _updateTroveRewardSnapshots(address _borrower) internal {
-        rewardSnapshots[_borrower].ETH = L_ETH;
+        rewardSnapshots[_borrower].NEON = L_NEON;
         rewardSnapshots[_borrower].ZKUSDDebt = L_ZKUSDDebt;
-        emit TroveSnapshotsUpdated(_borrower, L_ETH, L_ZKUSDDebt);
+        emit TroveSnapshotsUpdated(_borrower, L_NEON, L_ZKUSDDebt);
     }
 
-    // Get the borrower's pending accumulated ETH reward, earned by their stake
-    function getPendingETHReward(
+    // Get the borrower's pending accumulated NEON reward, earned by their stake
+    function getPendingNEONReward(
         address _borrower
     ) public view override returns (uint256) {
-        uint256 snapshotETH = rewardSnapshots[_borrower].ETH;
-        uint256 rewardPerUnitStaked = L_ETH.sub(snapshotETH);
+        uint256 snapshotNEON = rewardSnapshots[_borrower].NEON;
+        uint256 rewardPerUnitStaked = L_NEON.sub(snapshotNEON);
 
         if (
             rewardPerUnitStaked == 0 ||
@@ -1487,11 +1487,11 @@ contract TroveManager is
 
         uint256 stake = Troves[_borrower].stake;
 
-        uint256 pendingETHReward = stake.mul(rewardPerUnitStaked).div(
+        uint256 pendingNEONReward = stake.mul(rewardPerUnitStaked).div(
             DECIMAL_PRECISION
         );
 
-        return pendingETHReward;
+        return pendingNEONReward;
     }
 
     // Get the borrower's pending accumulated ZKUSD reward, earned by their stake
@@ -1529,7 +1529,7 @@ contract TroveManager is
             return false;
         }
 
-        return (rewardSnapshots[_borrower].ETH < L_ETH);
+        return (rewardSnapshots[_borrower].NEON < L_NEON);
     }
 
     // Return the Troves entire debt and coll, including pending rewards from redistributions.
@@ -1543,17 +1543,17 @@ contract TroveManager is
             uint256 debt,
             uint256 coll,
             uint256 pendingZKUSDDebtReward,
-            uint256 pendingETHReward
+            uint256 pendingNEONReward
         )
     {
         debt = Troves[_borrower].debt;
         coll = Troves[_borrower].coll;
 
         pendingZKUSDDebtReward = getPendingZKUSDDebtReward(_borrower);
-        pendingETHReward = getPendingETHReward(_borrower);
+        pendingNEONReward = getPendingNEONReward(_borrower);
 
         debt = debt.add(pendingZKUSDDebtReward);
-        coll = coll.add(pendingETHReward);
+        coll = coll.add(pendingNEONReward);
     }
 
     function removeStake(address _borrower) external override {
@@ -1619,7 +1619,7 @@ contract TroveManager is
 
         /*
          * Add distributed coll and debt rewards-per-unit-staked to the running totals. Division uses a "feedback"
-         * error correction, to keep the cumulative error low in the running totals L_ETH and L_ZKUSDDebt:
+         * error correction, to keep the cumulative error low in the running totals L_NEON and L_ZKUSDDebt:
          *
          * 1) Form numerators which compensate for the floor division errors that occurred the last time this
          * function was called.
@@ -1628,36 +1628,36 @@ contract TroveManager is
          * 4) Store these errors for use in the next correction when this function is called.
          * 5) Note: static analysis tools complain about this "division before multiplication", however, it is intended.
          */
-        uint256 ETHNumerator = _coll.mul(DECIMAL_PRECISION).add(
-            lastETHError_Redistribution
+        uint256 NEONNumerator = _coll.mul(DECIMAL_PRECISION).add(
+            lastNEONError_Redistribution
         );
         uint256 ZKUSDDebtNumerator = _debt.mul(DECIMAL_PRECISION).add(
             lastZKUSDDebtError_Redistribution
         );
 
         // Get the per-unit-staked terms
-        uint256 ETHRewardPerUnitStaked = ETHNumerator.div(totalStakes);
+        uint256 NEONRewardPerUnitStaked = NEONNumerator.div(totalStakes);
         uint256 ZKUSDDebtRewardPerUnitStaked = ZKUSDDebtNumerator.div(
             totalStakes
         );
 
-        lastETHError_Redistribution = ETHNumerator.sub(
-            ETHRewardPerUnitStaked.mul(totalStakes)
+        lastNEONError_Redistribution = NEONNumerator.sub(
+            NEONRewardPerUnitStaked.mul(totalStakes)
         );
         lastZKUSDDebtError_Redistribution = ZKUSDDebtNumerator.sub(
             ZKUSDDebtRewardPerUnitStaked.mul(totalStakes)
         );
 
         // Add per-unit-staked terms to the running totals
-        L_ETH = L_ETH.add(ETHRewardPerUnitStaked);
+        L_NEON = L_NEON.add(NEONRewardPerUnitStaked);
         L_ZKUSDDebt = L_ZKUSDDebt.add(ZKUSDDebtRewardPerUnitStaked);
 
-        emit LTermsUpdated(L_ETH, L_ZKUSDDebt);
+        emit LTermsUpdated(L_NEON, L_ZKUSDDebt);
 
         // Transfer coll and debt from ActivePool to DefaultPool
         _activePool.decreaseZKUSDDebt(_debt);
         _defaultPool.increaseZKUSDDebt(_debt);
-        _activePool.sendETH(address(_defaultPool), _coll);
+        _activePool.sendNEON(address(_defaultPool), _coll);
     }
 
     function closeTrove(address _borrower) external override {
@@ -1677,7 +1677,7 @@ contract TroveManager is
         Troves[_borrower].coll = 0;
         Troves[_borrower].debt = 0;
 
-        rewardSnapshots[_borrower].ETH = 0;
+        rewardSnapshots[_borrower].NEON = 0;
         rewardSnapshots[_borrower].ZKUSDDebt = 0;
 
         _removeTroveOwner(_borrower, TroveOwnersArrayLength);
@@ -1690,9 +1690,9 @@ contract TroveManager is
      *
      * The calculation excludes a portion of collateral that is in the ActivePool:
      *
-     * the total ETH gas compensation from the liquidation sequence
+     * the total NEON gas compensation from the liquidation sequence
      *
-     * The ETH as compensation must be excluded as it is always sent out at the very end of the liquidation sequence.
+     * The NEON as compensation must be excluded as it is always sent out at the very end of the liquidation sequence.
      */
     function _updateSystemSnapshots_excludeCollRemainder(
         IActivePool _activePool,
@@ -1700,8 +1700,8 @@ contract TroveManager is
     ) internal {
         totalStakesSnapshot = totalStakes;
 
-        uint256 activeColl = _activePool.getETH();
-        uint256 liquidatedColl = defaultPool.getETH();
+        uint256 activeColl = _activePool.getNEON();
+        uint256 liquidatedColl = defaultPool.getNEON();
         totalCollateralSnapshot = activeColl.sub(_collRemainder).add(
             liquidatedColl
         );
@@ -1777,7 +1777,7 @@ contract TroveManager is
         return _checkRecoveryMode(_price);
     }
 
-    // Check whether or not the system *would be* in Recovery Mode, given a ETH:USD price, and the entire system coll and debt.
+    // Check whether or not the system *would be* in Recovery Mode, given a NEON:USD price, and the entire system coll and debt.
     function _checkPotentialRecoveryMode(
         uint256 _entireSystemColl,
         uint256 _entireSystemDebt,
@@ -1801,15 +1801,15 @@ contract TroveManager is
      * 2) increases the baseRate based on the amount redeemed, as a proportion of total supply
      */
     function _updateBaseRateFromRedemption(
-        uint _ETHDrawn,
+        uint _NEONDrawn,
         uint _price,
         uint _totalZKUSDSupply
     ) internal returns (uint) {
         uint decayedBaseRate = _calcDecayedBaseRate();
 
-        /* Convert the drawn ETH back to ZKUSD at face value rate (1 ZKUSD:1 USD), in order to get
+        /* Convert the drawn NEON back to ZKUSD at face value rate (1 ZKUSD:1 USD), in order to get
          * the fraction of total supply that was redeemed at face value. */
-        uint redeemedZKUSDFraction = _ETHDrawn.mul(_price).div(
+        uint redeemedZKUSDFraction = _NEONDrawn.mul(_price).div(
             _totalZKUSDSupply
         );
 
@@ -1843,25 +1843,25 @@ contract TroveManager is
             );
     }
 
-    function _getRedemptionFee(uint _ETHDrawn) internal view returns (uint) {
-        return _calcRedemptionFee(getRedemptionRate(), _ETHDrawn);
+    function _getRedemptionFee(uint _NEONDrawn) internal view returns (uint) {
+        return _calcRedemptionFee(getRedemptionRate(), _NEONDrawn);
     }
 
     function getRedemptionFeeWithDecay(
-        uint _ETHDrawn
+        uint _NEONDrawn
     ) external view override returns (uint) {
-        return _calcRedemptionFee(getRedemptionRateWithDecay(), _ETHDrawn);
+        return _calcRedemptionFee(getRedemptionRateWithDecay(), _NEONDrawn);
     }
 
     function _calcRedemptionFee(
         uint _redemptionRate,
-        uint _ETHDrawn
+        uint _NEONDrawn
     ) internal pure returns (uint) {
-        uint redemptionFee = _redemptionRate.mul(_ETHDrawn).div(
+        uint redemptionFee = _redemptionRate.mul(_NEONDrawn).div(
             DECIMAL_PRECISION
         );
         require(
-            redemptionFee < _ETHDrawn,
+            redemptionFee < _NEONDrawn,
             "TroveManager: Fee would eat up all returned collateral"
         );
         return redemptionFee;

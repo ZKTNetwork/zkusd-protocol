@@ -39,7 +39,7 @@ describe("DefaultPool", () => {
     );
   });
 
-  it("sendETHToActivePool(): fails if receiver cannot receive ETH", async () => {
+  it("sendNEONToActivePool(): fails if receiver cannot receive NEON", async () => {
     const amount = th.dec(1, "ether");
 
     // start pool with `amount`
@@ -53,21 +53,21 @@ describe("DefaultPool", () => {
     expect(receipt.status).to.be.eq(1);
 
     // try to send ether from pool to non-payable
-    const sendETHData = defaultPool.interface.encodeFunctionData(
-      "sendETHToActivePool",
+    const sendNEONData = defaultPool.interface.encodeFunctionData(
+      "sendNEONToActivePool",
       [BigNumber.from(amount)]
     );
     // await expect(
     //     mockTroveManager
     //         .connect(owner)
-    //         .forward(defaultPool.address, sendETHData, {
+    //         .forward(defaultPool.address, sendNEONData, {
     //           from: await owner.getAddress(),
     //         })
-    // ).to.be.revertedWith(new RegExp("DefaultPool: sending ETH failed", "i"));
+    // ).to.be.revertedWith(new RegExp("DefaultPool: sending NEON failed", "i"));
     await expect(
       mockTroveManager
         .connect(owner)
-        .forward(defaultPool.address, sendETHData, {
+        .forward(defaultPool.address, sendNEONData, {
           from: await owner.getAddress(),
         })
     ).to.be.reverted;

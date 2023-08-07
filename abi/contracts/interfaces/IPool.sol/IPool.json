@@ -54,7 +54,7 @@
         "type": "uint256"
       }
     ],
-    "name": "ETHBalanceUpdated",
+    "name": "NEONBalanceUpdated",
     "type": "event"
   },
   {
@@ -98,7 +98,7 @@
   },
   {
     "inputs": [],
-    "name": "getETH",
+    "name": "getNEON",
     "outputs": [
       {
         "internalType": "uint256",

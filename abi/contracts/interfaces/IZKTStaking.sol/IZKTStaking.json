@@ -30,31 +30,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "_account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_F_NEON",
         "type": "uint256"
       }
     ],
-    "name": "EtherSent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_F_ETH",
-        "type": "uint256"
-      }
-    ],
-    "name": "F_ETHUpdated",
+    "name": "F_NEONUpdated",
     "type": "event"
   },
   {
@@ -68,6 +49,25 @@
       }
     ],
     "name": "F_ZKUSDUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "NeonSent",
     "type": "event"
   },
   {
@@ -101,7 +101,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_F_ETH",
+        "name": "_F_NEON",
         "type": "uint256"
       },
       {
@@ -132,7 +132,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "ETHGain",
+        "name": "NEONGain",
         "type": "uint256"
       }
     ],
@@ -199,7 +199,7 @@
         "type": "address"
       }
     ],
-    "name": "getPendingETHGain",
+    "name": "getPendingNEONGain",
     "outputs": [
       {
         "internalType": "uint256",
@@ -233,11 +233,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_ETHFee",
+        "name": "_NEONFee",
         "type": "uint256"
       }
     ],
-    "name": "increaseF_ETH",
+    "name": "increaseF_NEON",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

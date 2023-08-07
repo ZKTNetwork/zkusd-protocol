@@ -149,18 +149,18 @@ describe("BorrowerOperations", () => {
     );
   });
 
-  it("addColl(): Increases the activePool ETH and raw ether balance by correct amount", async () => {
+  it("addColl(): Increases the activePool NEON and raw ether balance by correct amount", async () => {
     const { collateral: aliceColl } = await openTrove(dh.testEnv.users[1], {
       ICR: toBN(dec(2, 18)),
       extraParams: { from: alice },
     });
 
-    const activePool_ETH_Before = await activePool.getETH();
+    const activePool_NEON_Before = await activePool.getNEON();
     const activePool_RawConflux_Before = toBN(
       await ethers.provider.getBalance(activePool.address)
     );
 
-    assertTrue(activePool_ETH_Before.eq(aliceColl));
+    assertTrue(activePool_NEON_Before.eq(aliceColl));
     assertTrue(activePool_RawConflux_Before.eq(aliceColl));
 
     await contracts.borrowerOperations
@@ -170,11 +170,11 @@ describe("BorrowerOperations", () => {
         value: dec(1, "ether"),
       });
 
-    const activePool_ETH_After = await activePool.getETH();
+    const activePool_NEON_After = await activePool.getNEON();
     const activePool_RawConflux_After = toBN(
       await ethers.provider.getBalance(activePool.address)
     );
-    assertTrue(activePool_ETH_After.eq(aliceColl.add(toBN(dec(1, "ether")))));
+    assertTrue(activePool_NEON_After.eq(aliceColl.add(toBN(dec(1, "ether")))));
     assertTrue(
       activePool_RawConflux_After.eq(aliceColl.add(toBN(dec(1, "ether"))))
     );
@@ -274,7 +274,7 @@ describe("BorrowerOperations", () => {
     );
   });
 
-  it("addColl(), active Trove: applies pending rewards and updates user's L_ETH, L_ZKUSDDebt snapshots", async () => {
+  it("addColl(), active Trove: applies pending rewards and updates user's L_NEON, L_ZKUSDDebt snapshots", async () => {
     // --- SETUP ---
 
     const { collateral: aliceCollBefore, totalDebt: aliceDebtBefore } =
@@ -297,7 +297,7 @@ describe("BorrowerOperations", () => {
 
     // --- TEST ---
 
-    // price drops to 1ETH:100ZKUSD, reducing Carol's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Carol's ICR below MCR
     await contracts.priceFeedTestnet.setPrice(toBN("100000000000000000000"));
 
     // Liquidate Carol's Trove,
@@ -307,36 +307,36 @@ describe("BorrowerOperations", () => {
 
     assertFalse(await contracts.sortedTroves.contains(carol));
 
-    const L_ETH = await contracts.troveManager.L_ETH();
+    const L_NEON = await contracts.troveManager.L_NEON();
     const L_ZKUSDDebt = await contracts.troveManager.L_ZKUSDDebt();
 
     // check Alice and Bob's reward snapshots are zero before they alter their Troves
     const alice_rewardSnapshot_Before =
       await contracts.troveManager.rewardSnapshots(alice);
-    const alice_ETHrewardSnapshot_Before = alice_rewardSnapshot_Before[0];
+    const alice_NEONrewardSnapshot_Before = alice_rewardSnapshot_Before[0];
     const alice_ZKUSDDebtRewardSnapshot_Before = alice_rewardSnapshot_Before[1];
 
     const bob_rewardSnapshot_Before =
       await contracts.troveManager.rewardSnapshots(bob);
-    const bob_ETHrewardSnapshot_Before = bob_rewardSnapshot_Before[0];
+    const bob_NEONrewardSnapshot_Before = bob_rewardSnapshot_Before[0];
     const bob_ZKUSDDebtRewardSnapshot_Before = bob_rewardSnapshot_Before[1];
 
-    assertEqual(alice_ETHrewardSnapshot_Before, 0);
+    assertEqual(alice_NEONrewardSnapshot_Before, 0);
     assertEqual(alice_ZKUSDDebtRewardSnapshot_Before, 0);
-    assertEqual(bob_ETHrewardSnapshot_Before, 0);
+    assertEqual(bob_NEONrewardSnapshot_Before, 0);
     assertEqual(bob_ZKUSDDebtRewardSnapshot_Before, 0);
 
-    const alicePendingETHReward =
-      await contracts.troveManager.getPendingETHReward(alice);
-    const bobPendingETHReward =
-      await contracts.troveManager.getPendingETHReward(bob);
+    const alicePendingNEONReward =
+      await contracts.troveManager.getPendingNEONReward(alice);
+    const bobPendingNEONReward =
+      await contracts.troveManager.getPendingNEONReward(bob);
     const alicePendingZKUSDDebtReward =
       await contracts.troveManager.getPendingZKUSDDebtReward(alice);
     const bobPendingZKUSDDebtReward =
       await contracts.troveManager.getPendingZKUSDDebtReward(bob);
     for (const reward of [
-      alicePendingETHReward,
-      bobPendingETHReward,
+      alicePendingNEONReward,
+      bobPendingNEONReward,
       alicePendingZKUSDDebtReward,
       bobPendingZKUSDDebtReward,
     ]) {
@@ -368,35 +368,35 @@ describe("BorrowerOperations", () => {
 
     assertTrue(
       aliceNewColl.eq(
-        aliceCollBefore.add(alicePendingETHReward).add(aliceTopUp)
+        aliceCollBefore.add(alicePendingNEONReward).add(aliceTopUp)
       )
     );
     assertTrue(
       aliceNewDebt.eq(aliceDebtBefore.add(alicePendingZKUSDDebtReward))
     );
     assertTrue(
-      bobNewColl.eq(bobCollBefore.add(bobPendingETHReward).add(bobTopUp))
+      bobNewColl.eq(bobCollBefore.add(bobPendingNEONReward).add(bobTopUp))
     );
     assertTrue(bobNewDebt.eq(bobDebtBefore.add(bobPendingZKUSDDebtReward)));
 
     /* Check that both Alice and Bob's snapshots of the rewards-per-unit-staked metrics should be updated
-     to the latest values of L_ETH and L_ZKUSDDebt */
+     to the latest values of L_NEON and L_ZKUSDDebt */
     const alice_rewardSnapshot_After =
       await contracts.troveManager.rewardSnapshots(alice);
-    const alice_ETHrewardSnapshot_After = alice_rewardSnapshot_After[0];
+    const alice_NEONrewardSnapshot_After = alice_rewardSnapshot_After[0];
     const alice_ZKUSDDebtRewardSnapshot_After = alice_rewardSnapshot_After[1];
 
     const bob_rewardSnapshot_After =
       await contracts.troveManager.rewardSnapshots(bob);
-    const bob_ETHrewardSnapshot_After = bob_rewardSnapshot_After[0];
+    const bob_NEONrewardSnapshot_After = bob_rewardSnapshot_After[0];
     const bob_ZKUSDDebtRewardSnapshot_After = bob_rewardSnapshot_After[1];
 
-    isAtMost(th.getDifference(alice_ETHrewardSnapshot_After, L_ETH), 100);
+    isAtMost(th.getDifference(alice_NEONrewardSnapshot_After, L_NEON), 100);
     isAtMost(
       th.getDifference(alice_ZKUSDDebtRewardSnapshot_After, L_ZKUSDDebt),
       100
     );
-    isAtMost(th.getDifference(bob_ETHrewardSnapshot_After, L_ETH), 100);
+    isAtMost(th.getDifference(bob_NEONrewardSnapshot_After, L_NEON), 100);
     isAtMost(
       th.getDifference(bob_ZKUSDDebtRewardSnapshot_After, L_ZKUSDDebt),
       100
@@ -555,7 +555,7 @@ describe("BorrowerOperations", () => {
     );
   });
 
-  it("withdrawColl(): reverts when requested ETH withdrawal is > the trove's collateral", async () => {
+  it("withdrawColl(): reverts when requested NEON withdrawal is > the trove's collateral", async () => {
     await openTrove(dh.testEnv.users[1], {
       ICR: toBN(dec(2, 18)),
       extraParams: { from: alice },
@@ -627,7 +627,7 @@ describe("BorrowerOperations", () => {
 
     // --- TEST ---
 
-    // price drops to 1ETH:150ZKUSD, reducing TCR below 150%
+    // price drops to 1NEON:150ZKUSD, reducing TCR below 150%
     await contracts.priceFeedTestnet.setPrice("150000000000000000000");
 
     //Alice tries to withdraw collateral during Recovery Mode

@@ -108,13 +108,13 @@ contract HintHelpers is ZKTProtocolBase, CheckContract, Ownable {
                         netZKUSDDebt.sub(MIN_NET_DEBT)
                     );
 
-                    uint256 ETH = troveManager
+                    uint256 NEON = troveManager
                         .getTroveColl(currentTroveuser)
                         .add(
-                            troveManager.getPendingETHReward(currentTroveuser)
+                            troveManager.getPendingNEONReward(currentTroveuser)
                         );
 
-                    uint256 newColl = ETH.sub(
+                    uint256 newColl = NEON.sub(
                         maxRedeemableZKUSD.mul(DECIMAL_PRECISION).div(_price)
                     );
                     uint256 newDebt = netZKUSDDebt.sub(maxRedeemableZKUSD);

@@ -43,7 +43,7 @@ export const MoneyValues = {
   NEGATIVE_50E18: "-" + utils.parseUnits("50", "ether").toString(),
   NEGATIVE_100E18: "-" + utils.parseUnits("100", "ether").toString(),
   NEGATIVE_101E18: "-" + utils.parseUnits("101", "ether").toString(),
-  NEGATIVE_ETH: (amount: string) =>
+  NEGATIVE_NEON: (amount: string) =>
     "-" + utils.parseUnits(amount, "ether").toString(),
 
   _ZEROBN: BigNumber.from("0"),
@@ -503,10 +503,10 @@ export class TestHelper {
       if (redemptionTx.logs[i].event === "Redemption") {
         const ZKUSDAmount = redemptionTx.logs[i].args[0];
         const totalZKUSDRedeemed = redemptionTx.logs[i].args[1];
-        const totalETHDrawn = redemptionTx.logs[i].args[2];
-        const ETHFee = redemptionTx.logs[i].args[3];
+        const totalNEONDrawn = redemptionTx.logs[i].args[2];
+        const NEONFee = redemptionTx.logs[i].args[3];
 
-        return [ZKUSDAmount, totalZKUSDRedeemed, totalETHDrawn, ETHFee];
+        return [ZKUSDAmount, totalZKUSDRedeemed, totalNEONDrawn, NEONFee];
       }
     }
     throw "The transaction logs do not contain a redemption event";
@@ -648,12 +648,12 @@ export class TestHelper {
     // console.log(`account: ${account}`)
     const rawColl = (await contracts.troveManager.Troves(account))[1];
     const rawDebt = (await contracts.troveManager.Troves(account))[0];
-    const pendingETHReward = await contracts.troveManager.getPendingETHReward(
+    const pendingNEONReward = await contracts.troveManager.getPendingNEONReward(
       account
     );
     const pendingZKUSDDebtReward =
       await contracts.troveManager.getPendingZKUSDDebtReward(account);
-    const entireColl = rawColl.add(pendingETHReward);
+    const entireColl = rawColl.add(pendingNEONReward);
     const entireDebt = rawDebt.add(pendingZKUSDDebtReward);
 
     return { entireColl, entireDebt };
@@ -726,7 +726,7 @@ export class TestHelper {
   static async getCollAndDebtFromAdjustment(
     contracts: ContractType,
     account: string,
-    ETHChange: BigNumber,
+    NEONChange: BigNumber,
     ZKUSDChange: BigNumber
   ): Promise<{ newColl: BigNumber; newDebt: BigNumber }> {
     const { entireColl, entireDebt } = await this.getEntireCollAndDebt(
@@ -737,7 +737,7 @@ export class TestHelper {
     const fee = ZKUSDChange.gt(BigNumber.from("0"))
       ? await contracts.troveManager.getBorrowingFee(ZKUSDChange)
       : BigNumber.from("0");
-    const newColl = entireColl.add(ETHChange);
+    const newColl = entireColl.add(NEONChange);
     const newDebt = entireDebt.add(ZKUSDChange).add(fee);
 
     return { newColl, newDebt };
@@ -747,7 +747,7 @@ export class TestHelper {
   static async openTrove_allAccounts(
     accounts: string[],
     contracts: ContractType,
-    ETHAmount: BigNumber,
+    NEONAmount: BigNumber,
     ZKUSDAmount: BigNumber
   ): Promise<any> {
     const gasCostList = [];
@@ -756,7 +756,7 @@ export class TestHelper {
     for (const account of accounts) {
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
         contracts,
-        ETHAmount,
+        NEONAmount,
         totalDebt
       );
 
@@ -765,7 +765,7 @@ export class TestHelper {
         ZKUSDAmount,
         upperHint,
         lowerHint,
-        { from: account, value: ETHAmount }
+        { from: account, value: NEONAmount }
       );
       const gas = await this.gasUsed(tx);
       gasCostList.push(gas);
@@ -773,9 +773,9 @@ export class TestHelper {
     return this.getGasMetrics(gasCostList);
   }
 
-  static async openTrove_allAccounts_randomETH(
-    minETH: BigNumber,
-    maxETH: BigNumber,
+  static async openTrove_allAccounts_randomNEON(
+    minNEON: BigNumber,
+    maxNEON: BigNumber,
     accounts: string[],
     contracts: ContractType,
     ZKUSDAmount: BigNumber
@@ -784,7 +784,7 @@ export class TestHelper {
     const totalDebt = await this.getOpenTroveTotalDebt(contracts, ZKUSDAmount);
 
     for (const account of accounts) {
-      const randCollAmount = this.randAmountInWei(minETH, maxETH);
+      const randCollAmount = this.randAmountInWei(minNEON, maxNEON);
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
         contracts,
         randCollAmount,
@@ -804,9 +804,9 @@ export class TestHelper {
     return this.getGasMetrics(gasCostList);
   }
 
-  static async openTrove_allAccounts_randomETH_ProportionalZKUSD(
-    minETH: BigNumber,
-    maxETH: BigNumber,
+  static async openTrove_allAccounts_randomNEON_ProportionalZKUSD(
+    minNEON: BigNumber,
+    maxNEON: BigNumber,
     accounts: string[],
     contracts: ContractType,
     proportion: BigNumber
@@ -814,7 +814,7 @@ export class TestHelper {
     const gasCostList = [];
 
     for (const account of accounts) {
-      const randCollAmount = this.randAmountInWei(minETH, maxETH);
+      const randCollAmount = this.randAmountInWei(minNEON, maxNEON);
       const proportionalZKUSD = proportion.mul(randCollAmount);
       const totalDebt = await this.getOpenTroveTotalDebt(
         contracts,
@@ -839,9 +839,9 @@ export class TestHelper {
     }
     return this.getGasMetrics(gasCostList);
   }
-  static async openTrove_allAccounts_randomETH_randomZKUSD(
-    minETH: BigNumber,
-    maxETH: BigNumber,
+  static async openTrove_allAccounts_randomNEON_randomZKUSD(
+    minNEON: BigNumber,
+    maxNEON: BigNumber,
     accounts: string[],
     contracts: ContractType,
     minZKUSDProportion: BigNumber,
@@ -852,7 +852,7 @@ export class TestHelper {
     const _1e18 = BigNumber.from("1000000000000000000");
 
     for (const account of accounts) {
-      const randCollAmount = this.randAmountInWei(minETH, maxETH);
+      const randCollAmount = this.randAmountInWei(minNEON, maxNEON);
       const randZKUSDProportion = this.randAmountInWei(
         minZKUSDProportion,
         maxZKUSDProportion
@@ -901,7 +901,7 @@ export class TestHelper {
   static async openTrove_allAccounts_decreasingZKUSDAmounts(
     accounts: string[],
     contracts: ContractType,
-    ETHAmount: BigNumber,
+    NEONAmount: BigNumber,
     maxZKUSDAmount: BigNumber
   ): Promise<any> {
     const gasCostList = [];
@@ -918,7 +918,7 @@ export class TestHelper {
       );
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
         contracts,
-        ETHAmount,
+        NEONAmount,
         totalDebt
       );
 
@@ -927,7 +927,7 @@ export class TestHelper {
         ZKUSDAmountWei,
         upperHint,
         lowerHint,
-        { from: account, value: ETHAmount }
+        { from: account, value: NEONAmount }
       );
       const gas = await this.gasUsed(tx);
       gasCostList.push(gas);
@@ -1063,19 +1063,19 @@ export class TestHelper {
   static async adjustTrove_allAccounts(
     accounts: string[],
     contracts: ContractType,
-    ETHAmount: BigNumber,
+    NEONAmount: BigNumber,
     ZKUSDAmount: BigNumber
   ): Promise<any> {
     const gasCostList = [];
 
     for (const account of accounts) {
-      let ETHChangeBN = BigNumber.from(ETHAmount);
+      let NEONChangeBN = BigNumber.from(NEONAmount);
       let ZKUSDChangeBN = BigNumber.from(ZKUSDAmount);
 
       const { newColl, newDebt } = await this.getCollAndDebtFromAdjustment(
         contracts,
         account,
-        ETHChangeBN,
+        NEONChangeBN,
         ZKUSDChangeBN
       );
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
@@ -1089,8 +1089,8 @@ export class TestHelper {
       let isDebtIncrease = ZKUSDChangeBN.gt(zero);
       ZKUSDChangeBN = ZKUSDChangeBN.abs();
 
-      // Add ETH to trove
-      if (ETHChangeBN.gt(zero)) {
+      // Add NEON to trove
+      if (NEONChangeBN.gt(zero)) {
         const tx = await contracts.borrowerOperations.adjustTrove(
           this._100pct,
           0,
@@ -1098,16 +1098,16 @@ export class TestHelper {
           isDebtIncrease,
           upperHint,
           lowerHint,
-          { from: account, value: ETHChangeBN }
+          { from: account, value: NEONChangeBN }
         );
         const gas = await this.gasUsed(tx);
         gasCostList.push(gas);
-        // Withdraw ETH from trove
-      } else if (ETHChangeBN.lt(zero)) {
-        ETHChangeBN = ETHChangeBN.mul(-1);
+        // Withdraw NEON from trove
+      } else if (NEONChangeBN.lt(zero)) {
+        NEONChangeBN = NEONChangeBN.mul(-1);
         const tx = await contracts.borrowerOperations.adjustTrove(
           this._100pct,
-          ETHChangeBN,
+          NEONChangeBN,
           ZKUSDChangeBN,
           isDebtIncrease,
           upperHint,
@@ -1124,15 +1124,15 @@ export class TestHelper {
   static async adjustTrove_allAccounts_randomAmount(
     accounts: string[],
     contracts: ContractType,
-    ETHMin: BigNumber,
-    ETHMax: BigNumber,
+    NEONMin: BigNumber,
+    NEONMax: BigNumber,
     ZKUSDMin: BigNumber,
     ZKUSDMax: BigNumber
   ): Promise<any> {
     const gasCostList = [];
 
     for (const account of accounts) {
-      let ETHChangeBN = BigNumber.from(this.randAmountInWei(ETHMin, ETHMax));
+      let NEONChangeBN = BigNumber.from(this.randAmountInWei(NEONMin, NEONMax));
       let ZKUSDChangeBN = BigNumber.from(
         this.randAmountInWei(ZKUSDMin, ZKUSDMax)
       );
@@ -1140,7 +1140,7 @@ export class TestHelper {
       const { newColl, newDebt } = await this.getCollAndDebtFromAdjustment(
         contracts,
         account,
-        ETHChangeBN,
+        NEONChangeBN,
         ZKUSDChangeBN
       );
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
@@ -1154,8 +1154,8 @@ export class TestHelper {
       let isDebtIncrease = ZKUSDChangeBN.gt(zero);
       ZKUSDChangeBN = ZKUSDChangeBN.abs();
 
-      // Add ETH to trove
-      if (ETHChangeBN.gt(zero)) {
+      // Add NEON to trove
+      if (NEONChangeBN.gt(zero)) {
         const tx = await contracts.borrowerOperations.adjustTrove(
           this._100pct,
           0,
@@ -1163,16 +1163,16 @@ export class TestHelper {
           isDebtIncrease,
           upperHint,
           lowerHint,
-          { from: account, value: ETHChangeBN }
+          { from: account, value: NEONChangeBN }
         );
-        // Withdraw ETH from trove
+        // Withdraw NEON from trove
         const gas = await this.gasUsed(tx);
         gasCostList.push(gas);
-      } else if (ETHChangeBN.lt(zero)) {
-        ETHChangeBN = ETHChangeBN.mul(-1);
+      } else if (NEONChangeBN.lt(zero)) {
+        NEONChangeBN = NEONChangeBN.mul(-1);
         const tx = await contracts.borrowerOperations.adjustTrove(
           this._100pct,
-          ETHChangeBN,
+          NEONChangeBN,
           ZKUSDChangeBN,
           isDebtIncrease,
           upperHint,
@@ -1668,7 +1668,7 @@ export class TestHelper {
     return this.getGasMetrics(gasCostList);
   }
 
-  static async withdrawETHGainToTrove_allAccounts(
+  static async withdrawNEONGainToTrove_allAccounts(
     accounts: string[],
     contracts: ContractType
   ): Promise<any> {
@@ -1680,17 +1680,17 @@ export class TestHelper {
       );
       console.log(`entireColl: ${entireColl}`);
       console.log(`entireDebt: ${entireDebt}`);
-      const ETHGain = await contracts.stabilityPool.getDepositorETHGain(
+      const NEONGain = await contracts.stabilityPool.getDepositorNEONGain(
         account
       );
-      const newColl = entireColl.add(ETHGain);
+      const newColl = entireColl.add(NEONGain);
       const { upperHint, lowerHint } = await this.getBorrowerOpsListHint(
         contracts,
         newColl,
         entireDebt
       );
 
-      const tx = await contracts.stabilityPool.withdrawETHGainToTrove(
+      const tx = await contracts.stabilityPool.withdrawNEONGainToTrove(
         upperHint,
         lowerHint,
         { from: account }

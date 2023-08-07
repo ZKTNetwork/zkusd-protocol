@@ -190,13 +190,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_ETHSent",
+        "name": "_NEONSent",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_ETHFee",
+        "name": "_NEONFee",
         "type": "uint256"
       }
     ],
@@ -479,7 +479,7 @@
   },
   {
     "inputs": [],
-    "name": "L_ETH",
+    "name": "L_NEON",
     "outputs": [
       {
         "internalType": "uint256",
@@ -977,7 +977,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "pendingETHReward",
+        "name": "pendingNEONReward",
         "type": "uint256"
       }
     ],
@@ -1037,7 +1037,7 @@
         "type": "address"
       }
     ],
-    "name": "getPendingETHReward",
+    "name": "getPendingNEONReward",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1071,7 +1071,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_ETHDrawn",
+        "name": "_NEONDrawn",
         "type": "uint256"
       }
     ],
@@ -1308,7 +1308,7 @@
   },
   {
     "inputs": [],
-    "name": "lastETHError_Redistribution",
+    "name": "lastFeeOperationTime",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1321,7 +1321,7 @@
   },
   {
     "inputs": [],
-    "name": "lastFeeOperationTime",
+    "name": "lastNEONError_Redistribution",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1472,7 +1472,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "ETH",
+        "name": "NEON",
         "type": "uint256"
       },
       {

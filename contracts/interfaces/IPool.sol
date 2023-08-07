@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 interface IPool {
     // --- Events ---
 
-    event ETHBalanceUpdated(uint256 _newBalance);
+    event NEONBalanceUpdated(uint256 _newBalance);
     event ZKUSDBalanceUpdated(uint256 _newBalance);
     event ActivePoolAddressChanged(address _newActivePoolAddress);
     event DefaultPoolAddressChanged(address _newDefaultPoolAddress);
@@ -14,7 +14,7 @@ interface IPool {
 
     // --- Functions ---
 
-    function getETH() external view returns (uint256);
+    function getNEON() external view returns (uint256);
 
     function getZKUSDDebt() external view returns (uint256);
 

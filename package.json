@@ -35,7 +35,8 @@
   },
   "scripts": {
     "compile": "npx hardhat compile",
-    "clear-cache": "rm -r ./abi ./artifacts-zk ./cache-zk ./typechain-types",
+    "test": "npx hardhat test",
+    "clear-cache": "rm -r ./abi ./artifacts ./cache ./typechain-types",
     "prettier": "prettier --write 'hardhat.config.ts' 'contracts/**/*.sol' 'deploy/**/*.ts' 'test/**/*.ts'",
     "update_spdx_license": "ts-node scripts/update_spdx_license.ts"
   }

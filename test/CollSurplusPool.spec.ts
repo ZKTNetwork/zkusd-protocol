@@ -30,10 +30,10 @@ describe("CollSurplusPool", () => {
       sortedTroves: dh.testEnv.sortedTroves,
     };
   });
-  it("CollSurplusPool::getETH(): Returns the ETH balance of the CollSurplusPool after redemption", async () => {
+  it("CollSurplusPool::getNEON(): Returns the NEON balance of the CollSurplusPool after redemption", async () => {
     const { collSurplusPool } = dh.testEnv;
-    const ETH_1 = await collSurplusPool.getETH();
-    expect(ETH_1).to.be.eq(BigNumber.from("0"));
+    const NEON_1 = await collSurplusPool.getNEON();
+    expect(NEON_1).to.be.eq(BigNumber.from("0"));
 
     const price = th.toBN(th.dec(100, 18));
     await contracts.priceFeedTestnet.setPrice(price);
@@ -54,12 +54,12 @@ describe("CollSurplusPool", () => {
     // skip bootstrapping phase
     await th.fastForwardTime(TimeValues.SECONDS_IN_ONE_WEEK * 2);
 
-    // At ETH:USD = 100, this redemption should leave 1 ether of coll surplus
+    // At NEON:USD = 100, this redemption should leave 1 ether of coll surplus
     await th.redeemCollateralAndGetTxObject(A, contracts, B_netDebt);
 
-    const ETH_2 = await collSurplusPool.getETH();
+    const NEON_2 = await collSurplusPool.getNEON();
     th.assertIsApproximatelyEqual(
-      ETH_2,
+      NEON_2,
       B_coll.sub(B_netDebt.mul(mv._1E18BN).div(price))
     );
   });
@@ -80,7 +80,7 @@ describe("CollSurplusPool", () => {
     ).revertedWith("CollSurplusPool: No collateral available to claim");
   });
 
-  it("CollSurplusPool: claimColl(): Reverts if owner cannot receive ETH surplus", async () => {
+  it("CollSurplusPool: claimColl(): Reverts if owner cannot receive NEON surplus", async () => {
     const { collSurplusPool } = dh.testEnv;
     const nonPayable = await deployFunction("NonPayable", dh.testEnv.deployer);
 
@@ -116,12 +116,12 @@ describe("CollSurplusPool", () => {
     // skip bootstrapping phase
     await th.fastForwardTime(TimeValues.SECONDS_IN_ONE_WEEK * 2);
 
-    // At ETH:USD = 100, this redemption should leave 1 ether of coll surplus for B
+    // At NEON:USD = 100, this redemption should leave 1 ether of coll surplus for B
     await th.redeemCollateralAndGetTxObject(A, contracts, B_netDebt);
 
-    const ETH_2 = await collSurplusPool.getETH();
+    const NEON_2 = await collSurplusPool.getNEON();
     th.assertIsApproximatelyEqual(
-      ETH_2,
+      NEON_2,
       B_coll.sub(B_netDebt.mul(mv._1E18BN).div(price))
     );
 
@@ -136,7 +136,7 @@ describe("CollSurplusPool", () => {
     //     .connect(B)
     //     .forward(contracts.borrowerOperations.address, claimCollateralData)
     // ).to.be.revertedWith(
-    //   new RegExp("CollSurplusPool: sending ETH failed$", "i")
+    //   new RegExp("CollSurplusPool: sending NEON failed$", "i")
     // );
     await expect(
       nonPayable
@@ -144,7 +144,7 @@ describe("CollSurplusPool", () => {
         .forward(contracts.borrowerOperations.address, claimCollateralData)
     ).to.be.reverted;
   });
-  it("CollSurplusPool: reverts trying to send ETH to it", async () => {
+  it("CollSurplusPool: reverts trying to send NEON to it", async () => {
     const { collSurplusPool } = dh.testEnv;
     // await expect(
     //   A.sendTransaction({

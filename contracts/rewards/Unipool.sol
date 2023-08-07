@@ -50,7 +50,7 @@ contract LPTokenWrapper is ILPTokenWrapper {
 }
 
 /*
- * On deployment a new Uniswap pool will be created for the pair ZKUSD/ETH and its token will be set here.
+ * On deployment a new Uniswap pool will be created for the pair ZKUSD/NEON and its token will be set here.
 
  * Essentially the way it works is:
 

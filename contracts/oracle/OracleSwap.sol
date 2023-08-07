@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // Example oracle AMM powered by Pyth price feeds.
 //
 // The contract holds a pool of two ERC-20 tokens, the BASE and the QUOTE, and allows users to swap tokens
-// for the pair BASE/QUOTE. For example, the base could be WETH and the quote could be USDC, in which case you can
-// buy WETH for USDC and vice versa. The pool offers to swap between the tokens at the current Pyth exchange rate for
+// for the pair BASE/QUOTE. For example, the base could be WNEON and the quote could be USDC, in which case you can
+// buy WNEON for USDC and vice versa. The pool offers to swap between the tokens at the current Pyth exchange rate for
 // BASE/QUOTE, which is computed from the BASE/USD price feed and the QUOTE/USD price feed.
 //
 // This contract only implements the swap functionality. It does not implement any pool balancing logic (e.g., skewing the
