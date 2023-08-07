@@ -1,0 +1,16 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+# Hardhat files
+cache
+artifacts
+cache-zk
+artifacts-zk
+zksolc
+pk_account_list.ts
+.idea
+hardhatAccountList2K.ts

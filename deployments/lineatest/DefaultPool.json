@@ -1,0 +1,419 @@
+{
+  "address": "0xE48530324219Ca33b8a2c1F41f5D6815Fc96c720",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newActivePoolAddress",
+          "type": "address"
+        }
+      ],
+      "name": "ActivePoolAddressChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "ConfluxSent",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newDefaultPoolAddress",
+          "type": "address"
+        }
+      ],
+      "name": "DefaultPoolAddressChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_ETH",
+          "type": "uint256"
+        }
+      ],
+      "name": "DefaultPoolETHBalanceUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_ZKUSDDebt",
+          "type": "uint256"
+        }
+      ],
+      "name": "DefaultPoolZKUSDDebtUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newBalance",
+          "type": "uint256"
+        }
+      ],
+      "name": "ETHBalanceUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newStabilityPoolAddress",
+          "type": "address"
+        }
+      ],
+      "name": "StabilityPoolAddressChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newTroveManagerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "TroveManagerAddressChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newBalance",
+          "type": "uint256"
+        }
+      ],
+      "name": "ZKUSDBalanceUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "NAME",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "activePoolAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "decreaseZKUSDDebt",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getETH",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getZKUSDDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseZKUSDDebt",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendETHToActivePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_troveManagerAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_activePoolAddress",
+          "type": "address"
+        }
+      ],
+      "name": "setAddresses",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "troveManagerAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "transactionHash": "0xa13dd97a457f1d9017041e818f49d7e36313399d31980e0606c9b59313de4af7",
+  "receipt": {
+    "to": null,
+    "from": "0x256dB3D00b3338f118a58dC95a6076bc5022Ba01",
+    "contractAddress": "0xE48530324219Ca33b8a2c1F41f5D6815Fc96c720",
+    "transactionIndex": 140,
+    "gasUsed": "592580",
+    "logsBloom": "0x00000000000000000000000000000000000000000080000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000020000000000000000000800000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800200000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000100000000000008",
+    "blockHash": "0xf004b16df26dd1c8d83f4c5a9bc3c1c390ed31001744204b99dd444647452870",
+    "transactionHash": "0xa13dd97a457f1d9017041e818f49d7e36313399d31980e0606c9b59313de4af7",
+    "logs": [
+      {
+        "transactionIndex": 140,
+        "blockNumber": 1104696,
+        "transactionHash": "0xa13dd97a457f1d9017041e818f49d7e36313399d31980e0606c9b59313de4af7",
+        "address": "0xE48530324219Ca33b8a2c1F41f5D6815Fc96c720",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000256db3d00b3338f118a58dc95a6076bc5022ba01"
+        ],
+        "data": "0x",
+        "logIndex": 191,
+        "blockHash": "0xf004b16df26dd1c8d83f4c5a9bc3c1c390ed31001744204b99dd444647452870"
+      }
+    ],
+    "blockNumber": 1104696,
+    "cumulativeGasUsed": "12711159",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "8d3bedc4d324e183b89fd63f58bc09d7",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newActivePoolAddress\",\"type\":\"address\"}],\"name\":\"ActivePoolAddressChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"ConfluxSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newDefaultPoolAddress\",\"type\":\"address\"}],\"name\":\"DefaultPoolAddressChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_ETH\",\"type\":\"uint256\"}],\"name\":\"DefaultPoolETHBalanceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_ZKUSDDebt\",\"type\":\"uint256\"}],\"name\":\"DefaultPoolZKUSDDebtUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_newBalance\",\"type\":\"uint256\"}],\"name\":\"ETHBalanceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newStabilityPoolAddress\",\"type\":\"address\"}],\"name\":\"StabilityPoolAddressChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newTroveManagerAddress\",\"type\":\"address\"}],\"name\":\"TroveManagerAddressChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_newBalance\",\"type\":\"uint256\"}],\"name\":\"ZKUSDBalanceUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"NAME\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"activePoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"decreaseZKUSDDebt\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getZKUSDDebt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"increaseZKUSDDebt\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"sendETHToActivePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_troveManagerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_activePoolAddress\",\"type\":\"address\"}],\"name\":\"setAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"troveManagerAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/protocol/DefaultPool.sol\":\"DefaultPool\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor() {\\n        _transferOwnership(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Address.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/Address.sol)\\n\\npragma solidity ^0.8.1;\\n\\n/**\\n * @dev Collection of functions related to the address type\\n */\\nlibrary Address {\\n    /**\\n     * @dev Returns true if `account` is a contract.\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * It is unsafe to assume that an address for which this function returns\\n     * false is an externally-owned account (EOA) and not a contract.\\n     *\\n     * Among others, `isContract` will return false for the following\\n     * types of addresses:\\n     *\\n     *  - an externally-owned account\\n     *  - a contract in construction\\n     *  - an address where a contract will be created\\n     *  - an address where a contract lived, but was destroyed\\n     *\\n     * Furthermore, `isContract` will also return true if the target contract within\\n     * the same transaction is already scheduled for destruction by `SELFDESTRUCT`,\\n     * which only has an effect at the end of a transaction.\\n     * ====\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * You shouldn't rely on `isContract` to protect against flash loan attacks!\\n     *\\n     * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets\\n     * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract\\n     * constructor.\\n     * ====\\n     */\\n    function isContract(address account) internal view returns (bool) {\\n        // This method relies on extcodesize/address.code.length, which returns 0\\n        // for contracts in construction, since the code is only stored at the end\\n        // of the constructor execution.\\n\\n        return account.code.length > 0;\\n    }\\n\\n    /**\\n     * @dev Replacement for Solidity's `transfer`: sends `amount` wei to\\n     * `recipient`, forwarding all available gas and reverting on errors.\\n     *\\n     * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost\\n     * of certain opcodes, possibly making contracts go over the 2300 gas limit\\n     * imposed by `transfer`, making them unable to receive funds via\\n     * `transfer`. {sendValue} removes this limitation.\\n     *\\n     * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].\\n     *\\n     * IMPORTANT: because control is transferred to `recipient`, care must be\\n     * taken to not create reentrancy vulnerabilities. Consider using\\n     * {ReentrancyGuard} or the\\n     * https://solidity.readthedocs.io/en/v0.8.0/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].\\n     */\\n    function sendValue(address payable recipient, uint256 amount) internal {\\n        require(address(this).balance >= amount, \\\"Address: insufficient balance\\\");\\n\\n        (bool success, ) = recipient.call{value: amount}(\\\"\\\");\\n        require(success, \\\"Address: unable to send value, recipient may have reverted\\\");\\n    }\\n\\n    /**\\n     * @dev Performs a Solidity function call using a low level `call`. A\\n     * plain `call` is an unsafe replacement for a function call: use this\\n     * function instead.\\n     *\\n     * If `target` reverts with a revert reason, it is bubbled up by this\\n     * function (like regular Solidity function calls).\\n     *\\n     * Returns the raw returned data. To convert to the expected return value,\\n     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].\\n     *\\n     * Requirements:\\n     *\\n     * - `target` must be a contract.\\n     * - calling `target` with `data` must not revert.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, \\\"Address: low-level call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with\\n     * `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but also transferring `value` wei to `target`.\\n     *\\n     * Requirements:\\n     *\\n     * - the calling contract must have an ETH balance of at least `value`.\\n     * - the called Solidity function must be `payable`.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, value, \\\"Address: low-level call with value failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but\\n     * with `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        require(address(this).balance >= value, \\\"Address: insufficient balance for call\\\");\\n        (bool success, bytes memory returndata) = target.call{value: value}(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {\\n        return functionStaticCall(target, data, \\\"Address: low-level static call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.staticcall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionDelegateCall(target, data, \\\"Address: low-level delegate call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.delegatecall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling\\n     * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.\\n     *\\n     * _Available since v4.8._\\n     */\\n    function verifyCallResultFromTarget(\\n        address target,\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        if (success) {\\n            if (returndata.length == 0) {\\n                // only check isContract if the call was successful and the return data is empty\\n                // otherwise we already know that it was a contract\\n                require(isContract(target), \\\"Address: call to non-contract\\\");\\n            }\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the\\n     * revert reason or using the provided one.\\n     *\\n     * _Available since v4.3._\\n     */\\n    function verifyCallResult(\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal pure returns (bytes memory) {\\n        if (success) {\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    function _revert(bytes memory returndata, string memory errorMessage) private pure {\\n        // Look for revert reason and bubble it up if present\\n        if (returndata.length > 0) {\\n            // The easiest way to bubble the revert reason is using memory via assembly\\n            /// @solidity memory-safe-assembly\\n            assembly {\\n                let returndata_size := mload(returndata)\\n                revert(add(32, returndata), returndata_size)\\n            }\\n        } else {\\n            revert(errorMessage);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/math/SafeMath.sol)\\n\\npragma solidity ^0.8.0;\\n\\n// CAUTION\\n// This version of SafeMath should only be used with Solidity 0.8 or later,\\n// because it relies on the compiler's built in overflow checks.\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations.\\n *\\n * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler\\n * now has built in overflow checking.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            uint256 c = a + b;\\n            if (c < a) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b > a) return (false, 0);\\n            return (true, a - b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n            // benefit is lost if 'b' is also tested.\\n            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n            if (a == 0) return (true, 0);\\n            uint256 c = a * b;\\n            if (c / a != b) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a / b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a % b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a + b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a * b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b <= a, errorMessage);\\n            return a - b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a / b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a % b;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x58b21219689909c4f8339af00813760337f7e2e7f169a97fe49e2896dcfb3b9a\",\"license\":\"MIT\"},\"contracts/dependencies/CheckContract.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/utils/Address.sol\\\";\\n\\nabstract contract CheckContract {\\n    /**\\n     * Check that the account is an already deployed non-destroyed contract.\\n     * See: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol\\n     */\\n    function checkContract(address _account) internal view {\\n        require(_account != address(0), \\\"Account cannot be zero address\\\");\\n        require(\\n            Address.isContract(_account),\\n            \\\"Account code size cannot be zero\\\"\\n        );\\n    }\\n}\\n\",\"keccak256\":\"0xaf457c01990a35e69f187bbaa4daceb410b624d7c34029246b54333816a4bba7\",\"license\":\"MIT\"},\"contracts/interfaces/IDefaultPool.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"./IPool.sol\\\";\\n\\ninterface IDefaultPool is IPool {\\n    // --- Events ---\\n    event TroveManagerAddressChanged(address _newTroveManagerAddress);\\n    event DefaultPoolZKUSDDebtUpdated(uint256 _ZKUSDDebt);\\n    event DefaultPoolETHBalanceUpdated(uint256 _ETH);\\n\\n    // --- Functions ---\\n    function sendETHToActivePool(uint256 _amount) external;\\n}\\n\",\"keccak256\":\"0x0cf8a22eaa1374a93431b90e10edb2b0ce7b0d043a0241197de9af0ba4d11b8e\",\"license\":\"MIT\"},\"contracts/interfaces/IPool.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\n// Common interface for the Pools.\\ninterface IPool {\\n    // --- Events ---\\n\\n    event ETHBalanceUpdated(uint256 _newBalance);\\n    event ZKUSDBalanceUpdated(uint256 _newBalance);\\n    event ActivePoolAddressChanged(address _newActivePoolAddress);\\n    event DefaultPoolAddressChanged(address _newDefaultPoolAddress);\\n    event StabilityPoolAddressChanged(address _newStabilityPoolAddress);\\n    event ConfluxSent(address _to, uint256 _amount);\\n\\n    // --- Functions ---\\n\\n    function getETH() external view returns (uint256);\\n\\n    function getZKUSDDebt() external view returns (uint256);\\n\\n    function increaseZKUSDDebt(uint256 _amount) external;\\n\\n    function decreaseZKUSDDebt(uint256 _amount) external;\\n}\\n\",\"keccak256\":\"0xfabe26c7d2bcf8674d5e79e6b2e728dc62c014f63cc1f01d811d20e81630a989\",\"license\":\"MIT\"},\"contracts/protocol/DefaultPool.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/math/SafeMath.sol\\\";\\n\\nimport \\\"../dependencies/CheckContract.sol\\\";\\nimport \\\"../interfaces/IDefaultPool.sol\\\";\\n\\n/*\\n * The Default Pool holds the ETH and ZKUSD debt (but not ZKUSD tokens) from liquidations that have been redistributed\\n * to active troves but not yet \\\"applied\\\", i.e. not yet recorded on a recipient active trove's struct.\\n *\\n * When a trove makes an operation that applies its pending ETH and ZKUSD debt, its pending ETH and ZKUSD debt is moved\\n * from the Default Pool to the Active Pool.\\n */\\ncontract DefaultPool is Ownable, CheckContract, IDefaultPool {\\n    using SafeMath for uint256;\\n\\n    string public constant NAME = \\\"DefaultPool\\\";\\n\\n    address public troveManagerAddress;\\n    address public activePoolAddress;\\n    uint256 internal ETH; // deposited ETH tracker\\n    uint256 internal ZKUSDDebt; // debt\\n\\n    // --- Dependency setters ---\\n\\n    function setAddresses(\\n        address _troveManagerAddress,\\n        address _activePoolAddress\\n    ) external onlyOwner {\\n        checkContract(_troveManagerAddress);\\n        checkContract(_activePoolAddress);\\n\\n        troveManagerAddress = _troveManagerAddress;\\n        activePoolAddress = _activePoolAddress;\\n\\n        emit TroveManagerAddressChanged(_troveManagerAddress);\\n        emit ActivePoolAddressChanged(_activePoolAddress);\\n\\n        //renounceOwnership();\\n    }\\n\\n    // --- Getters for public variables. Required by IPool interface ---\\n\\n    /*\\n     * Returns the ETH state variable.\\n     *\\n     * Not necessarily equal to the the contract's raw ETH balance - ETH can be forcibly sent to contracts.\\n     */\\n    function getETH() external view override returns (uint256) {\\n        return ETH;\\n    }\\n\\n    function getZKUSDDebt() external view override returns (uint256) {\\n        return ZKUSDDebt;\\n    }\\n\\n    // --- Pool functionality ---\\n\\n    function sendETHToActivePool(uint256 _amount) external override {\\n        _requireCallerIsTroveManager();\\n        address activePool = activePoolAddress; // cache to save an SLOAD\\n        ETH = ETH.sub(_amount);\\n        emit DefaultPoolETHBalanceUpdated(ETH);\\n        emit ConfluxSent(activePool, _amount);\\n\\n        (bool success, ) = activePool.call{value: _amount}(\\\"\\\");\\n        require(success, \\\"DefaultPool: sending ETH failed\\\");\\n    }\\n\\n    function increaseZKUSDDebt(uint256 _amount) external override {\\n        _requireCallerIsTroveManager();\\n        ZKUSDDebt = ZKUSDDebt.add(_amount);\\n        emit DefaultPoolZKUSDDebtUpdated(ZKUSDDebt);\\n    }\\n\\n    function decreaseZKUSDDebt(uint256 _amount) external override {\\n        _requireCallerIsTroveManager();\\n        ZKUSDDebt = ZKUSDDebt.sub(_amount);\\n        emit DefaultPoolZKUSDDebtUpdated(ZKUSDDebt);\\n    }\\n\\n    // --- 'require' functions ---\\n\\n    function _requireCallerIsActivePool() internal view {\\n        require(\\n            msg.sender == activePoolAddress,\\n            \\\"DefaultPool: Caller is not the ActivePool\\\"\\n        );\\n    }\\n\\n    function _requireCallerIsTroveManager() internal view {\\n        require(\\n            msg.sender == troveManagerAddress,\\n            \\\"DefaultPool: Caller is not the TroveManager\\\"\\n        );\\n    }\\n\\n    // --- Fallback function ---\\n\\n    receive() external payable {\\n        _requireCallerIsActivePool();\\n        ETH = ETH.add(msg.value);\\n        emit DefaultPoolETHBalanceUpdated(ETH);\\n    }\\n}\\n\",\"keccak256\":\"0x21f88ddd0a1dba1a101ff52e450555b4a8076f6b15d9c7f8e2919f241bb83972\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061001a3361001f565b61006f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b61094c8061007e6000396000f3fe6080604052600436106100cb5760003560e01c80638da5cb5b11610074578063b08bc7221161004e578063b08bc7221461026e578063be41205f1461028e578063f2fde38b146102ae57600080fd5b80638da5cb5b146101ec57806390107afe1461020a578063a3f4df7e1461022a57600080fd5b80635a4d28bb116100a55780635a4d28bb1461017f5780636b05e977146101b7578063715018a6146101d757600080fd5b806314f6c3be146101245780632d7c810814610148578063512a9ebb1461016a57600080fd5b3661011f576100d86102ce565b6003546100e59034610341565b60038190556040519081527f9a14ae677a60400af9176bed2e2d5ce8dfa6405e6c1702debb27668f567214289060200160405180910390a1005b600080fd5b34801561013057600080fd5b506003545b6040519081526020015b60405180910390f35b34801561015457600080fd5b50610168610163366004610832565b610356565b005b34801561017657600080fd5b50600454610135565b34801561018b57600080fd5b5060015461019f906001600160a01b031681565b6040516001600160a01b03909116815260200161013f565b3480156101c357600080fd5b506101686101d2366004610832565b6103a6565b3480156101e357600080fd5b506101686103bb565b3480156101f857600080fd5b506000546001600160a01b031661019f565b34801561021657600080fd5b50610168610225366004610867565b6103cd565b34801561023657600080fd5b506102616040518060400160405280600b81526020016a111959985d5b1d141bdbdb60aa1b81525081565b60405161013f919061089a565b34801561027a57600080fd5b5060025461019f906001600160a01b031681565b34801561029a57600080fd5b506101686102a9366004610832565b610495565b3480156102ba57600080fd5b506101686102c93660046108e8565b6105db565b6002546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820152602960248201527f44656661756c74506f6f6c3a2043616c6c6572206973206e6f7420746865204160448201526818dd1a5d99541bdbdb60ba1b60648201526084015b60405180910390fd5b565b600061034d8284610919565b90505b92915050565b61035e610654565b60045461036b90826106c2565b60048190556040519081527f791bb5400c9344b800b678e0c8945f11cf6a1709491a85febfe82305657d62969060200160405180910390a150565b6103ae610654565b60045461036b9082610341565b6103c36106ce565b61033f6000610728565b6103d56106ce565b6103de82610785565b6103e781610785565b600180546001600160a01b0384811673ffffffffffffffffffffffffffffffffffffffff19928316811790935560028054918516919092161790556040519081527f143219c9e69b09e07e095fcc889b43d8f46ca892bba65f08dc3a0050869a56789060200160405180910390a16040516001600160a01b03821681527f78f058b189175430c48dc02699e3a0031ea4ff781536dc2fab847de4babdd8829060200160405180910390a15050565b61049d610654565b6002546003546001600160a01b03909116906104b990836106c2565b60038190556040519081527f9a14ae677a60400af9176bed2e2d5ce8dfa6405e6c1702debb27668f567214289060200160405180910390a1604080516001600160a01b0383168152602081018490527fa9ed1e3aebb4eb39f9f71cd1d73d902290379cfd2d99fae04d46ea624c49f523910160405180910390a16000816001600160a01b03168360405160006040518083038185875af1925050503d8060008114610580576040519150601f19603f3d011682016040523d82523d6000602084013e610585565b606091505b50509050806105d65760405162461bcd60e51b815260206004820152601f60248201527f44656661756c74506f6f6c3a2073656e64696e6720455448206661696c6564006044820152606401610336565b505050565b6105e36106ce565b6001600160a01b0381166106485760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608401610336565b61065181610728565b50565b6001546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820152602b60248201527f44656661756c74506f6f6c3a2043616c6c6572206973206e6f7420746865205460448201526a3937bb32a6b0b730b3b2b960a91b6064820152608401610336565b600061034d828461092c565b6000546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152606401610336565b600080546001600160a01b0383811673ffffffffffffffffffffffffffffffffffffffff19831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b0381166107db5760405162461bcd60e51b815260206004820152601e60248201527f4163636f756e742063616e6e6f74206265207a65726f206164647265737300006044820152606401610336565b6001600160a01b0381163b6106515760405162461bcd60e51b815260206004820181905260248201527f4163636f756e7420636f64652073697a652063616e6e6f74206265207a65726f6044820152606401610336565b60006020828403121561084457600080fd5b5035919050565b80356001600160a01b038116811461086257600080fd5b919050565b6000806040838503121561087a57600080fd5b6108838361084b565b91506108916020840161084b565b90509250929050565b600060208083528351808285015260005b818110156108c7578581018301518582016040015282016108ab565b506000604082860101526040601f19601f8301168501019250505092915050565b6000602082840312156108fa57600080fd5b61034d8261084b565b634e487b7160e01b600052601160045260246000fd5b8082018082111561035057610350610903565b818103818111156103505761035061090356fea164736f6c6343000811000a",
+  "deployedBytecode": "0x6080604052600436106100cb5760003560e01c80638da5cb5b11610074578063b08bc7221161004e578063b08bc7221461026e578063be41205f1461028e578063f2fde38b146102ae57600080fd5b80638da5cb5b146101ec57806390107afe1461020a578063a3f4df7e1461022a57600080fd5b80635a4d28bb116100a55780635a4d28bb1461017f5780636b05e977146101b7578063715018a6146101d757600080fd5b806314f6c3be146101245780632d7c810814610148578063512a9ebb1461016a57600080fd5b3661011f576100d86102ce565b6003546100e59034610341565b60038190556040519081527f9a14ae677a60400af9176bed2e2d5ce8dfa6405e6c1702debb27668f567214289060200160405180910390a1005b600080fd5b34801561013057600080fd5b506003545b6040519081526020015b60405180910390f35b34801561015457600080fd5b50610168610163366004610832565b610356565b005b34801561017657600080fd5b50600454610135565b34801561018b57600080fd5b5060015461019f906001600160a01b031681565b6040516001600160a01b03909116815260200161013f565b3480156101c357600080fd5b506101686101d2366004610832565b6103a6565b3480156101e357600080fd5b506101686103bb565b3480156101f857600080fd5b506000546001600160a01b031661019f565b34801561021657600080fd5b50610168610225366004610867565b6103cd565b34801561023657600080fd5b506102616040518060400160405280600b81526020016a111959985d5b1d141bdbdb60aa1b81525081565b60405161013f919061089a565b34801561027a57600080fd5b5060025461019f906001600160a01b031681565b34801561029a57600080fd5b506101686102a9366004610832565b610495565b3480156102ba57600080fd5b506101686102c93660046108e8565b6105db565b6002546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820152602960248201527f44656661756c74506f6f6c3a2043616c6c6572206973206e6f7420746865204160448201526818dd1a5d99541bdbdb60ba1b60648201526084015b60405180910390fd5b565b600061034d8284610919565b90505b92915050565b61035e610654565b60045461036b90826106c2565b60048190556040519081527f791bb5400c9344b800b678e0c8945f11cf6a1709491a85febfe82305657d62969060200160405180910390a150565b6103ae610654565b60045461036b9082610341565b6103c36106ce565b61033f6000610728565b6103d56106ce565b6103de82610785565b6103e781610785565b600180546001600160a01b0384811673ffffffffffffffffffffffffffffffffffffffff19928316811790935560028054918516919092161790556040519081527f143219c9e69b09e07e095fcc889b43d8f46ca892bba65f08dc3a0050869a56789060200160405180910390a16040516001600160a01b03821681527f78f058b189175430c48dc02699e3a0031ea4ff781536dc2fab847de4babdd8829060200160405180910390a15050565b61049d610654565b6002546003546001600160a01b03909116906104b990836106c2565b60038190556040519081527f9a14ae677a60400af9176bed2e2d5ce8dfa6405e6c1702debb27668f567214289060200160405180910390a1604080516001600160a01b0383168152602081018490527fa9ed1e3aebb4eb39f9f71cd1d73d902290379cfd2d99fae04d46ea624c49f523910160405180910390a16000816001600160a01b03168360405160006040518083038185875af1925050503d8060008114610580576040519150601f19603f3d011682016040523d82523d6000602084013e610585565b606091505b50509050806105d65760405162461bcd60e51b815260206004820152601f60248201527f44656661756c74506f6f6c3a2073656e64696e6720455448206661696c6564006044820152606401610336565b505050565b6105e36106ce565b6001600160a01b0381166106485760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608401610336565b61065181610728565b50565b6001546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820152602b60248201527f44656661756c74506f6f6c3a2043616c6c6572206973206e6f7420746865205460448201526a3937bb32a6b0b730b3b2b960a91b6064820152608401610336565b600061034d828461092c565b6000546001600160a01b0316331461033f5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152606401610336565b600080546001600160a01b0383811673ffffffffffffffffffffffffffffffffffffffff19831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b0381166107db5760405162461bcd60e51b815260206004820152601e60248201527f4163636f756e742063616e6e6f74206265207a65726f206164647265737300006044820152606401610336565b6001600160a01b0381163b6106515760405162461bcd60e51b815260206004820181905260248201527f4163636f756e7420636f64652073697a652063616e6e6f74206265207a65726f6044820152606401610336565b60006020828403121561084457600080fd5b5035919050565b80356001600160a01b038116811461086257600080fd5b919050565b6000806040838503121561087a57600080fd5b6108838361084b565b91506108916020840161084b565b90509250929050565b600060208083528351808285015260005b818110156108c7578581018301518582016040015282016108ab565b506000604082860101526040601f19601f8301168501019250505092915050565b6000602082840312156108fa57600080fd5b61034d8261084b565b634e487b7160e01b600052601160045260246000fd5b8082018082111561035057610350610903565b818103818111156103505761035061090356fea164736f6c6343000811000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 53,
+        "contract": "contracts/protocol/DefaultPool.sol:DefaultPool",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 12937,
+        "contract": "contracts/protocol/DefaultPool.sol:DefaultPool",
+        "label": "troveManagerAddress",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 12939,
+        "contract": "contracts/protocol/DefaultPool.sol:DefaultPool",
+        "label": "activePoolAddress",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_address"
+      },
+      {
+        "astId": 12941,
+        "contract": "contracts/protocol/DefaultPool.sol:DefaultPool",
+        "label": "ETH",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 12943,
+        "contract": "contracts/protocol/DefaultPool.sol:DefaultPool",
+        "label": "ZKUSDDebt",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
