@@ -343,4 +343,5 @@ func.dependencies = [
   "DeployGasPool",
   "DeployHintHelpers",
   "DeployUniPool",
+    "DeployMultiTroveGetter"
 ];
