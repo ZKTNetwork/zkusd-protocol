@@ -1,0 +1,127 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCurrentICR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "getNominalICR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_id",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_NICR",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_prevId",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nextId",
+        "type": "address"
+      }
+    ],
+    "name": "insert",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_id",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newNICR",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_prevId",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nextId",
+        "type": "address"
+      }
+    ],
+    "name": "reInsert",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_id",
+        "type": "address"
+      }
+    ],
+    "name": "remove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sortedTrovesAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setSortedTroves",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

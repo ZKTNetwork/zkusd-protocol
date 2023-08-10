@@ -1,0 +1,42 @@
+{
+  "cfxtest": {
+    "V2Factory": "0x36b83e0d41d1dd9c73a006f0c1cbc1f096e69e34",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x2ed3dddae5b2f321af0806181fbfa6d049be47d8",
+    "bountyAddress": "",
+    "multiSigAddress": "",
+    "treasuryAddress": "",
+    "useMock": true
+  },
+  "hardhat": {
+    "V2Factory": "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+    "bountyAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "multiSigAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "treasuryAddress": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+    "useMock": true
+  },
+  "zktest": {
+    "V2Factory": "",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x1af2a66a7EB58D561edFEd3353a54E6DF08c3D7a",
+    "bountyAddress": "",
+    "multiSigAddress": "",
+    "treasuryAddress": "",
+    "useMock": true
+  },
+  "lineatest": {
+    "V2Factory": "",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x2C1b868d6596a18e32E61B901E4060C872647b6C",
+    "bountyAddress": "",
+    "multiSigAddress": "",
+    "treasuryAddress": "",
+    "useMock": true
+  }
+}
