@@ -20,23 +20,23 @@ const createV2AMMPool = async function (): Promise<string> {
     signer
   );
   let wrap_token_address: string = params.Wrap;
-  let rusd_wrap_address = await uniFactory.getPair(
+  let zkusd_wrap_address = await uniFactory.getPair(
     zkusdToken.address,
     wrap_token_address
   );
-  if (rusd_wrap_address == ethers.constants.AddressZero) {
+  if (zkusd_wrap_address == ethers.constants.AddressZero) {
     const tx = await uniFactory.createPair(
       wrap_token_address,
       zkusdToken.address
     );
     await tx.wait();
-    rusd_wrap_address = await uniFactory.getPair(
+    zkusd_wrap_address = await uniFactory.getPair(
       zkusdToken.address,
       wrap_token_address
     );
   }
-  console.log(`ZKUSD_WCFX_LP: ${rusd_wrap_address}`);
-  return rusd_wrap_address;
+  console.log(`ZKUSD_WCFX_LP: ${zkusd_wrap_address}`);
+  return zkusd_wrap_address;
 };
 
 const deployUnipool = async function (hre: HardhatRuntimeEnvironment) {

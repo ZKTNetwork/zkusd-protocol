@@ -44,7 +44,7 @@ describe("Unipool", () => {
   let owner: Signer;
   let erc20: ERC20Mock;
   let communityIssuance: NonPayable;
-  let rimeStaking: NonPayable;
+  let zktStaking: NonPayable;
   let lockupContractFactory: NonPayable;
   let zkToken: ZKToken;
   let pool: Unipool;
@@ -72,7 +72,7 @@ describe("Unipool", () => {
       "NonPayable",
       dh.testEnv.deployer
     )) as NonPayable;
-    rimeStaking = (await deployFunction(
+    zktStaking = (await deployFunction(
       "NonPayable",
       dh.testEnv.deployer
     )) as NonPayable;
@@ -82,7 +82,7 @@ describe("Unipool", () => {
     )) as NonPayable;
     zkToken = (await deployFunction("ZKToken", dh.testEnv.deployer, [
       communityIssuance.address,
-      rimeStaking.address,
+      zktStaking.address,
       lockupContractFactory.address,
       await bounty.getAddress(),
       pool.address,
@@ -682,7 +682,7 @@ describe("Unipool, before calling setAddresses", async function () {
   let owner: Signer;
   let erc20: ERC20Mock;
   let communityIssuance: NonPayable;
-  let rimeStaking: NonPayable;
+  let zktStaking: NonPayable;
   let lockupContractFactory: NonPayable;
   let zkToken: ZKToken;
   let pool: Unipool;
@@ -709,7 +709,7 @@ describe("Unipool, before calling setAddresses", async function () {
       "NonPayable",
       dh.testEnv.deployer
     )) as NonPayable;
-    rimeStaking = (await deployFunction(
+    zktStaking = (await deployFunction(
       "NonPayable",
       dh.testEnv.deployer
     )) as NonPayable;
@@ -719,7 +719,7 @@ describe("Unipool, before calling setAddresses", async function () {
     )) as NonPayable;
     zkToken = (await deployFunction("ZKToken", dh.testEnv.deployer, [
       communityIssuance.address,
-      rimeStaking.address,
+      zktStaking.address,
       lockupContractFactory.address,
       await bounty.getAddress(),
       pool.address,

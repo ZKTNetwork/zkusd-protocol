@@ -84,6 +84,15 @@ const config =  {
           ? []
           : [process.env.pk_lineatest],
     },
+    scrollSepolia:{
+      url: "https://scroll-sepolia.blockpi.network/v1/rpc/public",
+      chainId: 534351,
+      zksync: false,
+      accounts:
+          process.env.pk_scroll_sepolia === undefined
+              ? []
+              : [process.env.pk_scroll_sepolia],
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

@@ -1,0 +1,308 @@
+{
+  "address": "0x86DbE993C82727B37273ac0566dd6E1E6C4eEE6D",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_lockupContractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_beneficiary",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_unlockTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_deployer",
+          "type": "address"
+        }
+      ],
+      "name": "LockupContractDeployedThroughFactory",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_zkTokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "ZKTokenAddressSet",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "NAME",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "SECONDS_IN_ONE_YEAR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_beneficiary",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_unlockTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "deployLockupContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        }
+      ],
+      "name": "isRegisteredLockup",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "lockupContractToDeployer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_zkTokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "setZKTokenAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "zkTokenAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xad810ac3ef9fba57db16460d481193f36f910386a427c55ac10e4272fa5de7ac",
+  "receipt": {
+    "to": null,
+    "from": "0xd474eE0A24fc58dDF66BfaE61D56F44841bb0917",
+    "contractAddress": "0x86DbE993C82727B37273ac0566dd6E1E6C4eEE6D",
+    "transactionIndex": 0,
+    "gasUsed": "813782",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000004400000000000000000000000000000000000000000000000000000000100000000000000000000000001000000000000800000000000000000000000020000000000000000000800000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000002000000000000000000000",
+    "blockHash": "0x7feec0a140ccf329fc37c47aa7a1f5b81e3e5dc37aa50c24bfc33804cd177616",
+    "transactionHash": "0xad810ac3ef9fba57db16460d481193f36f910386a427c55ac10e4272fa5de7ac",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 2039,
+        "transactionHash": "0xad810ac3ef9fba57db16460d481193f36f910386a427c55ac10e4272fa5de7ac",
+        "address": "0x86DbE993C82727B37273ac0566dd6E1E6C4eEE6D",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000d474ee0a24fc58ddf66bfae61d56f44841bb0917"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0x7feec0a140ccf329fc37c47aa7a1f5b81e3e5dc37aa50c24bfc33804cd177616"
+      }
+    ],
+    "blockNumber": 2039,
+    "cumulativeGasUsed": "813782",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "b5c480e72330e8c3843dabc0083fc1ef",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_lockupContractAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_beneficiary\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_unlockTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_deployer\",\"type\":\"address\"}],\"name\":\"LockupContractDeployedThroughFactory\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_zkTokenAddress\",\"type\":\"address\"}],\"name\":\"ZKTokenAddressSet\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"NAME\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SECONDS_IN_ONE_YEAR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_beneficiary\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_unlockTime\",\"type\":\"uint256\"}],\"name\":\"deployLockupContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_contractAddress\",\"type\":\"address\"}],\"name\":\"isRegisteredLockup\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lockupContractToDeployer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_zkTokenAddress\",\"type\":\"address\"}],\"name\":\"setZKTokenAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"zkTokenAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/common/LockupContractFactory.sol\":\"LockupContractFactory\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor() {\\n        _transferOwnership(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Address.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/Address.sol)\\n\\npragma solidity ^0.8.1;\\n\\n/**\\n * @dev Collection of functions related to the address type\\n */\\nlibrary Address {\\n    /**\\n     * @dev Returns true if `account` is a contract.\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * It is unsafe to assume that an address for which this function returns\\n     * false is an externally-owned account (EOA) and not a contract.\\n     *\\n     * Among others, `isContract` will return false for the following\\n     * types of addresses:\\n     *\\n     *  - an externally-owned account\\n     *  - a contract in construction\\n     *  - an address where a contract will be created\\n     *  - an address where a contract lived, but was destroyed\\n     *\\n     * Furthermore, `isContract` will also return true if the target contract within\\n     * the same transaction is already scheduled for destruction by `SELFDESTRUCT`,\\n     * which only has an effect at the end of a transaction.\\n     * ====\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * You shouldn't rely on `isContract` to protect against flash loan attacks!\\n     *\\n     * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets\\n     * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract\\n     * constructor.\\n     * ====\\n     */\\n    function isContract(address account) internal view returns (bool) {\\n        // This method relies on extcodesize/address.code.length, which returns 0\\n        // for contracts in construction, since the code is only stored at the end\\n        // of the constructor execution.\\n\\n        return account.code.length > 0;\\n    }\\n\\n    /**\\n     * @dev Replacement for Solidity's `transfer`: sends `amount` wei to\\n     * `recipient`, forwarding all available gas and reverting on errors.\\n     *\\n     * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost\\n     * of certain opcodes, possibly making contracts go over the 2300 gas limit\\n     * imposed by `transfer`, making them unable to receive funds via\\n     * `transfer`. {sendValue} removes this limitation.\\n     *\\n     * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].\\n     *\\n     * IMPORTANT: because control is transferred to `recipient`, care must be\\n     * taken to not create reentrancy vulnerabilities. Consider using\\n     * {ReentrancyGuard} or the\\n     * https://solidity.readthedocs.io/en/v0.8.0/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].\\n     */\\n    function sendValue(address payable recipient, uint256 amount) internal {\\n        require(address(this).balance >= amount, \\\"Address: insufficient balance\\\");\\n\\n        (bool success, ) = recipient.call{value: amount}(\\\"\\\");\\n        require(success, \\\"Address: unable to send value, recipient may have reverted\\\");\\n    }\\n\\n    /**\\n     * @dev Performs a Solidity function call using a low level `call`. A\\n     * plain `call` is an unsafe replacement for a function call: use this\\n     * function instead.\\n     *\\n     * If `target` reverts with a revert reason, it is bubbled up by this\\n     * function (like regular Solidity function calls).\\n     *\\n     * Returns the raw returned data. To convert to the expected return value,\\n     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].\\n     *\\n     * Requirements:\\n     *\\n     * - `target` must be a contract.\\n     * - calling `target` with `data` must not revert.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, \\\"Address: low-level call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with\\n     * `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but also transferring `value` wei to `target`.\\n     *\\n     * Requirements:\\n     *\\n     * - the calling contract must have an ETH balance of at least `value`.\\n     * - the called Solidity function must be `payable`.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, value, \\\"Address: low-level call with value failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but\\n     * with `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        require(address(this).balance >= value, \\\"Address: insufficient balance for call\\\");\\n        (bool success, bytes memory returndata) = target.call{value: value}(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {\\n        return functionStaticCall(target, data, \\\"Address: low-level static call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.staticcall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionDelegateCall(target, data, \\\"Address: low-level delegate call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.delegatecall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling\\n     * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.\\n     *\\n     * _Available since v4.8._\\n     */\\n    function verifyCallResultFromTarget(\\n        address target,\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        if (success) {\\n            if (returndata.length == 0) {\\n                // only check isContract if the call was successful and the return data is empty\\n                // otherwise we already know that it was a contract\\n                require(isContract(target), \\\"Address: call to non-contract\\\");\\n            }\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the\\n     * revert reason or using the provided one.\\n     *\\n     * _Available since v4.3._\\n     */\\n    function verifyCallResult(\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal pure returns (bytes memory) {\\n        if (success) {\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    function _revert(bytes memory returndata, string memory errorMessage) private pure {\\n        // Look for revert reason and bubble it up if present\\n        if (returndata.length > 0) {\\n            // The easiest way to bubble the revert reason is using memory via assembly\\n            /// @solidity memory-safe-assembly\\n            assembly {\\n                let returndata_size := mload(returndata)\\n                revert(add(32, returndata), returndata_size)\\n            }\\n        } else {\\n            revert(errorMessage);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/math/SafeMath.sol)\\n\\npragma solidity ^0.8.0;\\n\\n// CAUTION\\n// This version of SafeMath should only be used with Solidity 0.8 or later,\\n// because it relies on the compiler's built in overflow checks.\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations.\\n *\\n * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler\\n * now has built in overflow checking.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            uint256 c = a + b;\\n            if (c < a) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b > a) return (false, 0);\\n            return (true, a - b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n            // benefit is lost if 'b' is also tested.\\n            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n            if (a == 0) return (true, 0);\\n            uint256 c = a * b;\\n            if (c / a != b) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a / b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a % b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a + b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a * b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b <= a, errorMessage);\\n            return a - b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a / b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a % b;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x58b21219689909c4f8339af00813760337f7e2e7f169a97fe49e2896dcfb3b9a\",\"license\":\"MIT\"},\"contracts/common/LockupContract.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/utils/math/SafeMath.sol\\\";\\n\\nimport \\\"../interfaces/IZKToken.sol\\\";\\n\\n/*\\n* The lockup contract architecture utilizes a single LockupContract, with an unlockTime. The unlockTime is passed as an argument\\n* to the LockupContract's constructor. The contract's balance can be withdrawn by the beneficiary when block.timestamp > unlockTime.\\n* At construction, the contract checks that unlockTime is at least one year later than the Liquity system's deployment time.\\n\\n* Within the first year from deployment, the deployer of the ZKToken (Liquity AG's address) may transfer ZKT only to valid\\n* LockupContracts, and no other addresses (this is enforced in ZKToken.sol's transfer() function).\\n*\\n* The above two restrictions ensure that until one year after system deployment, ZKT tokens originating from Liquity AG cannot\\n* enter circulating supply and cannot be staked to earn system revenue.\\n*/\\ncontract LockupContract {\\n    using SafeMath for uint256;\\n\\n    // --- Data ---\\n    string public constant NAME = \\\"LockupContract\\\";\\n\\n    uint256 public constant SECONDS_IN_ONE_YEAR = 31536000;\\n\\n    address public immutable beneficiary;\\n\\n    IZKToken public zkToken;\\n\\n    // Unlock time is the Unix point in time at which the beneficiary can withdraw.\\n    uint256 public unlockTime;\\n\\n    // --- Events ---\\n\\n    event LockupContractCreated(address _beneficiary, uint256 _unlockTime);\\n    event LockupContractEmptied(uint256 _ZKTwithdrawal);\\n\\n    // --- Functions ---\\n\\n    constructor(\\n        address _zkTokenAddress,\\n        address _beneficiary,\\n        uint256 _unlockTime\\n    ) {\\n        zkToken = IZKToken(_zkTokenAddress);\\n\\n        /*\\n         * Set the unlock time to a chosen instant in the future, as long as it is at least 1 year after\\n         * the system was deployed\\n         */\\n        _requireUnlockTimeIsAtLeastOneYearAfterSystemDeployment(_unlockTime);\\n        unlockTime = _unlockTime;\\n\\n        beneficiary = _beneficiary;\\n        emit LockupContractCreated(_beneficiary, _unlockTime);\\n    }\\n\\n    function withdrawZKT() external {\\n        _requireCallerIsBeneficiary();\\n        _requireLockupDurationHasPassed();\\n\\n        IZKToken zkTokenCached = zkToken;\\n        uint256 ZKTBalance = zkTokenCached.balanceOf(address(this));\\n        zkTokenCached.transfer(beneficiary, ZKTBalance);\\n        emit LockupContractEmptied(ZKTBalance);\\n    }\\n\\n    // --- 'require' functions ---\\n\\n    function _requireCallerIsBeneficiary() internal view {\\n        require(\\n            msg.sender == beneficiary,\\n            \\\"LockupContract: caller is not the beneficiary\\\"\\n        );\\n    }\\n\\n    function _requireLockupDurationHasPassed() internal view {\\n        require(\\n            block.timestamp >= unlockTime,\\n            \\\"LockupContract: The lockup duration must have passed\\\"\\n        );\\n    }\\n\\n    function _requireUnlockTimeIsAtLeastOneYearAfterSystemDeployment(\\n        uint256 _unlockTime\\n    ) internal view {\\n        uint256 systemDeploymentTime = zkToken.getDeploymentStartTime();\\n        require(\\n            _unlockTime >= systemDeploymentTime.add(SECONDS_IN_ONE_YEAR),\\n            \\\"LockupContract: unlock time must be at least one year after system deployment\\\"\\n        );\\n    }\\n}\\n\",\"keccak256\":\"0xd3095e05a5808547343be46d23363d70bb0f68857fc2b12413d24aaed150a119\",\"license\":\"MIT\"},\"contracts/common/LockupContractFactory.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/math/SafeMath.sol\\\";\\n\\nimport \\\"../interfaces/ILockupContractFactory.sol\\\";\\nimport \\\"../dependencies/CheckContract.sol\\\";\\nimport \\\"./LockupContract.sol\\\";\\n\\n/*\\n * The LockupContractFactory deploys LockupContracts - its main purpose is to keep a registry of valid deployed\\n * LockupContracts.\\n *\\n * This registry is checked by ZKToken when the Liquity deployer attempts to transfer ZKT tokens. During the first year\\n * since system deployment, the Liquity deployer is only allowed to transfer ZKT to valid LockupContracts that have been\\n * deployed by and recorded in the LockupContractFactory. This ensures the deployer's ZKT can't be traded or staked in the\\n * first year, and can only be sent to a verified LockupContract which unlocks at least one year after system deployment.\\n *\\n * LockupContracts can of course be deployed directly, but only those deployed through and recorded in the LockupContractFactory\\n * will be considered \\\"valid\\\" by ZKToken. This is a convenient way to verify that the target address is a genuine\\n * LockupContract.\\n */\\n\\ncontract LockupContractFactory is\\n    ILockupContractFactory,\\n    Ownable,\\n    CheckContract\\n{\\n    using SafeMath for uint256;\\n\\n    // --- Data ---\\n    string public constant NAME = \\\"LockupContractFactory\\\";\\n\\n    uint256 public constant SECONDS_IN_ONE_YEAR = 31536000;\\n\\n    address public zkTokenAddress;\\n\\n    mapping(address => address) public lockupContractToDeployer;\\n\\n    // --- Functions ---\\n\\n    function setZKTokenAddress(\\n        address _zkTokenAddress\\n    ) external override onlyOwner {\\n        checkContract(_zkTokenAddress);\\n\\n        zkTokenAddress = _zkTokenAddress;\\n        emit ZKTokenAddressSet(_zkTokenAddress);\\n\\n        //renounceOwnership();\\n    }\\n\\n    function deployLockupContract(\\n        address _beneficiary,\\n        uint256 _unlockTime\\n    ) external override {\\n        address zkTokenAddressCached = zkTokenAddress;\\n        _requireZKTAddressIsSet(zkTokenAddressCached);\\n        LockupContract lockupContract = new LockupContract(\\n            zkTokenAddressCached,\\n            _beneficiary,\\n            _unlockTime\\n        );\\n\\n        lockupContractToDeployer[address(lockupContract)] = msg.sender;\\n        emit LockupContractDeployedThroughFactory(\\n            address(lockupContract),\\n            _beneficiary,\\n            _unlockTime,\\n            msg.sender\\n        );\\n    }\\n\\n    function isRegisteredLockup(\\n        address _contractAddress\\n    ) public view override returns (bool) {\\n        return lockupContractToDeployer[_contractAddress] != address(0);\\n    }\\n\\n    // --- 'require'  functions ---\\n    function _requireZKTAddressIsSet(address _zkTokenAddress) internal pure {\\n        require(_zkTokenAddress != address(0), \\\"LCF: ZKT Address is not set\\\");\\n    }\\n}\\n\",\"keccak256\":\"0xa8de53f5e3d6f1abe444d2625e1ce680e541d0ec8fbd0f178309a35a1b6aeb5e\",\"license\":\"MIT\"},\"contracts/dependencies/CheckContract.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/utils/Address.sol\\\";\\n\\nabstract contract CheckContract {\\n    /**\\n     * Check that the account is an already deployed non-destroyed contract.\\n     * See: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol\\n     */\\n    function checkContract(address _account) internal view {\\n        require(_account != address(0), \\\"Account cannot be zero address\\\");\\n        require(\\n            Address.isContract(_account),\\n            \\\"Account code size cannot be zero\\\"\\n        );\\n    }\\n}\\n\",\"keccak256\":\"0xaf457c01990a35e69f187bbaa4daceb410b624d7c34029246b54333816a4bba7\",\"license\":\"MIT\"},\"contracts/interfaces/ILockupContractFactory.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface ILockupContractFactory {\\n    // --- Events ---\\n\\n    event ZKTokenAddressSet(address _zkTokenAddress);\\n    event LockupContractDeployedThroughFactory(\\n        address _lockupContractAddress,\\n        address _beneficiary,\\n        uint256 _unlockTime,\\n        address _deployer\\n    );\\n\\n    // --- Functions ---\\n\\n    function setZKTokenAddress(address _zkTokenAddress) external;\\n\\n    function deployLockupContract(\\n        address _beneficiary,\\n        uint256 _unlockTime\\n    ) external;\\n\\n    function isRegisteredLockup(address _addr) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x0efa2ae1da8e58c4dff085ee13e63e1100440069d0e29879d5b61b5b0c2b23d9\",\"license\":\"MIT\"},\"contracts/interfaces/IZKToken.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ninterface IZKToken is IERC20 {\\n    // --- Events ---\\n\\n    event CommunityIssuanceAddressSet(address _communityIssuanceAddress);\\n    event ZKTStakingAddressSet(address _zktStakingAddress);\\n    event LockupContractFactoryAddressSet(\\n        address _lockupContractFactoryAddress\\n    );\\n\\n    // --- Functions ---\\n\\n    function sendToZKTStaking(address _sender, uint256 _amount) external;\\n\\n    function getDeploymentStartTime() external view returns (uint256);\\n\\n    function getLpRewardsEntitlement() external view returns (uint256);\\n}\\n\",\"keccak256\":\"0x2957d7a9ae4c53d2454e688c1111a7e29dc267b8e80194acf18656b0330b9c44\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061001a3361001f565b61006f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b610d558061007e6000396000f3fe608060405234801561001057600080fd5b506004361061009e5760003560e01c8063a3f4df7e11610066578063a3f4df7e1461011a578063bb7603f114610163578063d83c72db146101a1578063e6d2bd49146101ca578063f2fde38b146101dd57600080fd5b806334c44b4d146100a35780635603a530146100b8578063715018a6146100e85780638da5cb5b146100f057806398e5f3c414610101575b600080fd5b6100b66100b136600461059d565b6101f0565b005b6001546100cb906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b6100b66102d0565b6000546001600160a01b03166100cb565b61010c6301e1338081565b6040519081526020016100df565b6101566040518060400160405280601581526020017f4c6f636b7570436f6e7472616374466163746f7279000000000000000000000081525081565b6040516100df91906105c7565b610191610171366004610615565b6001600160a01b0390811660009081526002602052604090205416151590565b60405190151581526020016100df565b6100cb6101af366004610615565b6002602052600090815260409020546001600160a01b031681565b6100b66101d8366004610615565b6102e4565b6100b66101eb366004610615565b610349565b6001546001600160a01b0316610205816103c7565b600081848460405161021690610574565b6001600160a01b0393841681529290911660208301526040820152606001604051809103906000f080158015610250573d6000803e3d6000fd5b506001600160a01b0381811660008181526002602090815260409182902080546001600160a01b03191633908117909155825193845293891690830152810186905260608101919091529091507ff534ff9ac4abb71a4aa2f8715f3a8f41c05155fbf8af61daecc51365e3a5c0089060800160405180910390a150505050565b6102d861041d565b6102e26000610477565b565b6102ec61041d565b6102f5816104c7565b600180546001600160a01b0319166001600160a01b0383169081179091556040519081527f4738bd2fa051c658ff5fb2e55ea0ec02521ca2c563327a88ebe9f2a8ab15c3169060200160405180910390a150565b61035161041d565b6001600160a01b0381166103bb5760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b6103c481610477565b50565b6001600160a01b0381166103c45760405162461bcd60e51b815260206004820152601b60248201527f4c43463a205a4b542041646472657373206973206e6f7420736574000000000060448201526064016103b2565b6000546001600160a01b031633146102e25760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657260448201526064016103b2565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b03811661051d5760405162461bcd60e51b815260206004820152601e60248201527f4163636f756e742063616e6e6f74206265207a65726f2061646472657373000060448201526064016103b2565b6001600160a01b0381163b6103c45760405162461bcd60e51b815260206004820181905260248201527f4163636f756e7420636f64652073697a652063616e6e6f74206265207a65726f60448201526064016103b2565b6107118061063883390190565b80356001600160a01b038116811461059857600080fd5b919050565b600080604083850312156105b057600080fd5b6105b983610581565b946020939093013593505050565b600060208083528351808285015260005b818110156105f4578581018301518582016040015282016105d8565b506000604082860101526040601f19601f8301168501019250505092915050565b60006020828403121561062757600080fd5b61063082610581565b939250505056fe60a060405234801561001057600080fd5b5060405161071138038061071183398101604081905261002f91610201565b600080546001600160a01b0319166001600160a01b038516179055610053816100a8565b60018190556001600160a01b038216608081905260408051918252602082018390527f5faee922186516bf77266643c1fda130acefc439d571400e8697106c6aed9b54910160405180910390a1505050610277565b60008060009054906101000a90046001600160a01b03166001600160a01b0316633c84b7c26040518163ffffffff1660e01b8152600401602060405180830381865afa1580156100fc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610120919061023d565b905061013d6301e13380826101d060201b6102921790919060201c565b8210156101cc5760405162461bcd60e51b815260206004820152604d60248201527f4c6f636b7570436f6e74726163743a20756e6c6f636b2074696d65206d75737460448201527f206265206174206c65617374206f6e652079656172206166746572207379737460648201526c195b4819195c1b1bde5b595b9d609a1b608482015260a40160405180910390fd5b5050565b60006101dc8284610256565b90505b92915050565b80516001600160a01b03811681146101fc57600080fd5b919050565b60008060006060848603121561021657600080fd5b61021f846101e5565b925061022d602085016101e5565b9150604084015190509250925092565b60006020828403121561024f57600080fd5b5051919050565b808201808211156101df57634e487b7160e01b600052601160045260246000fd5b60805161047261029f600039600081816098015281816101da01526102b201526104726000f3fe608060405234801561001057600080fd5b50600436106100725760003560e01c806398e5f3c41161005057806398e5f3c4146100e5578063a3f4df7e146100f0578063c0735e2b1461013957600080fd5b8063251c1aa31461007757806338af3eed146100935780637d8c87aa146100d2575b600080fd5b61008060015481565b6040519081526020015b60405180910390f35b6100ba7f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161008a565b6000546100ba906001600160a01b031681565b6100806301e1338081565b61012c6040518060400160405280600e81526020017f4c6f636b7570436f6e747261637400000000000000000000000000000000000081525081565b60405161008a91906103b4565b610141610143565b005b61014b6102a7565b61015361033c565b600080546040516370a0823160e01b81523060048201526001600160a01b03909116919082906370a0823190602401602060405180830381865afa15801561019f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c39190610402565b60405163a9059cbb60e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000081166004830152602482018390529192509083169063a9059cbb906044016020604051808303816000875af1158015610236573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061025a919061041b565b506040518181527f7d17cbc0f78ccfed33842dd29dab2872e8347bf3981293ab2cfe35ca16371a2f9060200160405180910390a15050565b600061029e8284610444565b90505b92915050565b336001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000161461033a5760405162461bcd60e51b815260206004820152602d60248201527f4c6f636b7570436f6e74726163743a2063616c6c6572206973206e6f7420746860448201526c652062656e656669636961727960981b60648201526084015b60405180910390fd5b565b60015442101561033a5760405162461bcd60e51b815260206004820152603460248201527f4c6f636b7570436f6e74726163743a20546865206c6f636b757020647572617460448201527f696f6e206d7573742068617665207061737365640000000000000000000000006064820152608401610331565b600060208083528351808285015260005b818110156103e1578581018301518582016040015282016103c5565b506000604082860101526040601f19601f8301168501019250505092915050565b60006020828403121561041457600080fd5b5051919050565b60006020828403121561042d57600080fd5b8151801515811461043d57600080fd5b9392505050565b808201808211156102a157634e487b7160e01b600052601160045260246000fdfea164736f6c6343000811000aa164736f6c6343000811000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061009e5760003560e01c8063a3f4df7e11610066578063a3f4df7e1461011a578063bb7603f114610163578063d83c72db146101a1578063e6d2bd49146101ca578063f2fde38b146101dd57600080fd5b806334c44b4d146100a35780635603a530146100b8578063715018a6146100e85780638da5cb5b146100f057806398e5f3c414610101575b600080fd5b6100b66100b136600461059d565b6101f0565b005b6001546100cb906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b6100b66102d0565b6000546001600160a01b03166100cb565b61010c6301e1338081565b6040519081526020016100df565b6101566040518060400160405280601581526020017f4c6f636b7570436f6e7472616374466163746f7279000000000000000000000081525081565b6040516100df91906105c7565b610191610171366004610615565b6001600160a01b0390811660009081526002602052604090205416151590565b60405190151581526020016100df565b6100cb6101af366004610615565b6002602052600090815260409020546001600160a01b031681565b6100b66101d8366004610615565b6102e4565b6100b66101eb366004610615565b610349565b6001546001600160a01b0316610205816103c7565b600081848460405161021690610574565b6001600160a01b0393841681529290911660208301526040820152606001604051809103906000f080158015610250573d6000803e3d6000fd5b506001600160a01b0381811660008181526002602090815260409182902080546001600160a01b03191633908117909155825193845293891690830152810186905260608101919091529091507ff534ff9ac4abb71a4aa2f8715f3a8f41c05155fbf8af61daecc51365e3a5c0089060800160405180910390a150505050565b6102d861041d565b6102e26000610477565b565b6102ec61041d565b6102f5816104c7565b600180546001600160a01b0319166001600160a01b0383169081179091556040519081527f4738bd2fa051c658ff5fb2e55ea0ec02521ca2c563327a88ebe9f2a8ab15c3169060200160405180910390a150565b61035161041d565b6001600160a01b0381166103bb5760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b6103c481610477565b50565b6001600160a01b0381166103c45760405162461bcd60e51b815260206004820152601b60248201527f4c43463a205a4b542041646472657373206973206e6f7420736574000000000060448201526064016103b2565b6000546001600160a01b031633146102e25760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657260448201526064016103b2565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b03811661051d5760405162461bcd60e51b815260206004820152601e60248201527f4163636f756e742063616e6e6f74206265207a65726f2061646472657373000060448201526064016103b2565b6001600160a01b0381163b6103c45760405162461bcd60e51b815260206004820181905260248201527f4163636f756e7420636f64652073697a652063616e6e6f74206265207a65726f60448201526064016103b2565b6107118061063883390190565b80356001600160a01b038116811461059857600080fd5b919050565b600080604083850312156105b057600080fd5b6105b983610581565b946020939093013593505050565b600060208083528351808285015260005b818110156105f4578581018301518582016040015282016105d8565b506000604082860101526040601f19601f8301168501019250505092915050565b60006020828403121561062757600080fd5b61063082610581565b939250505056fe60a060405234801561001057600080fd5b5060405161071138038061071183398101604081905261002f91610201565b600080546001600160a01b0319166001600160a01b038516179055610053816100a8565b60018190556001600160a01b038216608081905260408051918252602082018390527f5faee922186516bf77266643c1fda130acefc439d571400e8697106c6aed9b54910160405180910390a1505050610277565b60008060009054906101000a90046001600160a01b03166001600160a01b0316633c84b7c26040518163ffffffff1660e01b8152600401602060405180830381865afa1580156100fc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610120919061023d565b905061013d6301e13380826101d060201b6102921790919060201c565b8210156101cc5760405162461bcd60e51b815260206004820152604d60248201527f4c6f636b7570436f6e74726163743a20756e6c6f636b2074696d65206d75737460448201527f206265206174206c65617374206f6e652079656172206166746572207379737460648201526c195b4819195c1b1bde5b595b9d609a1b608482015260a40160405180910390fd5b5050565b60006101dc8284610256565b90505b92915050565b80516001600160a01b03811681146101fc57600080fd5b919050565b60008060006060848603121561021657600080fd5b61021f846101e5565b925061022d602085016101e5565b9150604084015190509250925092565b60006020828403121561024f57600080fd5b5051919050565b808201808211156101df57634e487b7160e01b600052601160045260246000fd5b60805161047261029f600039600081816098015281816101da01526102b201526104726000f3fe608060405234801561001057600080fd5b50600436106100725760003560e01c806398e5f3c41161005057806398e5f3c4146100e5578063a3f4df7e146100f0578063c0735e2b1461013957600080fd5b8063251c1aa31461007757806338af3eed146100935780637d8c87aa146100d2575b600080fd5b61008060015481565b6040519081526020015b60405180910390f35b6100ba7f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161008a565b6000546100ba906001600160a01b031681565b6100806301e1338081565b61012c6040518060400160405280600e81526020017f4c6f636b7570436f6e747261637400000000000000000000000000000000000081525081565b60405161008a91906103b4565b610141610143565b005b61014b6102a7565b61015361033c565b600080546040516370a0823160e01b81523060048201526001600160a01b03909116919082906370a0823190602401602060405180830381865afa15801561019f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c39190610402565b60405163a9059cbb60e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000081166004830152602482018390529192509083169063a9059cbb906044016020604051808303816000875af1158015610236573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061025a919061041b565b506040518181527f7d17cbc0f78ccfed33842dd29dab2872e8347bf3981293ab2cfe35ca16371a2f9060200160405180910390a15050565b600061029e8284610444565b90505b92915050565b336001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000161461033a5760405162461bcd60e51b815260206004820152602d60248201527f4c6f636b7570436f6e74726163743a2063616c6c6572206973206e6f7420746860448201526c652062656e656669636961727960981b60648201526084015b60405180910390fd5b565b60015442101561033a5760405162461bcd60e51b815260206004820152603460248201527f4c6f636b7570436f6e74726163743a20546865206c6f636b757020647572617460448201527f696f6e206d7573742068617665207061737365640000000000000000000000006064820152608401610331565b600060208083528351808285015260005b818110156103e1578581018301518582016040015282016103c5565b506000604082860101526040601f19601f8301168501019250505092915050565b60006020828403121561041457600080fd5b5051919050565b60006020828403121561042d57600080fd5b8151801515811461043d57600080fd5b9392505050565b808201808211156102a157634e487b7160e01b600052601160045260246000fdfea164736f6c6343000811000aa164736f6c6343000811000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 53,
+        "contract": "contracts/common/LockupContractFactory.sol:LockupContractFactory",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 3367,
+        "contract": "contracts/common/LockupContractFactory.sol:LockupContractFactory",
+        "label": "zkTokenAddress",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 3371,
+        "contract": "contracts/common/LockupContractFactory.sol:LockupContractFactory",
+        "label": "lockupContractToDeployer",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_address,t_address)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_address)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      }
+    }
+  }
+}

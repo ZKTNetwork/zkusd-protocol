@@ -1,0 +1,153 @@
+{
+  "address": "0xe572bee818133377954fb8Df35Ac7c8ccb7201B0",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_lastGoodPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "LastGoodPriceUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "fetchPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lastGoodPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setAddresses",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x5313c3ced35f3c02321c8d1d5e6426cefe3b993cf0612ebfe3f699ad2729efd6",
+  "receipt": {
+    "to": null,
+    "from": "0xd474eE0A24fc58dDF66BfaE61D56F44841bb0917",
+    "contractAddress": "0xe572bee818133377954fb8Df35Ac7c8ccb7201B0",
+    "transactionIndex": 1,
+    "gasUsed": "167815",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xa6c7a90cc7a9bab98c6bc07daf46b23111dabdee111d4a466e9772133ca41cbd",
+    "transactionHash": "0x5313c3ced35f3c02321c8d1d5e6426cefe3b993cf0612ebfe3f699ad2729efd6",
+    "logs": [],
+    "blockNumber": 2024,
+    "cumulativeGasUsed": "188815",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "b5c480e72330e8c3843dabc0083fc1ef",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_lastGoodPrice\",\"type\":\"uint256\"}],\"name\":\"LastGoodPriceUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"fetchPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastGoodPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"setAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"setPrice\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/mocks/PriceFeedTestnet.sol\":\"PriceFeedTestnet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"contracts/interfaces/IPriceFeed.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface IPriceFeed {\\n    // --- Events ---\\n    event LastGoodPriceUpdated(uint256 _lastGoodPrice);\\n\\n    // --- Function ---\\n    function fetchPrice() external returns (uint256);\\n}\\n\",\"keccak256\":\"0x7f24553ec892c12c1d924bfb1ae70a127ce520c46529631dee6b2ee1b248b6ff\",\"license\":\"MIT\"},\"contracts/mocks/PriceFeedTestnet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"../interfaces/IPriceFeed.sol\\\";\\n\\ncontract PriceFeedTestnet is IPriceFeed {\\n    uint256 private _price = 200 * 1e18;\\n\\n    uint256 public lastGoodPrice;\\n\\n    // --- Dependency setters ---\\n    function setAddresses(bytes4, address) external {}\\n\\n    // View price getter for simplicity in tests\\n    function getPrice() external view returns (uint256) {\\n        return _price;\\n    }\\n\\n    function fetchPrice() external override returns (uint256) {\\n        emit LastGoodPriceUpdated(_price);\\n        lastGoodPrice = _price;\\n        return lastGoodPrice;\\n    }\\n\\n    function setPrice(uint256 price) external returns (bool) {\\n        _price = price;\\n        lastGoodPrice = _price;\\n\\n        return true;\\n    }\\n}\\n\",\"keccak256\":\"0x1a5b07c78a9ef6fb74a8fb5d816b6bf3113738eadb23476094e1de05a189b0c8\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052680ad78ebc5ac620000060005534801561001d57600080fd5b506101ad8061002d6000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80630490be831461005c5780630fdb11cf146100785780631c0eb2ba1461008057806391b7f5ed1461009457806398d5fdca146100bf575b600080fd5b61006560015481565b6040519081526020015b60405180910390f35b6100656100c7565b61009261008e366004610110565b5050565b005b6100af6100a2366004610187565b6000819055600190815590565b604051901515815260200161006f565b600054610065565b60007f4d29de21de555af78a62fc82dd4bc05e9ae5b0660a37f04729527e0f22780cd36000546040516100fc91815260200190565b60405180910390a150600054600181905590565b6000806040838503121561012357600080fd5b82357fffffffff000000000000000000000000000000000000000000000000000000008116811461015357600080fd5b9150602083013573ffffffffffffffffffffffffffffffffffffffff8116811461017c57600080fd5b809150509250929050565b60006020828403121561019957600080fd5b503591905056fea164736f6c6343000811000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c80630490be831461005c5780630fdb11cf146100785780631c0eb2ba1461008057806391b7f5ed1461009457806398d5fdca146100bf575b600080fd5b61006560015481565b6040519081526020015b60405180910390f35b6100656100c7565b61009261008e366004610110565b5050565b005b6100af6100a2366004610187565b6000819055600190815590565b604051901515815260200161006f565b600054610065565b60007f4d29de21de555af78a62fc82dd4bc05e9ae5b0660a37f04729527e0f22780cd36000546040516100fc91815260200190565b60405180910390a150600054600181905590565b6000806040838503121561012357600080fd5b82357fffffffff000000000000000000000000000000000000000000000000000000008116811461015357600080fd5b9150602083013573ffffffffffffffffffffffffffffffffffffffff8116811461017c57600080fd5b809150509250929050565b60006020828403121561019957600080fd5b503591905056fea164736f6c6343000811000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 7571,
+        "contract": "contracts/mocks/PriceFeedTestnet.sol:PriceFeedTestnet",
+        "label": "_price",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 7573,
+        "contract": "contracts/mocks/PriceFeedTestnet.sol:PriceFeedTestnet",
+        "label": "lastGoodPrice",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "address": "0x91eD70f1cE175eF2bf4593ae47d8406d3f0f6688",
+  "abi": [],
+  "transactionHash": "0x271d0b334acd5121fbf9bc111025c1e7e9fbeaa9f3c506c0f5283aa94bf24ef6",
+  "receipt": {
+    "to": null,
+    "from": "0xd474eE0A24fc58dDF66BfaE61D56F44841bb0917",
+    "contractAddress": "0x91eD70f1cE175eF2bf4593ae47d8406d3f0f6688",
+    "transactionIndex": 0,
+    "gasUsed": "58211",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xfb0f5ae954a840238fcaeae0ca6c91c61159dad33d6a033c3d9093b638a6b0a5",
+    "transactionHash": "0x271d0b334acd5121fbf9bc111025c1e7e9fbeaa9f3c506c0f5283aa94bf24ef6",
+    "logs": [],
+    "blockNumber": 2028,
+    "cumulativeGasUsed": "58211",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "b5c480e72330e8c3843dabc0083fc1ef",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"The purpose of this contract is to hold ZKUSD tokens for gas compensation: When a borrower opens a trove, an additional 50 ZKUSD debt is issued, and 50 ZKUSD is minted and sent to this contract. When a borrower closes their active trove, this gas compensation is refunded: 50 ZKUSD is burned from the this contract's balance, and the corresponding 50 ZKUSD debt on the trove is cancelled. See this issue for more context: https://github.com/liquity/dev/issues/186\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/protocol/GasPool.sol\":\"GasPool\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"contracts/protocol/GasPool.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\n/**\\n * The purpose of this contract is to hold ZKUSD tokens for gas compensation:\\n * When a borrower opens a trove, an additional 50 ZKUSD debt is issued,\\n * and 50 ZKUSD is minted and sent to this contract.\\n * When a borrower closes their active trove, this gas compensation is refunded:\\n * 50 ZKUSD is burned from the this contract's balance, and the corresponding\\n * 50 ZKUSD debt on the trove is cancelled.\\n * See this issue for more context: https://github.com/liquity/dev/issues/186\\n */\\ncontract GasPool {\\n    // do nothing, as the core contracts have permission to send to and burn from this address\\n}\\n\",\"keccak256\":\"0x562d26ee8cbd8ecaf41ee1ba4ce1e2e39bff4d7e2b670907f44511e31feabcf4\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50601680601d6000396000f3fe6080604052600080fdfea164736f6c6343000811000a",
+  "deployedBytecode": "0x6080604052600080fdfea164736f6c6343000811000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "notice": "The purpose of this contract is to hold ZKUSD tokens for gas compensation: When a borrower opens a trove, an additional 50 ZKUSD debt is issued, and 50 ZKUSD is minted and sent to this contract. When a borrower closes their active trove, this gas compensation is refunded: 50 ZKUSD is burned from the this contract's balance, and the corresponding 50 ZKUSD debt on the trove is cancelled. See this issue for more context: https://github.com/liquity/dev/issues/186",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

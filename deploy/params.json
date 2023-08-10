@@ -38,5 +38,15 @@
     "multiSigAddress": "",
     "treasuryAddress": "",
     "useMock": true
+  },
+  "scrollSepolia": {
+    "V2Factory": "",
+    "PriceFeedId": "0x65784185",
+    "PriceRouter": "0x49c0bcce51a8b28f92d008394f06d5b259657f33",
+    "Wrap": "0x7b79995e5f793a07bc00c21412e50ecae098e7f9",
+    "bountyAddress": "",
+    "multiSigAddress": "",
+    "treasuryAddress": "",
+    "useMock": true
   }
 }

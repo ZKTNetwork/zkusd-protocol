@@ -76,7 +76,7 @@ describe("TroveManager", () => {
     account: Signer,
     params: {
       maxFeePercentage?: BigNumber;
-      rusdAmount?: BigNumber;
+      zkusdAmount?: BigNumber;
       ICR?: BigNumber;
       upperHint?: string;
       lowerHint?: string;
@@ -1280,17 +1280,17 @@ describe("TroveManager", () => {
       ICR: toBN(dec(10, 18)),
       extraParams: { from: address(whale) },
     });
-    const { rusdAmount: A_rusdAmount } = await openTrove(alice, {
+    const { zkusdAmount: A_zkusdAmount } = await openTrove(alice, {
       ICR: toBN(dec(2, 18)),
       extraZKUSDAmount: toBN(dec(300, 18)),
       extraParams: { from: address(alice) },
     });
-    const { rusdAmount: B_rusdAmount } = await openTrove(bob, {
+    const { zkusdAmount: B_zkusdAmount } = await openTrove(bob, {
       ICR: toBN(dec(2, 18)),
       extraZKUSDAmount: toBN(dec(200, 18)),
       extraParams: { from: address(bob) },
     });
-    const { rusdAmount: C_rusdAmount } = await openTrove(carol, {
+    const { zkusdAmount: C_zkusdAmount } = await openTrove(carol, {
       ICR: toBN(dec(2, 18)),
       extraZKUSDAmount: toBN(dec(100, 18)),
       extraParams: { from: address(carol) },
@@ -1329,15 +1329,15 @@ describe("TroveManager", () => {
     // Confirm token balances have not changed
     assertEqual(
       (await zkusdToken.balanceOf(address(alice))).toString(),
-      A_rusdAmount
+      A_zkusdAmount
     );
     assertEqual(
       (await zkusdToken.balanceOf(address(bob))).toString(),
-      B_rusdAmount
+      B_zkusdAmount
     );
     assertEqual(
       (await zkusdToken.balanceOf(address(carol))).toString(),
-      C_rusdAmount
+      C_zkusdAmount
     );
   });
 
@@ -2601,13 +2601,13 @@ describe("TroveManager", () => {
     Total liquidated debt = 150 + 350 + 150 = 650 ZKUSD
     Total liquidated ETH = 1.1 + 3.1 + 1.1 = 5.3 ETH
 
-    whale rusd loss: 650 * (400/800) = 325 rusd
-    alice rusd loss:  650 *(100/800) = 81.25 rusd
-    bob rusd loss: 650 * (300/800) = 243.75 rusd
+    whale zkusd loss: 650 * (400/800) = 325 zkusd
+    alice zkusd loss:  650 *(100/800) = 81.25 zkusd
+    bob zkusd loss: 650 * (300/800) = 243.75 zkusd
 
-    whale remaining deposit: (400 - 325) = 75 rusd
-    alice remaining deposit: (100 - 81.25) = 18.75 rusd
-    bob remaining deposit: (300 - 243.75) = 56.25 rusd
+    whale remaining deposit: (400 - 325) = 75 zkusd
+    alice remaining deposit: (100 - 81.25) = 18.75 zkusd
+    bob remaining deposit: (300 - 243.75) = 56.25 zkusd
 
     whale eth gain: 5*0.995 * (400/800) = 2.4875 eth
     alice eth gain: 5*0.995 *(100/800) = 0.621875 eth

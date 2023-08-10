@@ -21,9 +21,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "LockupContractFactory"
   );
   const communityIssuance = await ethers.getContract("CommunityIssuance");
-  const rimeToken = await ethers.getContract("RIMEToken");
-  const rimeStaking = await ethers.getContract("RIMEStaking");
-  const rusdToken = await ethers.getContract("RUSDToken");
+  const zkToken = await ethers.getContract("ZKToken");
+  const zktStaking = await ethers.getContract("ZKTStaking");
+  const zkusdToken = await ethers.getContract("ZKUSDToken");
   const gasPool = await ethers.getContract("GasPool");
   const hintHelpers = await ethers.getContract("HintHelpers");
   const uniPool = await ethers.getContract("Unipool");
@@ -38,7 +38,7 @@ func.dependencies = [
   "DeployActivePool",
   "DeploySortedTroves",
   "DeployRimeToken",
-  "DeployRUSDToken",
+  "DeployZKUSDToken",
   "DeployGasPool",
   "DeployHintHelpers",
   "DeployUniPool",

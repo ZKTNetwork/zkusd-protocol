@@ -452,10 +452,10 @@ export class TestHelper {
    */
   static async getOpenTroveTotalDebt(
     contracts: ContractType,
-    rusdAmount: BigNumber
+    zkusdAmount: BigNumber
   ): Promise<BigNumber> {
-    const fee = await contracts.troveManager.getBorrowingFee(rusdAmount);
-    const compositeDebt = await this.getCompositeDebt(contracts, rusdAmount);
+    const fee = await contracts.troveManager.getBorrowingFee(zkusdAmount);
+    const compositeDebt = await this.getCompositeDebt(contracts, zkusdAmount);
     return compositeDebt.add(fee);
   }
 
@@ -537,9 +537,9 @@ export class TestHelper {
       const collGasComp = liquidationLogs[0].args._collGasCompensation;
       // @ts-ignore
 
-      const rusdGasComp = liquidationLogs[0].args._ZKUSDGasCompensation;
+      const zkusdGasComp = liquidationLogs[0].args._ZKUSDGasCompensation;
 
-      return [liquidatedDebt, liquidatedColl, collGasComp, rusdGasComp];
+      return [liquidatedDebt, liquidatedColl, collGasComp, zkusdGasComp];
     }
     throw "The transaction logs do not contain a liquidation event";
   }
@@ -968,13 +968,13 @@ export class TestHelper {
         await contracts.borrowerOperations.MIN_NET_DEBT()
       )
     ).add(BigNumber.from(1)); // add 1 to avoid rounding issues
-    const rusdAmount = MIN_DEBT.add(extraZKUSDAmount);
+    const zkusdAmount = MIN_DEBT.add(extraZKUSDAmount);
 
     if (!ICR && !extraParams.value)
       ICR = BigNumber.from(this.dec(15, 17)); // 150%
     else if (typeof ICR == "string") ICR = BigNumber.from(ICR);
 
-    const totalDebt = await this.getOpenTroveTotalDebt(contracts, rusdAmount);
+    const totalDebt = await this.getOpenTroveTotalDebt(contracts, zkusdAmount);
     const netDebt = await this.getActualDebtFromComposite(totalDebt, contracts);
 
     if (ICR) {
@@ -985,14 +985,14 @@ export class TestHelper {
       .connect(account)
       .openTrove(
         maxFeePercentage,
-        rusdAmount,
+        zkusdAmount,
         upperHint,
         lowerHint,
         extraParams
       );
 
     return {
-      rusdAmount,
+      zkusdAmount,
       netDebt,
       totalDebt,
       ICR,
@@ -1006,14 +1006,14 @@ export class TestHelper {
     account: Signer,
     {
       maxFeePercentage,
-      rusdAmount,
+      zkusdAmount,
       ICR,
       upperHint,
       lowerHint,
       extraParams,
     }: {
       maxFeePercentage?: BigNumber;
-      rusdAmount?: BigNumber;
+      zkusdAmount?: BigNumber;
       ICR?: BigNumber;
       upperHint?: string;
       lowerHint?: string;
@@ -1032,15 +1032,15 @@ export class TestHelper {
       const price = await contracts.priceFeedTestnet.getPrice();
       const targetDebt = coll.mul(price).div(ICR);
       increasedTotalDebt = targetDebt.sub(debt);
-      rusdAmount = await this.getNetBorrowingAmount(
+      zkusdAmount = await this.getNetBorrowingAmount(
         contracts,
         increasedTotalDebt
       );
     } else {
-      rusdAmount = rusdAmount === undefined ? BigNumber.from("0") : rusdAmount;
+      zkusdAmount = zkusdAmount === undefined ? BigNumber.from("0") : zkusdAmount;
       increasedTotalDebt = await this.getAmountWithBorrowingFee(
         contracts,
-        rusdAmount
+        zkusdAmount
       );
     }
 
@@ -1048,14 +1048,14 @@ export class TestHelper {
       .connect(account)
       .withdrawZKUSD(
         maxFeePercentage,
-        rusdAmount,
+        zkusdAmount,
         upperHint,
         lowerHint,
         extraParams
       );
 
     return {
-      rusdAmount,
+      zkusdAmount,
       increasedTotalDebt,
     };
   }
