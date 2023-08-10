@@ -837,7 +837,7 @@ contract BorrowerOperations is
         uint _debtChange,
         bool _isDebtIncrease,
         uint _price
-    ) internal view returns (uint) {
+    ) internal pure returns (uint) {
         (uint newColl, uint newDebt) = _getNewTroveAmounts(
             _coll,
             _debt,

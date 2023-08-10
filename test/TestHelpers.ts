@@ -982,9 +982,9 @@ export class TestHelper {
       extraParams.value = ICR.mul(totalDebt).div(price);
     }
 
-    console.log("totalDebt: ", totalDebt.toString())
-    console.log("netDebt: ", netDebt.toString())
-    console.log("value: ", extraParams.value.toString())
+    // console.log("totalDebt: ", totalDebt.toString())
+    // console.log("netDebt: ", netDebt.toString())
+    // console.log("value: ", extraParams.value.toString()toString)
     const tx = await contracts.borrowerOperations
       .connect(account)
       .openTrove(
