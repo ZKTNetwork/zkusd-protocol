@@ -2,6 +2,8 @@ import "ts-mocha";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "solidity-coverage";
+import "typechain"
+import "@typechain/hardhat"
 import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
 import "@matterlabs/hardhat-zksync-chai-matchers";
