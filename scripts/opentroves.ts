@@ -15,17 +15,16 @@ async function main() {
     const oracle = (await ethers.getContract("PriceFeedTestnet")) as PriceFeedTestnet;
 
     const debtWithFee = await bo.MIN_NET_DEBT();
-    const icr = ethers.utils.parseEther("0.05");
+    const icr = ethers.utils.parseEther("1.5");
     const borrowingRate = await tm.getBorrowingRateWithDecay();
     const netBorrowingAmount = debtWithFee.mul(_1E18BN).div(_1E18BN.add(borrowingRate)).add(BigNumber.from(1));
     const zkusdAmount = netBorrowingAmount.add(BigNumber.from(0))
     const totalDebt = (await tm.getBorrowingFee(zkusdAmount)).add(await bo.getCompositeDebt(zkusdAmount))
-    const netDebt = totalDebt.sub(await tm.ZKUSD_GAS_COMPENSATION())
     const value = icr.mul(totalDebt).div(await oracle.getPrice())
 
     console.log(ethers.utils.formatEther(value))
 
-    const maxFeePercentage = ethers.BigNumber.from("10000000000000000")
+    const maxFeePercentage = ethers.BigNumber.from("1000000000000000000")
     const tx = await bo.connect(account0).openTrove(
         maxFeePercentage,
         zkusdAmount,
