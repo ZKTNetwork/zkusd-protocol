@@ -99,8 +99,8 @@ contract BorrowerOperations is
     // --- Borrower Trove Operations ---
 
     function openTrove(
-        uint256 _maxFeePercentage,
-        uint256 _ZKUSDAmount,
+        uint _maxFeePercentage,
+        uint _ZKUSDAmount,
         address _upperHint,
         address _lowerHint
     ) external payable override {
@@ -146,7 +146,7 @@ contract BorrowerOperations is
             _requireICRisAboveCCR(vars.ICR);
         } else {
             _requireICRisAboveMCR(vars.ICR);
-            uint256 newTCR = _getNewTCRFromTroveChange(
+            uint newTCR = _getNewTCRFromTroveChange(
                 msg.value,
                 true,
                 vars.compositeDebt,
@@ -223,7 +223,7 @@ contract BorrowerOperations is
 
     // Withdraw ETH collateral from a trove
     function withdrawColl(
-        uint256 _collWithdrawal,
+        uint _collWithdrawal,
         address _upperHint,
         address _lowerHint
     ) external override {
@@ -240,8 +240,8 @@ contract BorrowerOperations is
 
     // Withdraw ZKUSD tokens from a trove: mint new ZKUSD tokens to the owner, and increase the trove's debt accordingly
     function withdrawZKUSD(
-        uint256 _maxFeePercentage,
-        uint256 _ZKUSDAmount,
+        uint _maxFeePercentage,
+        uint _ZKUSDAmount,
         address _upperHint,
         address _lowerHint
     ) external override {
@@ -258,7 +258,7 @@ contract BorrowerOperations is
 
     // Repay ZKUSD tokens to a Trove: Burn the repaid ZKUSD tokens, and reduce the trove's debt accordingly
     function repayZKUSD(
-        uint256 _ZKUSDAmount,
+        uint _ZKUSDAmount,
         address _upperHint,
         address _lowerHint
     ) external override {
@@ -274,9 +274,9 @@ contract BorrowerOperations is
     }
 
     function adjustTrove(
-        uint256 _maxFeePercentage,
-        uint256 _collWithdrawal,
-        uint256 _ZKUSDChange,
+        uint _maxFeePercentage,
+        uint _collWithdrawal,
+        uint _ZKUSDChange,
         bool _isDebtIncrease,
         address _upperHint,
         address _lowerHint
@@ -301,12 +301,12 @@ contract BorrowerOperations is
      */
     function _adjustTrove(
         address _borrower,
-        uint256 _collWithdrawal,
-        uint256 _ZKUSDChange,
+        uint _collWithdrawal,
+        uint _ZKUSDChange,
         bool _isDebtIncrease,
         address _upperHint,
         address _lowerHint,
-        uint256 _maxFeePercentage
+        uint _maxFeePercentage
     ) internal {
         ContractsCache memory contractsCache = ContractsCache(
             troveManager,
@@ -369,7 +369,6 @@ contract BorrowerOperations is
             _isDebtIncrease,
             vars.price
         );
-
         assert(_collWithdrawal <= vars.coll);
 
         // Check the adjustment satisfies all conditions for the current system mode
@@ -406,7 +405,7 @@ contract BorrowerOperations is
         );
 
         // Re-insert trove in to the sorted list
-        uint256 newNICR = _getNewNominalICRFromTroveChange(
+        uint newNICR = _getNewNominalICRFromTroveChange(
             vars.coll,
             vars.debt,
             vars.collChange,
@@ -444,13 +443,13 @@ contract BorrowerOperations is
         IZKUSDToken zkusdTokenCached = zkusdToken;
 
         _requireTroveisActive(troveManagerCached, msg.sender);
-        uint256 price = priceFeed.fetchPrice();
+        uint price = priceFeed.fetchPrice();
         _requireNotInRecoveryMode(price);
 
         troveManagerCached.applyPendingRewards(msg.sender);
 
-        uint256 coll = troveManagerCached.getTroveColl(msg.sender);
-        uint256 debt = troveManagerCached.getTroveDebt(msg.sender);
+        uint coll = troveManagerCached.getTroveColl(msg.sender);
+        uint debt = troveManagerCached.getTroveDebt(msg.sender);
 
         _requireSufficientZKUSDBalance(
             zkusdTokenCached,
@@ -458,7 +457,7 @@ contract BorrowerOperations is
             debt.sub(ZKUSD_GAS_COMPENSATION)
         );
 
-        uint256 newTCR = _getNewTCRFromTroveChange(
+        uint newTCR = _getNewTCRFromTroveChange(
             coll,
             false,
             debt,
@@ -503,15 +502,15 @@ contract BorrowerOperations is
     function _triggerBorrowingFee(
         ITroveManager _troveManager,
         IZKUSDToken _zkusdToken,
-        uint256 _ZKUSDAmount,
-        uint256 _maxFeePercentage
-    ) internal returns (uint256) {
+        uint _ZKUSDAmount,
+        uint _maxFeePercentage
+    ) internal returns (uint) {
         _troveManager.decayBaseRateFromBorrowing(); // decay the baseRate state variable
-        uint256 ZKUSDFee = _troveManager.getBorrowingFee(_ZKUSDAmount);
+        uint ZKUSDFee = _troveManager.getBorrowingFee(_ZKUSDAmount);
 
         _requireUserAcceptsFee(ZKUSDFee, _ZKUSDAmount, _maxFeePercentage);
 
-        // Send fee to ZKT staking contract
+        // Send fee to ZK staking contract
         zktStaking.increaseF_ZKUSD(ZKUSDFee);
         _zkusdToken.mint(zktStakingAddress, ZKUSDFee);
 
@@ -519,18 +518,18 @@ contract BorrowerOperations is
     }
 
     function _getUSDValue(
-        uint256 _coll,
-        uint256 _price
-    ) internal pure returns (uint256) {
-        uint256 usdValue = _price.mul(_coll).div(DECIMAL_PRECISION);
+        uint _coll,
+        uint _price
+    ) internal pure returns (uint) {
+        uint usdValue = _price.mul(_coll).div(DECIMAL_PRECISION);
 
         return usdValue;
     }
 
     function _getCollChange(
-        uint256 _collReceived,
-        uint256 _requestedCollWithdrawal
-    ) internal pure returns (uint256 collChange, bool isCollIncrease) {
+        uint _collReceived,
+        uint _requestedCollWithdrawal
+    ) internal pure returns (uint collChange, bool isCollIncrease) {
         if (_collReceived != 0) {
             collChange = _collReceived;
             isCollIncrease = true;
@@ -543,15 +542,15 @@ contract BorrowerOperations is
     function _updateTroveFromAdjustment(
         ITroveManager _troveManager,
         address _borrower,
-        uint256 _collChange,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _debtChange,
+        uint _debtChange,
         bool _isDebtIncrease
-    ) internal returns (uint256, uint256) {
-        uint256 newColl = (_isCollIncrease)
+    ) internal returns (uint, uint) {
+        uint newColl = (_isCollIncrease)
             ? _troveManager.increaseTroveColl(_borrower, _collChange)
             : _troveManager.decreaseTroveColl(_borrower, _collChange);
-        uint256 newDebt = (_isDebtIncrease)
+        uint newDebt = (_isDebtIncrease)
             ? _troveManager.increaseTroveDebt(_borrower, _debtChange)
             : _troveManager.decreaseTroveDebt(_borrower, _debtChange);
 
@@ -562,11 +561,11 @@ contract BorrowerOperations is
         IActivePool _activePool,
         IZKUSDToken _zkusdToken,
         address _borrower,
-        uint256 _collChange,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _ZKUSDChange,
+        uint _ZKUSDChange,
         bool _isDebtIncrease,
-        uint256 _netDebtChange
+        uint _netDebtChange
     ) internal {
         if (_isDebtIncrease) {
             _withdrawZKUSD(
@@ -590,7 +589,7 @@ contract BorrowerOperations is
     // Send ETH to Active Pool and increase its recorded ETH balance
     function _activePoolAddColl(
         IActivePool _activePool,
-        uint256 _amount
+        uint _amount
     ) internal {
         (bool success, ) = address(_activePool).call{value: _amount}("");
         require(success, "Operation: Sending ETH to ActivePool failed");
@@ -601,8 +600,8 @@ contract BorrowerOperations is
         IActivePool _activePool,
         IZKUSDToken _zkusdToken,
         address _account,
-        uint256 _ZKUSDAmount,
-        uint256 _netDebtIncrease
+        uint _ZKUSDAmount,
+        uint _netDebtIncrease
     ) internal {
         _activePool.increaseZKUSDDebt(_netDebtIncrease);
         _zkusdToken.mint(_account, _ZKUSDAmount);
@@ -613,7 +612,7 @@ contract BorrowerOperations is
         IActivePool _activePool,
         IZKUSDToken _zkusdToken,
         address _account,
-        uint256 _ZKUSD
+        uint _ZKUSD
     ) internal {
         _activePool.decreaseZKUSDDebt(_ZKUSD);
         _zkusdToken.burn(_account, _ZKUSD);
@@ -621,10 +620,10 @@ contract BorrowerOperations is
 
     // --- 'Require' wrapper functions ---
 
-    function _requireSingularCollChange(uint256 _collWithdrawal) internal view {
+    function _requireSingularCollChange(uint _collWithdrawal) internal view {
         require(
             msg.value == 0 || _collWithdrawal == 0,
-            "Operation: Cannot withdraw and add coll"
+            "BorrowerOperations: Cannot withdraw and add coll"
         );
     }
 
@@ -636,8 +635,8 @@ contract BorrowerOperations is
     }
 
     function _requireNonZeroAdjustment(
-        uint256 _collWithdrawal,
-        uint256 _ZKUSDChange
+        uint _collWithdrawal,
+        uint _ZKUSDChange
     ) internal view {
         require(
             msg.value != 0 || _collWithdrawal != 0 || _ZKUSDChange != 0,
@@ -649,7 +648,7 @@ contract BorrowerOperations is
         ITroveManager _troveManager,
         address _borrower
     ) internal view {
-        uint256 status = _troveManager.getTroveStatus(_borrower);
+        uint status = _troveManager.getTroveStatus(_borrower);
         require(status == 1, "Operation: Trove does not exist or is closed");
     }
 
@@ -657,25 +656,25 @@ contract BorrowerOperations is
         ITroveManager _troveManager,
         address _borrower
     ) internal view {
-        uint256 status = _troveManager.getTroveStatus(_borrower);
+        uint status = _troveManager.getTroveStatus(_borrower);
         require(status != 1, "Operation: Trove is active");
     }
 
-    function _requireNonZeroDebtChange(uint256 _ZKUSDChange) internal pure {
+    function _requireNonZeroDebtChange(uint _ZKUSDChange) internal pure {
         require(
             _ZKUSDChange > 0,
             "Operation: Debt increase requires non-zero debtChange"
         );
     }
 
-    function _requireNotInRecoveryMode(uint256 _price) internal view {
+    function _requireNotInRecoveryMode(uint _price) internal view {
         require(
             !_checkRecoveryMode(_price),
             "Operation: Operation not permitted during Recovery Mode"
         );
     }
 
-    function _requireNoCollWithdrawal(uint256 _collWithdrawal) internal pure {
+    function _requireNoCollWithdrawal(uint _collWithdrawal) internal pure {
         require(
             _collWithdrawal == 0,
             "Operation: Collateral withdrawal not permitted Recovery Mode"
@@ -684,7 +683,7 @@ contract BorrowerOperations is
 
     function _requireValidAdjustmentInCurrentMode(
         bool _isRecoveryMode,
-        uint256 _collWithdrawal,
+        uint _collWithdrawal,
         bool _isDebtIncrease,
         LocalVariables_adjustTrove memory _vars
     ) internal view {
@@ -721,14 +720,14 @@ contract BorrowerOperations is
         }
     }
 
-    function _requireICRisAboveMCR(uint256 _newICR) internal pure {
+    function _requireICRisAboveMCR(uint _newICR) internal pure {
         require(
             _newICR >= MCR,
             "Operation: An operation that would result in ICR < MCR is not permitted"
         );
     }
 
-    function _requireICRisAboveCCR(uint256 _newICR) internal pure {
+    function _requireICRisAboveCCR(uint _newICR) internal pure {
         require(
             _newICR >= CCR,
             "Operation: Operation must leave trove with ICR >= CCR"
@@ -736,8 +735,8 @@ contract BorrowerOperations is
     }
 
     function _requireNewICRisAboveOldICR(
-        uint256 _newICR,
-        uint256 _oldICR
+        uint _newICR,
+        uint _oldICR
     ) internal pure {
         require(
             _newICR >= _oldICR,
@@ -745,14 +744,14 @@ contract BorrowerOperations is
         );
     }
 
-    function _requireNewTCRisAboveCCR(uint256 _newTCR) internal pure {
+    function _requireNewTCRisAboveCCR(uint _newTCR) internal pure {
         require(
             _newTCR >= CCR,
             "Operation: An operation that would result in TCR < CCR is not permitted"
         );
     }
 
-    function _requireAtLeastMinNetDebt(uint256 _netDebt) internal pure {
+    function _requireAtLeastMinNetDebt(uint _netDebt) internal pure {
         require(
             _netDebt >= MIN_NET_DEBT,
             "Operation: Trove's net debt must be greater than minimum"
@@ -760,8 +759,8 @@ contract BorrowerOperations is
     }
 
     function _requireValidZKUSDRepayment(
-        uint256 _currentDebt,
-        uint256 _debtRepayment
+        uint _currentDebt,
+        uint _debtRepayment
     ) internal pure {
         require(
             _debtRepayment <= _currentDebt.sub(ZKUSD_GAS_COMPENSATION),
@@ -779,7 +778,7 @@ contract BorrowerOperations is
     function _requireSufficientZKUSDBalance(
         IZKUSDToken _zkusdToken,
         address _borrower,
-        uint256 _debtRepayment
+        uint _debtRepayment
     ) internal view {
         require(
             _zkusdToken.balanceOf(_borrower) >= _debtRepayment,
@@ -788,7 +787,7 @@ contract BorrowerOperations is
     }
 
     function _requireValidMaxFeePercentage(
-        uint256 _maxFeePercentage,
+        uint _maxFeePercentage,
         bool _isRecoveryMode
     ) internal pure {
         if (_isRecoveryMode) {
@@ -809,14 +808,14 @@ contract BorrowerOperations is
 
     // Compute the new collateral ratio, considering the change in coll and debt. Assumes 0 pending rewards.
     function _getNewNominalICRFromTroveChange(
-        uint256 _coll,
-        uint256 _debt,
-        uint256 _collChange,
+        uint _coll,
+        uint _debt,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _debtChange,
+        uint _debtChange,
         bool _isDebtIncrease
-    ) internal pure returns (uint256) {
-        (uint256 newColl, uint256 newDebt) = _getNewTroveAmounts(
+    ) internal pure returns (uint) {
+        (uint newColl, uint newDebt) = _getNewTroveAmounts(
             _coll,
             _debt,
             _collChange,
@@ -825,21 +824,21 @@ contract BorrowerOperations is
             _isDebtIncrease
         );
 
-        uint256 newNICR = FullMath._computeNominalCR(newColl, newDebt);
+        uint newNICR = FullMath._computeNominalCR(newColl, newDebt);
         return newNICR;
     }
 
     // Compute the new collateral ratio, considering the change in coll and debt. Assumes 0 pending rewards.
     function _getNewICRFromTroveChange(
-        uint256 _coll,
-        uint256 _debt,
-        uint256 _collChange,
+        uint _coll,
+        uint _debt,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _debtChange,
+        uint _debtChange,
         bool _isDebtIncrease,
-        uint256 _price
-    ) internal pure returns (uint256) {
-        (uint256 newColl, uint256 newDebt) = _getNewTroveAmounts(
+        uint _price
+    ) internal view returns (uint) {
+        (uint newColl, uint newDebt) = _getNewTroveAmounts(
             _coll,
             _debt,
             _collChange,
@@ -848,20 +847,20 @@ contract BorrowerOperations is
             _isDebtIncrease
         );
 
-        uint256 newICR = FullMath._computeCR(newColl, newDebt, _price);
+        uint newICR = FullMath._computeCR(newColl, newDebt, _price);
         return newICR;
     }
 
     function _getNewTroveAmounts(
-        uint256 _coll,
-        uint256 _debt,
-        uint256 _collChange,
+        uint _coll,
+        uint _debt,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _debtChange,
+        uint _debtChange,
         bool _isDebtIncrease
-    ) internal pure returns (uint256, uint256) {
-        uint256 newColl = _coll;
-        uint256 newDebt = _debt;
+    ) internal pure returns (uint, uint) {
+        uint newColl = _coll;
+        uint newDebt = _debt;
 
         newColl = _isCollIncrease
             ? _coll.add(_collChange)
@@ -874,14 +873,14 @@ contract BorrowerOperations is
     }
 
     function _getNewTCRFromTroveChange(
-        uint256 _collChange,
+        uint _collChange,
         bool _isCollIncrease,
-        uint256 _debtChange,
+        uint _debtChange,
         bool _isDebtIncrease,
-        uint256 _price
-    ) internal view returns (uint256) {
-        uint256 totalColl = getEntireSystemColl();
-        uint256 totalDebt = getEntireSystemDebt();
+        uint _price
+    ) internal view returns (uint) {
+        uint totalColl = getEntireSystemColl();
+        uint totalDebt = getEntireSystemDebt();
 
         totalColl = _isCollIncrease
             ? totalColl.add(_collChange)
@@ -890,13 +889,13 @@ contract BorrowerOperations is
             ? totalDebt.add(_debtChange)
             : totalDebt.sub(_debtChange);
 
-        uint256 newTCR = FullMath._computeCR(totalColl, totalDebt, _price);
+        uint newTCR = FullMath._computeCR(totalColl, totalDebt, _price);
         return newTCR;
     }
 
     function getCompositeDebt(
-        uint256 _debt
-    ) external pure override returns (uint256) {
+        uint _debt
+    ) external pure override returns (uint) {
         return _getCompositeDebt(_debt);
     }
 }

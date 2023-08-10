@@ -71,7 +71,7 @@ contract ActivePool is Ownable, CheckContract, IActivePool {
         _requireCallerIsBOorTroveMorSP();
         ETH = ETH.sub(_amount);
         emit ActivePoolETHBalanceUpdated(ETH);
-        emit ConfluxSent(_account, _amount);
+        emit EtherSent(_account, _amount);
 
         (bool success, ) = _account.call{value: _amount}("");
         require(success, "ActivePool: sending ETH failed");

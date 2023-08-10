@@ -94,7 +94,7 @@ contract ZKToken is IZKToken, CheckContract, ERC2612Permit {
         _requireCallerIsZKTStaking();
         if (_isFirstYear()) {
             _requireSenderIsNotMultisig(_sender);
-        } // Prevent the multisig from staking ZK
+        } // Prevent the multisig from staking ZKT
         _transfer(_sender, zktStakingAddress, _amount);
     }
 
@@ -175,12 +175,12 @@ contract ZKToken is IZKToken, CheckContract, ERC2612Permit {
     function _requireValidRecipient(address _recipient) internal view {
         require(
             _recipient != address(0) && _recipient != address(this),
-            "ZK: Cannot transfer tokens directly to the ZK token contract or the zero address"
+            "ZKT: Cannot transfer tokens directly to the ZK token contract or the zero address"
         );
         require(
             _recipient != communityIssuanceAddress &&
                 _recipient != zktStakingAddress,
-            "ZK: Cannot transfer tokens directly to the community issuance or staking contract"
+            "ZKT: Cannot transfer tokens directly to the community issuance or staking contract"
         );
     }
 

@@ -47,36 +47,36 @@ contract DefaultPool is Ownable, CheckContract, IDefaultPool {
     /*
      * Returns the ETH state variable.
      *
-     * Not necessarily equal to the the contract's raw ETH balance - ETH can be forcibly sent to contracts.
+     * Not necessarily equal to the the contract's raw ETH balance - ether can be forcibly sent to contracts.
      */
-    function getETH() external view override returns (uint256) {
+    function getETH() external view override returns (uint) {
         return ETH;
     }
 
-    function getZKUSDDebt() external view override returns (uint256) {
+    function getZKUSDDebt() external view override returns (uint) {
         return ZKUSDDebt;
     }
 
     // --- Pool functionality ---
 
-    function sendETHToActivePool(uint256 _amount) external override {
+    function sendETHToActivePool(uint _amount) external override {
         _requireCallerIsTroveManager();
         address activePool = activePoolAddress; // cache to save an SLOAD
         ETH = ETH.sub(_amount);
         emit DefaultPoolETHBalanceUpdated(ETH);
-        emit ConfluxSent(activePool, _amount);
+        emit EtherSent(activePool, _amount);
 
         (bool success, ) = activePool.call{value: _amount}("");
         require(success, "DefaultPool: sending ETH failed");
     }
 
-    function increaseZKUSDDebt(uint256 _amount) external override {
+    function increaseZKUSDDebt(uint _amount) external override {
         _requireCallerIsTroveManager();
         ZKUSDDebt = ZKUSDDebt.add(_amount);
         emit DefaultPoolZKUSDDebtUpdated(ZKUSDDebt);
     }
 
-    function decreaseZKUSDDebt(uint256 _amount) external override {
+    function decreaseZKUSDDebt(uint _amount) external override {
         _requireCallerIsTroveManager();
         ZKUSDDebt = ZKUSDDebt.sub(_amount);
         emit DefaultPoolZKUSDDebtUpdated(ZKUSDDebt);

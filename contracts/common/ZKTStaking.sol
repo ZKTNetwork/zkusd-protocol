@@ -73,13 +73,13 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
     }
 
     // If caller has a pre-existing stake, send any accumulated ETH and ZKUSD gains to them.
-    function stake(uint256 _ZKTamount) external override {
+    function stake(uint _ZKTamount) external override {
         _requireNonZeroAmount(_ZKTamount);
 
-        uint256 currentStake = stakes[msg.sender];
+        uint currentStake = stakes[msg.sender];
 
-        uint256 ETHGain;
-        uint256 ZKUSDGain;
+        uint ETHGain;
+        uint ZKUSDGain;
         // Grab any accumulated ETH and ZKUSD gains from the current stake
         if (currentStake != 0) {
             ETHGain = _getPendingETHGain(msg.sender);
@@ -88,7 +88,7 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
         _updateUserSnapshots(msg.sender);
 
-        uint256 newStake = currentStake.add(_ZKTamount);
+        uint newStake = currentStake.add(_ZKTamount);
 
         // Increase user’s stake and total ZKT staked
         stakes[msg.sender] = newStake;
@@ -110,20 +110,20 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
     // Unstake the ZKT and send the it back to the caller, along with their accumulated ZKUSD & ETH gains.
     // If requested amount > stake, send their entire stake.
-    function unstake(uint256 _ZKTamount) external override {
-        uint256 currentStake = stakes[msg.sender];
+    function unstake(uint _ZKTamount) external override {
+        uint currentStake = stakes[msg.sender];
         _requireUserHasStake(currentStake);
 
         // Grab any accumulated ETH and ZKUSD gains from the current stake
-        uint256 ETHGain = _getPendingETHGain(msg.sender);
-        uint256 ZKUSDGain = _getPendingZKUSDGain(msg.sender);
+        uint ETHGain = _getPendingETHGain(msg.sender);
+        uint ZKUSDGain = _getPendingZKUSDGain(msg.sender);
 
         _updateUserSnapshots(msg.sender);
 
         if (_ZKTamount > 0) {
-            uint256 ZKTToWithdraw = Math.min(_ZKTamount, currentStake);
+            uint ZKTToWithdraw = Math.min(_ZKTamount, currentStake);
 
-            uint256 newStake = currentStake.sub(ZKTToWithdraw);
+            uint newStake = currentStake.sub(ZKTToWithdraw);
 
             // Decrease user's stake and total ZKT staked
             stakes[msg.sender] = newStake;
@@ -145,9 +145,9 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
     // --- Reward-per-unit-staked increase functions. Called by Liquity core contracts ---
 
-    function increaseF_ETH(uint256 _ETHFee) external override {
+    function increaseF_ETH(uint _ETHFee) external override {
         _requireCallerIsTroveManager();
-        uint256 ETHFeePerZKTStaked;
+        uint ETHFeePerZKTStaked;
 
         if (totalZKTStaked > 0) {
             ETHFeePerZKTStaked = _ETHFee.mul(DECIMAL_PRECISION).div(
@@ -159,9 +159,9 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         emit F_ETHUpdated(F_ETH);
     }
 
-    function increaseF_ZKUSD(uint256 _ZKUSDFee) external override {
+    function increaseF_ZKUSD(uint _ZKUSDFee) external override {
         _requireCallerIsBorrowerOperations();
-        uint256 ZKUSDFeePerZKTStaked;
+        uint ZKUSDFeePerZKTStaked;
 
         if (totalZKTStaked > 0) {
             ZKUSDFeePerZKTStaked = _ZKUSDFee.mul(DECIMAL_PRECISION).div(
@@ -177,13 +177,13 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
     function getPendingETHGain(
         address _user
-    ) external view override returns (uint256) {
+    ) external view override returns (uint) {
         return _getPendingETHGain(_user);
     }
 
-    function _getPendingETHGain(address _user) internal view returns (uint256) {
-        uint256 F_ETH_Snapshot = snapshots[_user].F_ETH_Snapshot;
-        uint256 ETHGain = stakes[_user].mul(F_ETH.sub(F_ETH_Snapshot)).div(
+    function _getPendingETHGain(address _user) internal view returns (uint) {
+        uint F_ETH_Snapshot = snapshots[_user].F_ETH_Snapshot;
+        uint ETHGain = stakes[_user].mul(F_ETH.sub(F_ETH_Snapshot)).div(
             DECIMAL_PRECISION
         );
         return ETHGain;
@@ -191,17 +191,15 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
     function getPendingZKUSDGain(
         address _user
-    ) external view override returns (uint256) {
+    ) external view override returns (uint) {
         return _getPendingZKUSDGain(_user);
     }
 
-    function _getPendingZKUSDGain(
-        address _user
-    ) internal view returns (uint256) {
-        uint256 F_ZKUSD_Snapshot = snapshots[_user].F_ZKUSD_Snapshot;
-        uint256 ZKUSDGain = stakes[_user]
-            .mul(F_ZKUSD.sub(F_ZKUSD_Snapshot))
-            .div(DECIMAL_PRECISION);
+    function _getPendingZKUSDGain(address _user) internal view returns (uint) {
+        uint F_ZKUSD_Snapshot = snapshots[_user].F_ZKUSD_Snapshot;
+        uint ZKUSDGain = stakes[_user].mul(F_ZKUSD.sub(F_ZKUSD_Snapshot)).div(
+            DECIMAL_PRECISION
+        );
         return ZKUSDGain;
     }
 
@@ -213,7 +211,7 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         emit StakerSnapshotsUpdated(_user, F_ETH, F_ZKUSD);
     }
 
-    function _sendETHGainToUser(uint256 ETHGain) internal {
+    function _sendETHGainToUser(uint ETHGain) internal {
         emit EtherSent(msg.sender, ETHGain);
         (bool success, ) = msg.sender.call{value: ETHGain}("");
         require(success, "ZKTStaking: Failed to send accumulated ETHGain");
@@ -242,14 +240,14 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         );
     }
 
-    function _requireUserHasStake(uint256 currentStake) internal pure {
+    function _requireUserHasStake(uint currentStake) internal pure {
         require(
             currentStake > 0,
             "ZKTStaking: User must have a non-zero stake"
         );
     }
 
-    function _requireNonZeroAmount(uint256 _amount) internal pure {
+    function _requireNonZeroAmount(uint _amount) internal pure {
         require(_amount > 0, "ZKTStaking: Amount must be non-zero");
     }
 

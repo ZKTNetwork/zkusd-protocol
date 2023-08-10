@@ -588,7 +588,7 @@ contract StabilityPool is
          * The newProductFactor is the factor by which to change all deposits, due to the depletion of Stability Pool ZKUSD in the liquidation.
          * We make the product factor 0 if there was a pool-emptying. Otherwise, it is (1 - ZKUSDLossPerUnitStaked)
          */
-        uint256 newProductFactor = uint(DECIMAL_PRECISION).sub(
+        uint256 newProductFactor = uint256(DECIMAL_PRECISION).sub(
             _ZKUSDLossPerUnitStaked
         );
 
@@ -749,6 +749,7 @@ contract StabilityPool is
         uint256 frontEndShare = uint256(DECIMAL_PRECISION).sub(
             DefaultKickbackRate
         );
+
         Snapshots memory snapshots = frontEndSnapshots[_frontEnd];
 
         uint256 ZKTGain = frontEndShare
@@ -871,7 +872,7 @@ contract StabilityPool is
          * corrections should ensure the error in P "favors the Pool", i.e. any given compounded deposit should slightly less
          * than it's theoretical value.
          *
-         * Thus it's unclear whETHer this line is still really needed.
+         * Thus it's unclear whether this line is still really needed.
          */
         if (compoundedStake < initialStake.div(1e9)) {
             return 0;

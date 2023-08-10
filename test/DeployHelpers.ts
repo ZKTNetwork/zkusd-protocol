@@ -127,7 +127,7 @@ export class DeployHelpers {
   }
 
   async runDeployCore() {
-    console.time("setup");
+    // console.time("setup");
     this.testEnv.wrapToken = (await deployFunction(
       "WrapToken",
       this.testEnv.deployer
@@ -229,7 +229,7 @@ export class DeployHelpers {
     await this.hintHelpersSetAddresses();
     await this.zktStakingSetAddresses();
     await this.communityIssuanceSetAddresses();
-    console.timeEnd("setup");
+    // console.timeEnd("setup");
   }
 
   async sortedTrovesSetParams() {

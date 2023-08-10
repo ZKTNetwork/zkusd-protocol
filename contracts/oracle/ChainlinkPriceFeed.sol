@@ -10,7 +10,7 @@ import "../dependencies/CheckContract.sol";
 import "../interfaces/IPriceFeed.sol";
 
 /*
- * PriceFeed for mainnet deployment, to be connected to Chainlink's live CFX:USD aggregator reference
+ * PriceFeed for mainnet deployment, to be connected to Chainlink's live ETH:USD aggregator reference
  *
  * The PriceFeed uses Chainlink as primary oracle.
  */

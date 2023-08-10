@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import {
   Signer,
   BigNumber,
@@ -981,6 +981,10 @@ export class TestHelper {
       const price = await contracts.priceFeedTestnet.getPrice();
       extraParams.value = ICR.mul(totalDebt).div(price);
     }
+
+    console.log("totalDebt: ", totalDebt.toString())
+    console.log("netDebt: ", netDebt.toString())
+    console.log("value: ", extraParams.value.toString())
     const tx = await contracts.borrowerOperations
       .connect(account)
       .openTrove(
@@ -1037,7 +1041,8 @@ export class TestHelper {
         increasedTotalDebt
       );
     } else {
-      zkusdAmount = zkusdAmount === undefined ? BigNumber.from("0") : zkusdAmount;
+      zkusdAmount =
+        zkusdAmount === undefined ? BigNumber.from("0") : zkusdAmount;
       increasedTotalDebt = await this.getAmountWithBorrowingFee(
         contracts,
         zkusdAmount
@@ -1741,6 +1746,20 @@ export class TestHelper {
       await ethers.provider.send("evm_mine", []);
     } catch (error) {
       console.log("Error: ", error);
+    }
+  }
+
+  static async assertRevert(transaction: ContractTransaction) {
+    try {
+      const receipt = await ethers.provider.getTransactionReceipt(
+        transaction.hash
+      );
+      // console.log("tx succeeded")
+      assert.isFalse(receipt.status); // when this assert fails, the expected revert didn't occur, i.e. the tx succeeded
+    } catch (err) {
+      if (err instanceof Error) {
+        assert.include(err.message, "revert");
+      }
     }
   }
 }

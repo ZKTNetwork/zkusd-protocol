@@ -26,15 +26,15 @@ abstract contract ZKTProtocolBase {
     uint256 public constant CCR = 1500000000000000000; // 150%
 
     // Amount of ZKUSD to be locked in gas pool on opening troves
-    uint256 public constant ZKUSD_GAS_COMPENSATION = 50e18;
+    uint256 public constant ZKUSD_GAS_COMPENSATION = 200e18;
 
     // Minimum amount of net ZKUSD debt a trove must have
-    uint256 public constant MIN_NET_DEBT = 500e18;
+    uint256 public constant MIN_NET_DEBT = 1800e18;
 
-    uint256 public constant PERCENT_DIVISOR = ZKUSD_GAS_COMPENSATION / 1e18; // dividing by 200 yields 0.5%
+    uint256 public constant PERCENT_DIVISOR = 200; // dividing by 20000 yields 0.5%
 
     uint256 public constant BORROWING_FEE_FLOOR =
-        (DECIMAL_PRECISION / 100000) * 5; // 0.005%
+        (DECIMAL_PRECISION / 1000) * 5; // 0.5%
 
     IActivePool public activePool;
 

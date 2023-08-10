@@ -55,7 +55,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_lqtyTokenAddress",
+        "name": "_zkTokenAddress",
         "type": "address"
       },
       {

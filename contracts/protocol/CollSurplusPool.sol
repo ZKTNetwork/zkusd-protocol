@@ -44,26 +44,23 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
     }
 
     /* Returns the ETH state variable at ActivePool address.
-    Not necessarily equal to the raw ETH balance - ETH can be forcibly sent to contracts. */
-    function getETH() external view override returns (uint256) {
+      Not necessarily equal to the raw ether balance - ether can be forcibly sent to contracts. */
+    function getETH() external view override returns (uint) {
         return ETH;
     }
 
     function getCollateral(
         address _account
-    ) external view override returns (uint256) {
+    ) external view override returns (uint) {
         return balances[_account];
     }
 
     // --- Pool functionality ---
 
-    function accountSurplus(
-        address _account,
-        uint256 _amount
-    ) external override {
+    function accountSurplus(address _account, uint _amount) external override {
         _requireCallerIsTroveManager();
 
-        uint256 newAmount = balances[_account].add(_amount);
+        uint newAmount = balances[_account].add(_amount);
         balances[_account] = newAmount;
 
         emit CollBalanceUpdated(_account, newAmount);
@@ -71,7 +68,7 @@ contract CollSurplusPool is Ownable, CheckContract, ICollSurplusPool {
 
     function claimColl(address _account) external override {
         _requireCallerIsBorrowerOperations();
-        uint256 claimableColl = balances[_account];
+        uint claimableColl = balances[_account];
         require(
             claimableColl > 0,
             "CollSurplusPool: No collateral available to claim"

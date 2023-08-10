@@ -2,15 +2,15 @@ import "ts-mocha";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "solidity-coverage";
-import "typechain"
-import "@typechain/hardhat"
+import "typechain";
+import "@typechain/hardhat";
 import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
 import "@matterlabs/hardhat-zksync-chai-matchers";
 import "@matterlabs/hardhat-zksync-solc";
 
 import { accountsList } from "./hardhatAccountList2K";
-import { account_pk_list} from "./pk_account_list";
+import { account_pk_list } from "./pk_account_list";
 
 const DEFAULT_COMPILER_SETTINGS = {
   version: "0.8.17",
@@ -28,7 +28,7 @@ const DEFAULT_COMPILER_SETTINGS = {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config =  {
+const config = {
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
   },
@@ -73,9 +73,9 @@ const config =  {
       chainId: 59140,
       zksync: false,
       accounts:
-          process.env.pk_lineatest === undefined
-              ? []
-              : [process.env.pk_lineatest],
+        process.env.pk_lineatest === undefined
+          ? []
+          : [process.env.pk_lineatest],
     },
     lineatest: {
       url: "https://rpc.goerli.linea.build",
@@ -86,15 +86,15 @@ const config =  {
           ? []
           : [process.env.pk_lineatest],
     },
-    scrollSepolia:{
+    scrollSepolia: {
       url: "https://scroll-sepolia.blockpi.network/v1/rpc/public",
       chainId: 534351,
       zksync: false,
       accounts:
-          process.env.pk_scroll_sepolia === undefined
-              ? []
-              : [process.env.pk_scroll_sepolia],
-    }
+        process.env.pk_scroll_sepolia === undefined
+          ? []
+          : [process.env.pk_scroll_sepolia],
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
