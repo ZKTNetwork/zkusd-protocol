@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 interface IZKTStaking {
     // --- Events --
 
-    event ZKTTokenAddressSet(address _zkTokenAddress);
+    event ZKTokenAddressSet(address _zkTokenAddress);
     event ZKUSDTokenAddressSet(address _zkusdTokenAddress);
     event TroveManagerAddressSet(address _troveManager);
     event BorrowerOperationsAddressSet(address _borrowerOperationsAddress);

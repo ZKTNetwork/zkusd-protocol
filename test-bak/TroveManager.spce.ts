@@ -1473,7 +1473,7 @@ describe("TroveManager", () => {
     );
   });
 
-  it("liquidate(): when SP > 0, triggers LQTY reward event - increases the sum G", async () => {
+  it("liquidate(): when SP > 0, triggers ZKT reward event - increases the sum G", async () => {
     await openTrove(whale, {
       ICR: toBN(dec(100, 18)),
       extraParams: { from: address(whale) },
@@ -1520,7 +1520,7 @@ describe("TroveManager", () => {
 
     const G_After = await contracts.stabilityPool.epochToScaleToG(0, 0);
 
-    // Expect G has increased from the LQTY reward event triggered
+    // Expect G has increased from the ZKT reward event triggered
     assertTrue(G_After.gt(G_Before));
   });
 
@@ -2696,7 +2696,7 @@ describe("TroveManager", () => {
     );
   });
 
-  it("liquidateTroves(): when SP > 0, triggers LQTY reward event - increases the sum G", async () => {
+  it("liquidateTroves(): when SP > 0, triggers ZKT reward event - increases the sum G", async () => {
     await openTrove(whale, {
       ICR: toBN(dec(100, 18)),
       extraParams: { from: address(whale) },
@@ -2749,7 +2749,7 @@ describe("TroveManager", () => {
 
     const G_After = await contracts.stabilityPool.epochToScaleToG(0, 0);
 
-    // Expect G has increased from the LQTY reward event triggered
+    // Expect G has increased from the ZKT reward event triggered
     assertTrue(G_After.gt(G_Before));
   });
 

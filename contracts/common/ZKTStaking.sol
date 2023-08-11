@@ -63,8 +63,8 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         borrowerOperationsAddress = _borrowerOperationsAddress;
         activePoolAddress = _activePoolAddress;
 
-        emit ZKTTokenAddressSet(_zkTokenAddress);
-        emit ZKTTokenAddressSet(_zkusdTokenAddress);
+        emit ZKTokenAddressSet(_zkTokenAddress);
+        emit ZKTokenAddressSet(_zkusdTokenAddress);
         emit TroveManagerAddressSet(_troveManagerAddress);
         emit BorrowerOperationsAddressSet(_borrowerOperationsAddress);
         emit ActivePoolAddressSet(_activePoolAddress);

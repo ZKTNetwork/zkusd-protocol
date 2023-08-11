@@ -1,7 +1,7 @@
 import { Signer, BigNumber } from "ethers";
 import {ethers, network} from "hardhat";
 import {BorrowerOperations, PriceFeedTestnet, TroveManager} from "../typechain-types";
-import {ContractType} from "../test/TestHelpers";
+import {ContractType} from "../test-bak/TestHelpers";
 import {max} from "hardhat/internal/util/bigint";
 
 const _1E18BN = BigNumber.from("1000000000000000000")

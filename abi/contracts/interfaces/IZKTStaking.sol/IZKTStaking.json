@@ -175,7 +175,7 @@
         "type": "address"
       }
     ],
-    "name": "ZKTTokenAddressSet",
+    "name": "ZKTokenAddressSet",
     "type": "event"
   },
   {

@@ -1908,15 +1908,15 @@ describe("BorrowerOperations", () => {
   //     assert.isTrue(baseRate_2.lt(baseRate_1))
   // })
   //
-  // it("openTrove(): borrowing at non-zero base rate sends ZKUSD fee to LQTY staking contract", async () => {
-  //     // time fast-forwards 1 year, and multisig stakes 1 LQTY
+  // it("openTrove(): borrowing at non-zero base rate sends ZKUSD fee to ZKT staking contract", async () => {
+  //     // time fast-forwards 1 year, and multisig stakes 1 ZKT
   //     await th.fastForwardTime(timeValues.SECONDS_IN_ONE_YEAR, web3.currentProvider)
-  //     await lqtyToken.approve(lqtyStaking.address, dec(1, 18), { from: multisig })
-  //     await lqtyStaking.stake(dec(1, 18), { from: multisig })
+  //     await zkToken.approve(zktStaking.address, dec(1, 18), { from: multisig })
+  //     await zktStaking.stake(dec(1, 18), { from: multisig })
   //
-  //     // Check LQTY ZKUSD balance before == 0
-  //     const lqtyStaking_ZKUSDBalance_Before = await zkusdToken.balanceOf(lqtyStaking.address)
-  //     assert.equal(lqtyStaking_ZKUSDBalance_Before, '0')
+  //     // Check ZKT ZKUSD balance before == 0
+  //     const zktStaking_ZKUSDBalance_Before = await zkusdToken.balanceOf(zktStaking.address)
+  //     assert.equal(zktStaking_ZKUSDBalance_Before, '0')
   //
   //     await openTrove({ extraZKUSDAmount: toBN(dec(10000, 18)), ICR: toBN(dec(10, 18)), extraParams: { from: whale } })
   //     await openTrove({ extraZKUSDAmount: toBN(dec(20000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: A } })
@@ -1937,17 +1937,17 @@ describe("BorrowerOperations", () => {
   //     // D opens trove
   //     await openTrove({ extraZKUSDAmount: toBN(dec(40000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: D } })
   //
-  //     // Check LQTY ZKUSD balance after has increased
-  //     const lqtyStaking_ZKUSDBalance_After = await zkusdToken.balanceOf(lqtyStaking.address)
-  //     assert.isTrue(lqtyStaking_ZKUSDBalance_After.gt(lqtyStaking_ZKUSDBalance_Before))
+  //     // Check ZKT ZKUSD balance after has increased
+  //     const zktStaking_ZKUSDBalance_After = await zkusdToken.balanceOf(zktStaking.address)
+  //     assert.isTrue(zktStaking_ZKUSDBalance_After.gt(zktStaking_ZKUSDBalance_Before))
   // })
   //
   // if (!withProxy) { // TODO: use rawLogs instead of logs
   //     it("openTrove(): borrowing at non-zero base records the (drawn debt + fee  + liq. reserve) on the Trove struct", async () => {
-  //         // time fast-forwards 1 year, and multisig stakes 1 LQTY
+  //         // time fast-forwards 1 year, and multisig stakes 1 ZKT
   //         await th.fastForwardTime(timeValues.SECONDS_IN_ONE_YEAR, web3.currentProvider)
-  //         await lqtyToken.approve(lqtyStaking.address, dec(1, 18), { from: multisig })
-  //         await lqtyStaking.stake(dec(1, 18), { from: multisig })
+  //         await zkToken.approve(zktStaking.address, dec(1, 18), { from: multisig })
+  //         await zktStaking.stake(dec(1, 18), { from: multisig })
   //
   //         await openTrove({ extraZKUSDAmount: toBN(dec(10000, 18)), ICR: toBN(dec(10, 18)), extraParams: { from: whale } })
   //         await openTrove({ extraZKUSDAmount: toBN(dec(20000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: A } })
@@ -1980,14 +1980,14 @@ describe("BorrowerOperations", () => {
   //     })
   // }
   //
-  // it("openTrove(): Borrowing at non-zero base rate increases the LQTY staking contract ZKUSD fees-per-unit-staked", async () => {
-  //     // time fast-forwards 1 year, and multisig stakes 1 LQTY
+  // it("openTrove(): Borrowing at non-zero base rate increases the ZKT staking contract ZKUSD fees-per-unit-staked", async () => {
+  //     // time fast-forwards 1 year, and multisig stakes 1 ZKT
   //     await th.fastForwardTime(timeValues.SECONDS_IN_ONE_YEAR, web3.currentProvider)
-  //     await lqtyToken.approve(lqtyStaking.address, dec(1, 18), { from: multisig })
-  //     await lqtyStaking.stake(dec(1, 18), { from: multisig })
+  //     await zkToken.approve(zktStaking.address, dec(1, 18), { from: multisig })
+  //     await zktStaking.stake(dec(1, 18), { from: multisig })
   //
-  //     // Check LQTY contract ZKUSD fees-per-unit-staked is zero
-  //     const F_ZKUSD_Before = await lqtyStaking.F_ZKUSD()
+  //     // Check ZKT contract ZKUSD fees-per-unit-staked is zero
+  //     const F_ZKUSD_Before = await zktStaking.F_ZKUSD()
   //     assert.equal(F_ZKUSD_Before, '0')
   //
   //     await openTrove({ extraZKUSDAmount: toBN(dec(10000, 18)), ICR: toBN(dec(10, 18)), extraParams: { from: whale } })
@@ -2009,20 +2009,20 @@ describe("BorrowerOperations", () => {
   //     // D opens trove
   //     await openTrove({ extraZKUSDAmount: toBN(dec(37, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: D } })
   //
-  //     // Check LQTY contract ZKUSD fees-per-unit-staked has increased
-  //     const F_ZKUSD_After = await lqtyStaking.F_ZKUSD()
+  //     // Check ZKT contract ZKUSD fees-per-unit-staked has increased
+  //     const F_ZKUSD_After = await zktStaking.F_ZKUSD()
   //     assert.isTrue(F_ZKUSD_After.gt(F_ZKUSD_Before))
   // })
   //
   // it("openTrove(): Borrowing at non-zero base rate sends requested amount to the user", async () => {
-  //     // time fast-forwards 1 year, and multisig stakes 1 LQTY
+  //     // time fast-forwards 1 year, and multisig stakes 1 ZKT
   //     await th.fastForwardTime(timeValues.SECONDS_IN_ONE_YEAR, web3.currentProvider)
-  //     await lqtyToken.approve(lqtyStaking.address, dec(1, 18), { from: multisig })
-  //     await lqtyStaking.stake(dec(1, 18), { from: multisig })
+  //     await zkToken.approve(zktStaking.address, dec(1, 18), { from: multisig })
+  //     await zktStaking.stake(dec(1, 18), { from: multisig })
   //
-  //     // Check LQTY Staking contract balance before == 0
-  //     const lqtyStaking_ZKUSDBalance_Before = await zkusdToken.balanceOf(lqtyStaking.address)
-  //     assert.equal(lqtyStaking_ZKUSDBalance_Before, '0')
+  //     // Check ZKT Staking contract balance before == 0
+  //     const zktStaking_ZKUSDBalance_Before = await zkusdToken.balanceOf(zktStaking.address)
+  //     assert.equal(zktStaking_ZKUSDBalance_Before, '0')
   //
   //     await openTrove({ extraZKUSDAmount: toBN(dec(10000, 18)), ICR: toBN(dec(10, 18)), extraParams: { from: whale } })
   //     await openTrove({ extraZKUSDAmount: toBN(dec(20000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: A } })
@@ -2044,16 +2044,16 @@ describe("BorrowerOperations", () => {
   //     const ZKUSDRequest_D = toBN(dec(40000, 18))
   //     await contracts.borrowerOperations.openTrove(th._100pct, ZKUSDRequest_D, D, D, { from: D, value: dec(500, 'ether') })
   //
-  //     // Check LQTY staking ZKUSD balance has increased
-  //     const lqtyStaking_ZKUSDBalance_After = await zkusdToken.balanceOf(lqtyStaking.address)
-  //     assert.isTrue(lqtyStaking_ZKUSDBalance_After.gt(lqtyStaking_ZKUSDBalance_Before))
+  //     // Check ZKT staking ZKUSD balance has increased
+  //     const zktStaking_ZKUSDBalance_After = await zkusdToken.balanceOf(zktStaking.address)
+  //     assert.isTrue(zktStaking_ZKUSDBalance_After.gt(zktStaking_ZKUSDBalance_Before))
   //
   //     // Check D's ZKUSD balance now equals their requested ZKUSD
   //     const ZKUSDBalance_D = await zkusdToken.balanceOf(D)
   //     assert.isTrue(ZKUSDRequest_D.eq(ZKUSDBalance_D))
   // })
   //
-  // it("openTrove(): Borrowing at zero base rate changes the LQTY staking contract ZKUSD fees-per-unit-staked", async () => {
+  // it("openTrove(): Borrowing at zero base rate changes the ZKT staking contract ZKUSD fees-per-unit-staked", async () => {
   //     await openTrove({ extraZKUSDAmount: toBN(dec(5000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: A } })
   //     await openTrove({ extraZKUSDAmount: toBN(dec(5000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: B } })
   //     await openTrove({ extraZKUSDAmount: toBN(dec(5000, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: C } })
@@ -2065,19 +2065,19 @@ describe("BorrowerOperations", () => {
   //     // 2 hours pass
   //     th.fastForwardTime(7200, web3.currentProvider)
   //
-  //     // Check ZKUSD reward per LQTY staked == 0
-  //     const F_ZKUSD_Before = await lqtyStaking.F_ZKUSD()
+  //     // Check ZKUSD reward per ZKT staked == 0
+  //     const F_ZKUSD_Before = await zktStaking.F_ZKUSD()
   //     assert.equal(F_ZKUSD_Before, '0')
   //
-  //     // A stakes LQTY
-  //     await lqtyToken.unprotectedMint(A, dec(100, 18))
-  //     await lqtyStaking.stake(dec(100, 18), { from: A })
+  //     // A stakes ZKT
+  //     await zkToken.unprotectedMint(A, dec(100, 18))
+  //     await zktStaking.stake(dec(100, 18), { from: A })
   //
   //     // D opens trove
   //     await openTrove({ extraZKUSDAmount: toBN(dec(37, 18)), ICR: toBN(dec(2, 18)), extraParams: { from: D } })
   //
-  //     // Check ZKUSD reward per LQTY staked > 0
-  //     const F_ZKUSD_After = await lqtyStaking.F_ZKUSD()
+  //     // Check ZKUSD reward per ZKT staked > 0
+  //     const F_ZKUSD_After = await zktStaking.F_ZKUSD()
   //     assert.isTrue(F_ZKUSD_After.gt(toBN('0')))
   // })
   //

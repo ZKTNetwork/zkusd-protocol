@@ -1,0 +1,75 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract ITroveManager",
+        "name": "_troveManager",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "NAME",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_ZKUSDAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_firstRedemptionHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperPartialRedemptionHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerPartialRedemptionHint",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_partialRedemptionHintNICR",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxIterations",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeemCollateral",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
