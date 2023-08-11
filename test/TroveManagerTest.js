@@ -1,6 +1,6 @@
 const deploymentHelper = require("../utils/deploymentHelpers.js");
 const testHelpers = require("../utils/testHelpers.js");
-const {skip} = require("node:test");
+const { skip } = require("node:test");
 const TroveManagerTester = artifacts.require("./TroveManagerTester.sol");
 const ZKUSDTokenTester = artifacts.require("./ZKUSDTokenTester.sol");
 
@@ -1418,8 +1418,8 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(await th.checkRecoveryMode(contracts));
 
     // D and E fill the Stability Pool, enough to completely absorb C's debt of 70
-    await stabilityPool.provideToSP(dec(50, 18),  { from: D });
-    await stabilityPool.provideToSP(dec(50, 18),  { from: E });
+    await stabilityPool.provideToSP(dec(50, 18), { from: D });
+    await stabilityPool.provideToSP(dec(50, 18), { from: E });
 
     await priceFeed.setPrice(dec(50, 18));
 
@@ -1449,7 +1449,7 @@ contract("TroveManager", async (accounts) => {
     await openTrove({ ICR: toBN(dec(80, 18)), extraParams: { from: ida } });
 
     // Whale puts some tokens in Stability Pool
-    await stabilityPool.provideToSP(dec(300, 18),{
+    await stabilityPool.provideToSP(dec(300, 18), {
       from: whale,
     });
 
@@ -2037,7 +2037,7 @@ contract("TroveManager", async (accounts) => {
       extraZKUSDAmount: whaleDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(whaleDeposit,{
+    await stabilityPool.provideToSP(whaleDeposit, {
       from: whale,
     });
 
@@ -2062,8 +2062,8 @@ contract("TroveManager", async (accounts) => {
     const liquidatedDebt = A_debt.add(B_debt).add(C_debt);
 
     // A, B provide 100, 300 to the SP
-    await stabilityPool.provideToSP(A_deposit,  { from: alice });
-    await stabilityPool.provideToSP(B_deposit,  { from: bob });
+    await stabilityPool.provideToSP(A_deposit, { from: alice });
+    await stabilityPool.provideToSP(B_deposit, { from: bob });
 
     assert.equal((await sortedTroves.getSize()).toString(), "4");
 
@@ -2378,8 +2378,8 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(await th.checkRecoveryMode(contracts));
 
     // D and E fill the Stability Pool, enough to completely absorb C's debt of 70
-    await stabilityPool.provideToSP(dec(50, 18),  { from: D });
-    await stabilityPool.provideToSP(dec(50, 18),  { from: E });
+    await stabilityPool.provideToSP(dec(50, 18), { from: D });
+    await stabilityPool.provideToSP(dec(50, 18), { from: E });
 
     await priceFeed.setPrice(dec(50, 18));
 
@@ -2541,7 +2541,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal((await sortedTroves.getSize()).toString(), "6");
 
     // Whale puts some tokens in Stability Pool
-    await stabilityPool.provideToSP(dec(300, 18),  {
+    await stabilityPool.provideToSP(dec(300, 18), {
       from: whale,
     });
 
@@ -2604,7 +2604,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal((await sortedTroves.getSize()).toString(), "6");
 
     // Whale puts some tokens in Stability Pool
-    await stabilityPool.provideToSP(dec(300, 18),  {
+    await stabilityPool.provideToSP(dec(300, 18), {
       from: whale,
     });
 
@@ -2743,7 +2743,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal((await sortedTroves.getSize()).toString(), "6");
 
     // Whale puts some tokens in Stability Pool
-    await stabilityPool.provideToSP(spDeposit,{ from: whale });
+    await stabilityPool.provideToSP(spDeposit, { from: whale });
 
     // Whale transfers to Carol so she can close her trove
     await zkusdToken.transfer(carol, dec(100, 18), { from: whale });
@@ -3838,6 +3838,7 @@ contract("TroveManager", async (accounts) => {
   });
 
   // active debt cannot be zero, as there’s a positive min debt enforced, and at least a trove must exist
+/*
   it.skip("redeemCollateral(): can redeem if there is zero active debt but non-zero debt in DefaultPool", async () => {
     // --- SETUP ---
 
@@ -3896,6 +3897,7 @@ contract("TroveManager", async (accounts) => {
     ).toString();
     assert.equal(carol_ZKUSDBalance_After, "0");
   });
+*/
 
   it("redeemCollateral(): doesn't touch Troves with ICR < 110%", async () => {
     // --- SETUP ---
@@ -4415,7 +4417,7 @@ contract("TroveManager", async (accounts) => {
     await stabilityPool.provideToSP(dec(150, 18), {
       from: carol,
     });
-    await stabilityPool.provideToSP(dec(200, 18),  {
+    await stabilityPool.provideToSP(dec(200, 18), {
       from: dennis,
     });
 

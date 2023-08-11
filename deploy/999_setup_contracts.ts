@@ -10,7 +10,6 @@ const params = JSON.parse(
 )[network.name];
 
 async function priceFeedSetAddresses(priceFeed: Contract) {
-  console.log(params.PriceFeedId, params.PriceRouter);
   const setTx0 = await priceFeed.setAddresses(
     params.PriceFeedId,
     params.PriceRouter

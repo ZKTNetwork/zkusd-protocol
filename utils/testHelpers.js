@@ -1100,8 +1100,6 @@ class TestHelper {
         for (const account of accounts) {
 
             let {entireColl, entireDebt} = await this.getEntireCollAndDebt(contracts, account)
-            console.log(`entireColl: ${entireColl}`)
-            console.log(`entireDebt: ${entireDebt}`)
             const ETHGain = await contracts.stabilityPool.getDepositorETHGain(account)
             const newColl = entireColl.add(ETHGain)
             const {upperHint, lowerHint} = await this.getBorrowerOpsListHint(contracts, newColl, entireDebt)

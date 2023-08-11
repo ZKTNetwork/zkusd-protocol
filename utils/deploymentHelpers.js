@@ -189,7 +189,8 @@ class DeploymentHelper {
     }
 
     static async deployZKTTesterContractsHardhat(bountyAddress, lpRewardsAddress, multisigAddress) {
-        const zktStaking = await ZKTStaking.new()
+        const accounts = await web3.eth.getAccounts()
+        const zktStaking = await ZKTStaking.new(accounts[0])
         const lockupContractFactory = await LockupContractFactory.new()
         const communityIssuance = await CommunityIssuanceTester.new()
 
@@ -297,10 +298,12 @@ class DeploymentHelper {
     static async deployProxyScripts(contracts, ZKTContracts, owner, users) {
         const proxies = await buildUserProxies(users)
 
+        console.log(contracts.priceFeedTestnet.address)
         const borrowerWrappersScript = await BorrowerWrappersScript.new(
             contracts.borrowerOperations.address,
             contracts.troveManager.address,
-            ZKTContracts.zktStaking.address
+            ZKTContracts.zktStaking.address,
+            contracts.priceFeedTestnet.address
         )
         contracts.borrowerWrappers = new BorrowerWrappersProxy(owner, proxies, borrowerWrappersScript.address)
 

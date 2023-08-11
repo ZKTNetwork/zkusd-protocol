@@ -41,7 +41,7 @@
     "test": "npx hardhat test",
     "compile": "npx hardhat compile",
     "clear-cache": "rm -r ./abi ./artifacts ./cache ./typechain-types",
-    "prettier": "prettier --write 'hardhat.config.ts' 'contracts/**/*.sol' 'deploy/**/*.ts' 'test-bak/**/*.ts' 'test/**/*.js'",
+    "prettier": "prettier --write 'hardhat.config.ts' 'contracts/**/*.sol' 'deploy/**/*.ts' 'duplicate/**/*.ts' 'test/**/*.js'",
     "update_spdx_license": "ts-node scripts/update_spdx_license.ts"
   }
 }

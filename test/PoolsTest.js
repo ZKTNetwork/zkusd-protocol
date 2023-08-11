@@ -12,11 +12,11 @@ const _minus_1_Ether = web3.utils.toWei("-1", "ether");
 
 contract("StabilityPool", async (accounts) => {
   /* mock* are EOA’s, temporarily used to call protected functions.
-  TODO: Replace with mock contracts, and later complete transactions from EOA
-  */
+    TODO: Replace with mock contracts, and later complete transactions from EOA
+    */
   let stabilityPool;
 
-  const [owner, alice] = accounts;
+  const [owner, alice, treasury] = accounts;
 
   beforeEach(async () => {
     stabilityPool = await StabilityPool.new();
@@ -29,7 +29,8 @@ contract("StabilityPool", async (accounts) => {
       dumbContractAddress,
       dumbContractAddress,
       dumbContractAddress,
-      dumbContractAddress
+      dumbContractAddress,
+      treasury
     );
   });
 

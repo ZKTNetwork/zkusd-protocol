@@ -261,12 +261,12 @@ contract TroveManager is
 
     // --- Getters ---
 
-    function getTroveOwnersCount() external view override returns (uint) {
+    function getTroveOwnersCount() external view override returns (uint256) {
         return TroveOwners.length;
     }
 
     function getTroveFromTroveOwnersArray(
-        uint _index
+        uint256 _index
     ) external view override returns (address) {
         return TroveOwners[_index];
     }
@@ -289,7 +289,7 @@ contract TroveManager is
         IActivePool _activePool,
         IDefaultPool _defaultPool,
         address _borrower,
-        uint _ZKUSDInStabPool
+        uint256 _ZKUSDInStabPool
     ) internal returns (LiquidationValues memory singleLiquidation) {
         LocalVariables_InnerSingleLiquidateFunction memory vars;
 
@@ -312,7 +312,7 @@ contract TroveManager is
             singleLiquidation.entireTroveColl
         );
         singleLiquidation.ZKUSDGasCompensation = ZKUSD_GAS_COMPENSATION;
-        uint collToLiquidate = singleLiquidation.entireTroveColl.sub(
+        uint256 collToLiquidate = singleLiquidation.entireTroveColl.sub(
             singleLiquidation.collGasCompensation
         );
 
@@ -343,10 +343,10 @@ contract TroveManager is
         IActivePool _activePool,
         IDefaultPool _defaultPool,
         address _borrower,
-        uint _ICR,
-        uint _ZKUSDInStabPool,
-        uint _TCR,
-        uint _price
+        uint256 _ICR,
+        uint256 _ZKUSDInStabPool,
+        uint256 _TCR,
+        uint256 _price
     ) internal returns (LiquidationValues memory singleLiquidation) {
         LocalVariables_InnerSingleLiquidateFunction memory vars;
         if (TroveOwners.length <= 1) {
@@ -493,17 +493,17 @@ contract TroveManager is
      * redistributed to active troves.
      */
     function _getOffsetAndRedistributionVals(
-        uint _debt,
-        uint _coll,
-        uint _ZKUSDInStabPool
+        uint256 _debt,
+        uint256 _coll,
+        uint256 _ZKUSDInStabPool
     )
         internal
         pure
         returns (
-            uint debtToOffset,
-            uint collToSendToSP,
-            uint debtToRedistribute,
-            uint collToRedistribute
+            uint256 debtToOffset,
+            uint256 collToSendToSP,
+            uint256 debtToRedistribute,
+            uint256 collToRedistribute
         )
     {
         if (_ZKUSDInStabPool > 0) {
@@ -533,13 +533,13 @@ contract TroveManager is
      *  Get its offset coll/debt and ETH gas comp, and close the trove.
      */
     function _getCappedOffsetVals(
-        uint _entireTroveDebt,
-        uint _entireTroveColl,
-        uint _price
+        uint256 _entireTroveDebt,
+        uint256 _entireTroveColl,
+        uint256 _price
     ) internal pure returns (LiquidationValues memory singleLiquidation) {
         singleLiquidation.entireTroveDebt = _entireTroveDebt;
         singleLiquidation.entireTroveColl = _entireTroveColl;
-        uint cappedCollPortion = _entireTroveDebt.mul(MCR).div(_price);
+        uint256 cappedCollPortion = _entireTroveDebt.mul(MCR).div(_price);
 
         singleLiquidation.collGasCompensation = _getCollGasCompensation(
             cappedCollPortion
@@ -559,7 +559,7 @@ contract TroveManager is
      * Liquidate a sequence of troves. Closes a maximum number of n under-collateralized Troves,
      * starting from the one with the lowest collateral ratio in the system, and moving upwards
      */
-    function liquidateTroves(uint _n) external override {
+    function liquidateTroves(uint256 _n) external override {
         ContractsCache memory contractsCache = ContractsCache(
             activePool,
             defaultPool,
@@ -654,9 +654,9 @@ contract TroveManager is
      */
     function _getTotalsFromLiquidateTrovesSequence_RecoveryMode(
         ContractsCache memory _contractsCache,
-        uint _price,
-        uint _ZKUSDInStabPool,
-        uint _n
+        uint256 _price,
+        uint256 _ZKUSDInStabPool,
+        uint256 _n
     ) internal returns (LiquidationTotals memory totals) {
         LocalVariables_LiquidationSequence memory vars;
         LiquidationValues memory singleLiquidation;
@@ -680,7 +680,7 @@ contract TroveManager is
                     break;
                 }
 
-                uint TCR = FullMath._computeCR(
+                uint256 TCR = FullMath._computeCR(
                     vars.entireSystemColl,
                     vars.entireSystemDebt,
                     _price
@@ -746,9 +746,9 @@ contract TroveManager is
     function _getTotalsFromLiquidateTrovesSequence_NormalMode(
         IActivePool _activePool,
         IDefaultPool _defaultPool,
-        uint _price,
-        uint _ZKUSDInStabPool,
-        uint _n
+        uint256 _price,
+        uint256 _ZKUSDInStabPool,
+        uint256 _n
     ) internal returns (LiquidationTotals memory totals) {
         LocalVariables_LiquidationSequence memory vars;
         LiquidationValues memory singleLiquidation;
@@ -880,8 +880,8 @@ contract TroveManager is
     function _getTotalFromBatchLiquidate_RecoveryMode(
         IActivePool _activePool,
         IDefaultPool _defaultPool,
-        uint _price,
-        uint _ZKUSDInStabPool,
+        uint256 _price,
+        uint256 _ZKUSDInStabPool,
         address[] memory _troveArray
     ) internal returns (LiquidationTotals memory totals) {
         LocalVariables_LiquidationSequence memory vars;
@@ -906,7 +906,7 @@ contract TroveManager is
                     continue;
                 }
 
-                uint TCR = FullMath._computeCR(
+                uint256 TCR = FullMath._computeCR(
                     vars.entireSystemColl,
                     vars.entireSystemDebt,
                     _price
@@ -969,8 +969,8 @@ contract TroveManager is
     function _getTotalsFromBatchLiquidate_NormalMode(
         IActivePool _activePool,
         IDefaultPool _defaultPool,
-        uint _price,
-        uint _ZKUSDInStabPool,
+        uint256 _price,
+        uint256 _ZKUSDInStabPool,
         address[] memory _troveArray
     ) internal returns (LiquidationTotals memory totals) {
         LocalVariables_LiquidationSequence memory vars;
@@ -1043,8 +1043,8 @@ contract TroveManager is
     function _sendGasCompensation(
         IActivePool _activePool,
         address _liquidator,
-        uint _ZKUSD,
-        uint _ETH
+        uint256 _ZKUSD,
+        uint256 _ETH
     ) internal {
         if (_ZKUSD > 0) {
             zkusdToken.returnFromPool(gasPoolAddress, _liquidator, _ZKUSD);
@@ -1059,8 +1059,8 @@ contract TroveManager is
     function _movePendingTroveRewardsToActivePool(
         IActivePool _activePool,
         IDefaultPool _defaultPool,
-        uint _ZKUSD,
-        uint _ETH
+        uint256 _ZKUSD,
+        uint256 _ETH
     ) internal {
         _defaultPool.decreaseZKUSDDebt(_ZKUSD);
         _activePool.increaseZKUSDDebt(_ZKUSD);
@@ -1073,11 +1073,11 @@ contract TroveManager is
     function _redeemCollateralFromTrove(
         ContractsCache memory _contractsCache,
         address _borrower,
-        uint _maxZKUSDamount,
-        uint _price,
+        uint256 _maxZKUSDamount,
+        uint256 _price,
         address _upperPartialRedemptionHint,
         address _lowerPartialRedemptionHint,
-        uint _partialRedemptionHintNICR
+        uint256 _partialRedemptionHintNICR
     ) internal returns (SingleRedemptionValues memory singleRedemption) {
         // Determine the remaining amount (lot) to be redeemed, capped by the entire debt of the Trove minus the liquidation reserve
         singleRedemption.ZKUSDLot = Math.min(
@@ -1092,8 +1092,10 @@ contract TroveManager is
             .div(_price);
 
         // Decrease the debt and collateral of the current Trove according to the ZKUSD lot and corresponding ETH to send
-        uint newDebt = (Troves[_borrower].debt).sub(singleRedemption.ZKUSDLot);
-        uint newColl = (Troves[_borrower].coll).sub(singleRedemption.ETHLot);
+        uint256 newDebt = (Troves[_borrower].debt).sub(
+            singleRedemption.ZKUSDLot
+        );
+        uint256 newColl = (Troves[_borrower].coll).sub(singleRedemption.ETHLot);
 
         if (newDebt == ZKUSD_GAS_COMPENSATION) {
             // No debt left in the Trove (except for the liquidation reserve), therefore the trove gets closed
@@ -1107,7 +1109,7 @@ contract TroveManager is
             );
             emit TroveUpdated(_borrower, 0, 0, 0, Operation.redeemCollateral);
         } else {
-            uint newNICR = FullMath._computeNominalCR(newColl, newDebt);
+            uint256 newNICR = FullMath._computeNominalCR(newColl, newDebt);
 
             /*
              * If the provided hint is out of date, we bail since trying to reinsert without a good hint will almost
@@ -1156,8 +1158,8 @@ contract TroveManager is
     function _redeemCloseTrove(
         ContractsCache memory _contractsCache,
         address _borrower,
-        uint _ZKUSD,
-        uint _ETH
+        uint256 _ZKUSD,
+        uint256 _ETH
     ) internal {
         _contractsCache.zkusdToken.burn(gasPoolAddress, _ZKUSD);
         // Update Active Pool ZKUSD, and send ETH to account
@@ -1174,7 +1176,7 @@ contract TroveManager is
     function _isValidFirstRedemptionHint(
         ISortedTroves _sortedTroves,
         address _firstRedemptionHint,
-        uint _price
+        uint256 _price
     ) internal view returns (bool) {
         if (
             _firstRedemptionHint == address(0) ||
@@ -1211,13 +1213,13 @@ contract TroveManager is
      * to redeem later.
      */
     function redeemCollateral(
-        uint _ZKUSDamount,
+        uint256 _ZKUSDamount,
         address _firstRedemptionHint,
         address _upperPartialRedemptionHint,
         address _lowerPartialRedemptionHint,
-        uint _partialRedemptionHintNICR,
-        uint _maxIterations,
-        uint _maxFeePercentage
+        uint256 _partialRedemptionHintNICR,
+        uint256 _maxIterations,
+        uint256 _maxFeePercentage
     ) external override {
         ContractsCache memory contractsCache = ContractsCache(
             activePool,
@@ -1371,36 +1373,38 @@ contract TroveManager is
     // Return the nominal collateral ratio (ICR) of a given Trove, without the price. Takes a trove's pending coll and debt rewards from redistributions into account.
     function getNominalICR(
         address _borrower
-    ) public view override returns (uint) {
-        (uint currentETH, uint currentZKUSDDebt) = _getCurrentTroveAmounts(
-            _borrower
-        );
+    ) public view override returns (uint256) {
+        (
+            uint256 currentETH,
+            uint256 currentZKUSDDebt
+        ) = _getCurrentTroveAmounts(_borrower);
 
-        uint NICR = FullMath._computeNominalCR(currentETH, currentZKUSDDebt);
+        uint256 NICR = FullMath._computeNominalCR(currentETH, currentZKUSDDebt);
         return NICR;
     }
 
     // Return the current collateral ratio (ICR) of a given Trove. Takes a trove's pending coll and debt rewards from redistributions into account.
     function getCurrentICR(
         address _borrower,
-        uint _price
-    ) public view override returns (uint) {
-        (uint currentETH, uint currentZKUSDDebt) = _getCurrentTroveAmounts(
-            _borrower
-        );
+        uint256 _price
+    ) public view override returns (uint256) {
+        (
+            uint256 currentETH,
+            uint256 currentZKUSDDebt
+        ) = _getCurrentTroveAmounts(_borrower);
 
-        uint ICR = FullMath._computeCR(currentETH, currentZKUSDDebt, _price);
+        uint256 ICR = FullMath._computeCR(currentETH, currentZKUSDDebt, _price);
         return ICR;
     }
 
     function _getCurrentTroveAmounts(
         address _borrower
-    ) internal view returns (uint, uint) {
-        uint pendingETHReward = getPendingETHReward(_borrower);
-        uint pendingZKUSDDebtReward = getPendingZKUSDDebtReward(_borrower);
+    ) internal view returns (uint256, uint256) {
+        uint256 pendingETHReward = getPendingETHReward(_borrower);
+        uint256 pendingZKUSDDebtReward = getPendingZKUSDDebtReward(_borrower);
 
-        uint currentETH = Troves[_borrower].coll.add(pendingETHReward);
-        uint currentZKUSDDebt = Troves[_borrower].debt.add(
+        uint256 currentETH = Troves[_borrower].coll.add(pendingETHReward);
+        uint256 currentZKUSDDebt = Troves[_borrower].debt.add(
             pendingZKUSDDebtReward
         );
 
@@ -1422,8 +1426,10 @@ contract TroveManager is
             _requireTroveIsActive(_borrower);
 
             // Compute pending rewards
-            uint pendingETHReward = getPendingETHReward(_borrower);
-            uint pendingZKUSDDebtReward = getPendingZKUSDDebtReward(_borrower);
+            uint256 pendingETHReward = getPendingETHReward(_borrower);
+            uint256 pendingZKUSDDebtReward = getPendingZKUSDDebtReward(
+                _borrower
+            );
 
             // Apply pending rewards to trove's state
             Troves[_borrower].coll = Troves[_borrower].coll.add(
@@ -1468,9 +1474,9 @@ contract TroveManager is
     // Get the borrower's pending accumulated ETH reward, earned by their stake
     function getPendingETHReward(
         address _borrower
-    ) public view override returns (uint) {
-        uint snapshotETH = rewardSnapshots[_borrower].ETH;
-        uint rewardPerUnitStaked = L_ETH.sub(snapshotETH);
+    ) public view override returns (uint256) {
+        uint256 snapshotETH = rewardSnapshots[_borrower].ETH;
+        uint256 rewardPerUnitStaked = L_ETH.sub(snapshotETH);
 
         if (
             rewardPerUnitStaked == 0 ||
@@ -1479,9 +1485,9 @@ contract TroveManager is
             return 0;
         }
 
-        uint stake = Troves[_borrower].stake;
+        uint256 stake = Troves[_borrower].stake;
 
-        uint pendingETHReward = stake.mul(rewardPerUnitStaked).div(
+        uint256 pendingETHReward = stake.mul(rewardPerUnitStaked).div(
             DECIMAL_PRECISION
         );
 
@@ -1491,9 +1497,9 @@ contract TroveManager is
     // Get the borrower's pending accumulated ZKUSD reward, earned by their stake
     function getPendingZKUSDDebtReward(
         address _borrower
-    ) public view override returns (uint) {
-        uint snapshotZKUSDDebt = rewardSnapshots[_borrower].ZKUSDDebt;
-        uint rewardPerUnitStaked = L_ZKUSDDebt.sub(snapshotZKUSDDebt);
+    ) public view override returns (uint256) {
+        uint256 snapshotZKUSDDebt = rewardSnapshots[_borrower].ZKUSDDebt;
+        uint256 rewardPerUnitStaked = L_ZKUSDDebt.sub(snapshotZKUSDDebt);
 
         if (
             rewardPerUnitStaked == 0 ||
@@ -1502,9 +1508,9 @@ contract TroveManager is
             return 0;
         }
 
-        uint stake = Troves[_borrower].stake;
+        uint256 stake = Troves[_borrower].stake;
 
-        uint pendingZKUSDDebtReward = stake.mul(rewardPerUnitStaked).div(
+        uint256 pendingZKUSDDebtReward = stake.mul(rewardPerUnitStaked).div(
             DECIMAL_PRECISION
         );
 
@@ -1534,10 +1540,10 @@ contract TroveManager is
         view
         override
         returns (
-            uint debt,
-            uint coll,
-            uint pendingZKUSDDebtReward,
-            uint pendingETHReward
+            uint256 debt,
+            uint256 coll,
+            uint256 pendingZKUSDDebtReward,
+            uint256 pendingETHReward
         )
     {
         debt = Troves[_borrower].debt;
@@ -1557,14 +1563,14 @@ contract TroveManager is
 
     // Remove borrower's stake from the totalStakes sum, and set their stake to 0
     function _removeStake(address _borrower) internal {
-        uint stake = Troves[_borrower].stake;
+        uint256 stake = Troves[_borrower].stake;
         totalStakes = totalStakes.sub(stake);
         Troves[_borrower].stake = 0;
     }
 
     function updateStakeAndTotalStakes(
         address _borrower
-    ) external override returns (uint) {
+    ) external override returns (uint256) {
         _requireCallerIsBorrowerOperations();
         return _updateStakeAndTotalStakes(_borrower);
     }
@@ -1572,9 +1578,9 @@ contract TroveManager is
     // Update borrower's stake based on their latest collateral value
     function _updateStakeAndTotalStakes(
         address _borrower
-    ) internal returns (uint) {
-        uint newStake = _computeNewStake(Troves[_borrower].coll);
-        uint oldStake = Troves[_borrower].stake;
+    ) internal returns (uint256) {
+        uint256 newStake = _computeNewStake(Troves[_borrower].coll);
+        uint256 oldStake = Troves[_borrower].stake;
         Troves[_borrower].stake = newStake;
 
         totalStakes = totalStakes.sub(oldStake).add(newStake);
@@ -1584,8 +1590,8 @@ contract TroveManager is
     }
 
     // Calculate a new stake based on the snapshots of the totalStakes and totalCollateral taken at the last liquidation
-    function _computeNewStake(uint _coll) internal view returns (uint) {
-        uint stake;
+    function _computeNewStake(uint256 _coll) internal view returns (uint256) {
+        uint256 stake;
         if (totalCollateralSnapshot == 0) {
             stake = _coll;
         } else {
@@ -1604,8 +1610,8 @@ contract TroveManager is
     function _redistributeDebtAndColl(
         IActivePool _activePool,
         IDefaultPool _defaultPool,
-        uint _debt,
-        uint _coll
+        uint256 _debt,
+        uint256 _coll
     ) internal {
         if (_debt == 0) {
             return;
@@ -1622,16 +1628,18 @@ contract TroveManager is
          * 4) Store these errors for use in the next correction when this function is called.
          * 5) Note: static analysis tools complain about this "division before multiplication", however, it is intended.
          */
-        uint ETHNumerator = _coll.mul(DECIMAL_PRECISION).add(
+        uint256 ETHNumerator = _coll.mul(DECIMAL_PRECISION).add(
             lastETHError_Redistribution
         );
-        uint ZKUSDDebtNumerator = _debt.mul(DECIMAL_PRECISION).add(
+        uint256 ZKUSDDebtNumerator = _debt.mul(DECIMAL_PRECISION).add(
             lastZKUSDDebtError_Redistribution
         );
 
         // Get the per-unit-staked terms
-        uint ETHRewardPerUnitStaked = ETHNumerator.div(totalStakes);
-        uint ZKUSDDebtRewardPerUnitStaked = ZKUSDDebtNumerator.div(totalStakes);
+        uint256 ETHRewardPerUnitStaked = ETHNumerator.div(totalStakes);
+        uint256 ZKUSDDebtRewardPerUnitStaked = ZKUSDDebtNumerator.div(
+            totalStakes
+        );
 
         lastETHError_Redistribution = ETHNumerator.sub(
             ETHRewardPerUnitStaked.mul(totalStakes)
@@ -1662,7 +1670,7 @@ contract TroveManager is
             closedStatus != Status.nonExistent && closedStatus != Status.active
         );
 
-        uint TroveOwnersArrayLength = TroveOwners.length;
+        uint256 TroveOwnersArrayLength = TroveOwners.length;
         _requireMoreThanOneTroveInSystem(TroveOwnersArrayLength);
 
         Troves[_borrower].status = closedStatus;
@@ -1688,12 +1696,12 @@ contract TroveManager is
      */
     function _updateSystemSnapshots_excludeCollRemainder(
         IActivePool _activePool,
-        uint _collRemainder
+        uint256 _collRemainder
     ) internal {
         totalStakesSnapshot = totalStakes;
 
-        uint activeColl = _activePool.getETH();
-        uint liquidatedColl = defaultPool.getETH();
+        uint256 activeColl = _activePool.getETH();
+        uint256 liquidatedColl = defaultPool.getETH();
         totalCollateralSnapshot = activeColl.sub(_collRemainder).add(
             liquidatedColl
         );
@@ -1707,7 +1715,7 @@ contract TroveManager is
     // Push the owner's address to the Trove owners list, and record the corresponding array index on the Trove struct
     function addTroveOwnerToArray(
         address _borrower
-    ) external override returns (uint index) {
+    ) external override returns (uint256 index) {
         _requireCallerIsBorrowerOperations();
         return _addTroveOwnerToArray(_borrower);
     }
@@ -1734,7 +1742,7 @@ contract TroveManager is
      */
     function _removeTroveOwner(
         address _borrower,
-        uint TroveOwnersArrayLength
+        uint256 TroveOwnersArrayLength
     ) internal {
         Status troveStatus = Troves[_borrower].status;
         // It’s set in caller function `_closeTrove`
@@ -1743,8 +1751,8 @@ contract TroveManager is
         );
 
         uint256 index = Troves[_borrower].arrayIndex;
-        uint length = TroveOwnersArrayLength;
-        uint idxLast = length.sub(1);
+        uint256 length = TroveOwnersArrayLength;
+        uint256 idxLast = length.sub(1);
 
         assert(index <= idxLast);
 
@@ -1759,23 +1767,23 @@ contract TroveManager is
 
     // --- Recovery Mode and TCR functions ---
 
-    function getTCR(uint _price) external view override returns (uint) {
+    function getTCR(uint256 _price) external view override returns (uint256) {
         return _getTCR(_price);
     }
 
     function checkRecoveryMode(
-        uint _price
+        uint256 _price
     ) external view override returns (bool) {
         return _checkRecoveryMode(_price);
     }
 
     // Check whether or not the system *would be* in Recovery Mode, given an ETH:USD price, and the entire system coll and debt.
     function _checkPotentialRecoveryMode(
-        uint _entireSystemColl,
-        uint _entireSystemDebt,
-        uint _price
+        uint256 _entireSystemColl,
+        uint256 _entireSystemDebt,
+        uint256 _price
     ) internal pure returns (bool) {
-        uint TCR = FullMath._computeCR(
+        uint256 TCR = FullMath._computeCR(
             _entireSystemColl,
             _entireSystemDebt,
             _price
@@ -1793,19 +1801,21 @@ contract TroveManager is
      * 2) increases the baseRate based on the amount redeemed, as a proportion of total supply
      */
     function _updateBaseRateFromRedemption(
-        uint _ETHDrawn,
-        uint _price,
-        uint _totalZKUSDSupply
-    ) internal returns (uint) {
-        uint decayedBaseRate = _calcDecayedBaseRate();
+        uint256 _ETHDrawn,
+        uint256 _price,
+        uint256 _totalZKUSDSupply
+    ) internal returns (uint256) {
+        uint256 decayedBaseRate = _calcDecayedBaseRate();
 
         /* Convert the drawn ETH back to ZKUSD at face value rate (1 ZKUSD:1 USD), in order to get
          * the fraction of total supply that was redeemed at face value. */
-        uint redeemedZKUSDFraction = _ETHDrawn.mul(_price).div(
+        uint256 redeemedZKUSDFraction = _ETHDrawn.mul(_price).div(
             _totalZKUSDSupply
         );
 
-        uint newBaseRate = decayedBaseRate.add(redeemedZKUSDFraction.div(BETA));
+        uint256 newBaseRate = decayedBaseRate.add(
+            redeemedZKUSDFraction.div(BETA)
+        );
         newBaseRate = Math.min(newBaseRate, DECIMAL_PRECISION); // cap baseRate at a maximum of 100%
         //assert(newBaseRate <= DECIMAL_PRECISION); // This is already enforced in the line above
         assert(newBaseRate > 0); // Base rate is always non-zero after redemption
@@ -1819,15 +1829,22 @@ contract TroveManager is
         return newBaseRate;
     }
 
-    function getRedemptionRate() public view override returns (uint) {
+    function getRedemptionRate() public view override returns (uint256) {
         return _calcRedemptionRate(baseRate);
     }
 
-    function getRedemptionRateWithDecay() public view override returns (uint) {
+    function getRedemptionRateWithDecay()
+        public
+        view
+        override
+        returns (uint256)
+    {
         return _calcRedemptionRate(_calcDecayedBaseRate());
     }
 
-    function _calcRedemptionRate(uint _baseRate) internal pure returns (uint) {
+    function _calcRedemptionRate(
+        uint256 _baseRate
+    ) internal pure returns (uint256) {
         return
             Math.min(
                 REDEMPTION_FEE_FLOOR.add(_baseRate),
@@ -1835,21 +1852,23 @@ contract TroveManager is
             );
     }
 
-    function _getRedemptionFee(uint _ETHDrawn) internal view returns (uint) {
+    function _getRedemptionFee(
+        uint256 _ETHDrawn
+    ) internal view returns (uint256) {
         return _calcRedemptionFee(getRedemptionRate(), _ETHDrawn);
     }
 
     function getRedemptionFeeWithDecay(
-        uint _ETHDrawn
-    ) external view override returns (uint) {
+        uint256 _ETHDrawn
+    ) external view override returns (uint256) {
         return _calcRedemptionFee(getRedemptionRateWithDecay(), _ETHDrawn);
     }
 
     function _calcRedemptionFee(
-        uint _redemptionRate,
-        uint _ETHDrawn
-    ) internal pure returns (uint) {
-        uint redemptionFee = _redemptionRate.mul(_ETHDrawn).div(
+        uint256 _redemptionRate,
+        uint256 _ETHDrawn
+    ) internal pure returns (uint256) {
+        uint256 redemptionFee = _redemptionRate.mul(_ETHDrawn).div(
             DECIMAL_PRECISION
         );
         require(
@@ -1861,34 +1880,41 @@ contract TroveManager is
 
     // --- Borrowing fee functions ---
 
-    function getBorrowingRate() public view override returns (uint) {
+    function getBorrowingRate() public view override returns (uint256) {
         return _calcBorrowingRate(baseRate);
     }
 
-    function getBorrowingRateWithDecay() public view override returns (uint) {
+    function getBorrowingRateWithDecay()
+        public
+        view
+        override
+        returns (uint256)
+    {
         return _calcBorrowingRate(_calcDecayedBaseRate());
     }
 
-    function _calcBorrowingRate(uint _baseRate) internal pure returns (uint) {
+    function _calcBorrowingRate(
+        uint256 _baseRate
+    ) internal pure returns (uint256) {
         return Math.min(BORROWING_FEE_FLOOR.add(_baseRate), MAX_BORROWING_FEE);
     }
 
     function getBorrowingFee(
-        uint _ZKUSDDebt
-    ) external view override returns (uint) {
+        uint256 _ZKUSDDebt
+    ) external view override returns (uint256) {
         return _calcBorrowingFee(getBorrowingRate(), _ZKUSDDebt);
     }
 
     function getBorrowingFeeWithDecay(
-        uint _ZKUSDDebt
-    ) external view override returns (uint) {
+        uint256 _ZKUSDDebt
+    ) external view override returns (uint256) {
         return _calcBorrowingFee(getBorrowingRateWithDecay(), _ZKUSDDebt);
     }
 
     function _calcBorrowingFee(
-        uint _borrowingRate,
-        uint _ZKUSDDebt
-    ) internal pure returns (uint) {
+        uint256 _borrowingRate,
+        uint256 _ZKUSDDebt
+    ) internal pure returns (uint256) {
         return _borrowingRate.mul(_ZKUSDDebt).div(DECIMAL_PRECISION);
     }
 
@@ -1896,7 +1922,7 @@ contract TroveManager is
     function decayBaseRateFromBorrowing() external override {
         _requireCallerIsBorrowerOperations();
 
-        uint decayedBaseRate = _calcDecayedBaseRate();
+        uint256 decayedBaseRate = _calcDecayedBaseRate();
         assert(decayedBaseRate <= DECIMAL_PRECISION); // The baseRate can decay to 0
 
         baseRate = decayedBaseRate;
@@ -1909,7 +1935,7 @@ contract TroveManager is
 
     // Update the last fee operation time only if time passed >= decay interval. This prevents base rate griefing.
     function _updateLastFeeOpTime() internal {
-        uint timePassed = block.timestamp.sub(lastFeeOperationTime);
+        uint256 timePassed = block.timestamp.sub(lastFeeOperationTime);
 
         if (timePassed >= SECONDS_IN_ONE_MINUTE) {
             lastFeeOperationTime = block.timestamp;
@@ -1917,14 +1943,17 @@ contract TroveManager is
         }
     }
 
-    function _calcDecayedBaseRate() internal view returns (uint) {
-        uint minutesPassed = _minutesPassedSinceLastFeeOp();
-        uint decayFactor = FullMath._decPow(MINUTE_DECAY_FACTOR, minutesPassed);
+    function _calcDecayedBaseRate() internal view returns (uint256) {
+        uint256 minutesPassed = _minutesPassedSinceLastFeeOp();
+        uint256 decayFactor = FullMath._decPow(
+            MINUTE_DECAY_FACTOR,
+            minutesPassed
+        );
 
         return baseRate.mul(decayFactor).div(DECIMAL_PRECISION);
     }
 
-    function _minutesPassedSinceLastFeeOp() internal view returns (uint) {
+    function _minutesPassedSinceLastFeeOp() internal view returns (uint256) {
         return
             (block.timestamp.sub(lastFeeOperationTime)).div(
                 SECONDS_IN_ONE_MINUTE
@@ -1950,7 +1979,7 @@ contract TroveManager is
     function _requireZKUSDBalanceCoversRedemption(
         IZKUSDToken _zkusdToken,
         address _redeemer,
-        uint _amount
+        uint256 _amount
     ) internal view {
         require(
             _zkusdToken.balanceOf(_redeemer) >= _amount,
@@ -1959,7 +1988,7 @@ contract TroveManager is
     }
 
     function _requireMoreThanOneTroveInSystem(
-        uint TroveOwnersArrayLength
+        uint256 TroveOwnersArrayLength
     ) internal view {
         require(
             TroveOwnersArrayLength > 1 && sortedTroves.getSize() > 1,
@@ -1967,11 +1996,11 @@ contract TroveManager is
         );
     }
 
-    function _requireAmountGreaterThanZero(uint _amount) internal pure {
+    function _requireAmountGreaterThanZero(uint256 _amount) internal pure {
         require(_amount > 0, "TroveManager: Amount must be greater than zero");
     }
 
-    function _requireTCRoverMCR(uint _price) internal view {
+    function _requireTCRoverMCR(uint256 _price) internal view {
         require(
             _getTCR(_price) >= MCR,
             "TroveManager: Cannot redeem when TCR < MCR"
@@ -1979,7 +2008,7 @@ contract TroveManager is
     }
 
     function _requireAfterBootstrapPeriod() internal view {
-        uint systemDeploymentTime = zkToken.getDeploymentStartTime();
+        uint256 systemDeploymentTime = zkToken.getDeploymentStartTime();
         require(
             block.timestamp >= systemDeploymentTime.add(BOOTSTRAP_PERIOD),
             "TroveManager: Redemptions are not allowed during bootstrap phase"
@@ -1987,7 +2016,7 @@ contract TroveManager is
     }
 
     function _requireValidMaxFeePercentage(
-        uint _maxFeePercentage
+        uint256 _maxFeePercentage
     ) internal pure {
         require(
             _maxFeePercentage >= REDEMPTION_FEE_FLOOR &&
@@ -2000,71 +2029,71 @@ contract TroveManager is
 
     function getTroveStatus(
         address _borrower
-    ) external view override returns (uint) {
-        return uint(Troves[_borrower].status);
+    ) external view override returns (uint256) {
+        return uint256(Troves[_borrower].status);
     }
 
     function getTroveStake(
         address _borrower
-    ) external view override returns (uint) {
+    ) external view override returns (uint256) {
         return Troves[_borrower].stake;
     }
 
     function getTroveDebt(
         address _borrower
-    ) external view override returns (uint) {
+    ) external view override returns (uint256) {
         return Troves[_borrower].debt;
     }
 
     function getTroveColl(
         address _borrower
-    ) external view override returns (uint) {
+    ) external view override returns (uint256) {
         return Troves[_borrower].coll;
     }
 
     // --- Trove property setters, called by BorrowerOperations ---
 
-    function setTroveStatus(address _borrower, uint _num) external override {
+    function setTroveStatus(address _borrower, uint256 _num) external override {
         _requireCallerIsBorrowerOperations();
         Troves[_borrower].status = Status(_num);
     }
 
     function increaseTroveColl(
         address _borrower,
-        uint _collIncrease
-    ) external override returns (uint) {
+        uint256 _collIncrease
+    ) external override returns (uint256) {
         _requireCallerIsBorrowerOperations();
-        uint newColl = Troves[_borrower].coll.add(_collIncrease);
+        uint256 newColl = Troves[_borrower].coll.add(_collIncrease);
         Troves[_borrower].coll = newColl;
         return newColl;
     }
 
     function decreaseTroveColl(
         address _borrower,
-        uint _collDecrease
-    ) external override returns (uint) {
+        uint256 _collDecrease
+    ) external override returns (uint256) {
         _requireCallerIsBorrowerOperations();
-        uint newColl = Troves[_borrower].coll.sub(_collDecrease);
+        uint256 newColl = Troves[_borrower].coll.sub(_collDecrease);
         Troves[_borrower].coll = newColl;
         return newColl;
     }
 
     function increaseTroveDebt(
         address _borrower,
-        uint _debtIncrease
-    ) external override returns (uint) {
+        uint256 _debtIncrease
+    ) external override returns (uint256) {
         _requireCallerIsBorrowerOperations();
-        uint newDebt = Troves[_borrower].debt.add(_debtIncrease);
+        uint256 newDebt = Troves[_borrower].debt.add(_debtIncrease);
         Troves[_borrower].debt = newDebt;
         return newDebt;
     }
 
     function decreaseTroveDebt(
         address _borrower,
-        uint _debtDecrease
-    ) external override returns (uint) {
+        uint256 _debtDecrease
+    ) external override returns (uint256) {
         _requireCallerIsBorrowerOperations();
-        uint newDebt = Troves[_borrower].debt.sub(_debtDecrease);
+        uint256 newDebt = Troves[_borrower].debt.sub(_debtDecrease);
         Troves[_borrower].debt = newDebt;
         return newDebt;
     }

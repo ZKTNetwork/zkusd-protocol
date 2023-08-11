@@ -1,7 +1,7 @@
 import { Signer, BigNumber } from "ethers";
 import {ethers, network} from "hardhat";
 import {BorrowerOperations, PriceFeedTestnet, TroveManager} from "../typechain-types";
-import {ContractType} from "../test-bak/TestHelpers";
+import {ContractType} from "../duplicate/TestHelpers";
 import {max} from "hardhat/internal/util/bigint";
 
 const _1E18BN = BigNumber.from("1000000000000000000")
@@ -21,8 +21,6 @@ async function main() {
     const zkusdAmount = netBorrowingAmount.add(BigNumber.from(0))
     const totalDebt = (await tm.getBorrowingFee(zkusdAmount)).add(await bo.getCompositeDebt(zkusdAmount))
     const value = icr.mul(totalDebt).div(await oracle.getPrice())
-
-    console.log(ethers.utils.formatEther(value))
 
     const maxFeePercentage = ethers.BigNumber.from("1000000000000000000")
     const tx = await bo.connect(account0).openTrove(
