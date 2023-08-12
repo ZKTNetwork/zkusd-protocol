@@ -1154,6 +1154,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_defaultKickBackRate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setDefaultKickbackRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "sortedTroves",
     "outputs": [

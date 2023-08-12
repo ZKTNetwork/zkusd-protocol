@@ -131,7 +131,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -252,7 +252,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -380,7 +380,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18),  {
             from: account,
           });
         }
@@ -518,7 +518,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -648,7 +648,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -785,15 +785,15 @@ contract(
 
         // Whale transfers 10k, 20k, 30k ZKUSD to A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: carol,
         });
 
@@ -919,15 +919,15 @@ contract(
 
         // Whale transfers 10k, 20k, 30k ZKUSD to A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: carol,
         });
 
@@ -1066,15 +1066,15 @@ contract(
       Carol: 13100 ZKUSD */
         // Whale transfers ZKUSD to  A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(2000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(2000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(2000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(456000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(456000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(456000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(13100, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(13100, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(13100, 18), {
           from: carol,
         });
 
@@ -1226,7 +1226,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1263,7 +1263,7 @@ contract(
 
         // Whale transfers 10k to Dennis who then provides to SP
         await zkusdToken.transfer(dennis, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: dennis,
         });
 
@@ -1399,7 +1399,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1443,7 +1443,7 @@ contract(
 
         // Dennis opens a trove and provides to SP
         await zkusdToken.transfer(dennis, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: dennis,
         });
 
@@ -1580,15 +1580,15 @@ contract(
       */
         // Whale transfers ZKUSD to  A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(60000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(60000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(60000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(15000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(15000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(15000, 18), {
           from: carol,
         });
 
@@ -1636,7 +1636,7 @@ contract(
 
         // Dennis provides 25000 ZKUSD
         await zkusdToken.transfer(dennis, dec(25000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(25000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(25000, 18), {
           from: dennis,
         });
 
@@ -1774,7 +1774,7 @@ contract(
         const depositors = [alice, bob, carol, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1949,19 +1949,19 @@ contract(
       */
         // Whale transfers ZKUSD to  A, B,C and D respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(25000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(25000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(25000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(12500, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(12500, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(12500, 18), {
           from: carol,
         });
         await zkusdToken.transfer(dennis, dec(40000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(40000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(40000, 18), {
           from: dennis,
         });
 
@@ -2137,7 +2137,7 @@ contract(
         const depositors = [alice, bob, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2181,7 +2181,7 @@ contract(
 
         // Carol makes deposit
         await zkusdToken.transfer(carol, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: carol,
         });
 
@@ -2328,7 +2328,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2359,7 +2359,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors_2) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2507,7 +2507,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2581,7 +2581,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2669,7 +2669,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2698,17 +2698,17 @@ contract(
 
         // Carol, Dennis, Erin each deposit 10000, 20000, 30000 ZKUSD respectively
         await zkusdToken.transfer(carol, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: dennis,
         });
 
         await zkusdToken.transfer(erin, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: erin,
         });
 
@@ -2864,7 +2864,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3041,7 +3041,7 @@ contract(
         const depositors_1 = [alice, bob];
         for (account of depositors_1) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -3053,7 +3053,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors_2) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -3065,7 +3065,7 @@ contract(
         const depositors_3 = [erin, flyn];
         for (account of depositors_3) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -3077,7 +3077,7 @@ contract(
         const depositors_4 = [graham, harriet];
         for (account of depositors_4) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -3284,7 +3284,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3328,7 +3328,7 @@ contract(
           .toString();
 
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
@@ -3408,7 +3408,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3448,17 +3448,17 @@ contract(
 
         //B, C, D deposit to Stability Pool
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
         await zkusdToken.transfer(carol, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: dennis,
         });
 
@@ -3582,7 +3582,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3621,7 +3621,7 @@ contract(
 
         // Bob deposits 10k ZKUSD
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
@@ -3702,7 +3702,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3740,17 +3740,17 @@ contract(
 
         // B, C, D deposit 10000, 20000, 30000 ZKUSD
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
         await zkusdToken.transfer(carol, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: dennis,
         });
 
@@ -3879,7 +3879,7 @@ contract(
         await priceFeed.setPrice(dec(100, 18));
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3979,7 +3979,7 @@ contract(
         await priceFeed.setPrice(dec(100, 18));
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: alice,
         });
 
@@ -3991,7 +3991,7 @@ contract(
 
         // B deposits 9999.9 ZKUSD
         await zkusdToken.transfer(bob, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: bob,
         });
 
@@ -4003,7 +4003,7 @@ contract(
 
         // C deposits 9999.9 ZKUSD
         await zkusdToken.transfer(carol, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: carol,
         });
 
@@ -4015,7 +4015,7 @@ contract(
 
         // D deposits 9999.9 ZKUSD
         await zkusdToken.transfer(dennis, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: dennis,
         });
 
@@ -4182,10 +4182,10 @@ contract(
         // A, B provide 10k ZKUSD
         await zkusdToken.transfer(A, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(B, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: A,
         });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: B,
         });
 
@@ -4236,10 +4236,10 @@ contract(
         // C, D provide 10k ZKUSD
         await zkusdToken.transfer(C, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(D, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: C,
         });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: D,
         });
 
@@ -4290,10 +4290,10 @@ contract(
         // E, F provide 10k ZKUSD
         await zkusdToken.transfer(E, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(F, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: E,
         });
-        await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: F,
         });
 
@@ -4359,7 +4359,7 @@ contract(
             account,
             { from: account, value: dec(2, 27) }
           );
-          await stabilityPool.provideToSP(dec(1, 36), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(1, 36), {
             from: account,
           });
         }
@@ -4458,7 +4458,7 @@ contract(
             account,
             { from: account, value: dec(2, 29) }
           );
-          await stabilityPool.provideToSP(dec(1, 38), ZERO_ADDRESS, {
+          await stabilityPool.provideToSP(dec(1, 38), {
             from: account,
           });
         }

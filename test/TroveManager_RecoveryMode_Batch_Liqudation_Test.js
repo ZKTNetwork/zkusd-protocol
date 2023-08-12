@@ -94,7 +94,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt, ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
           from: whale,
         });
 
@@ -234,7 +234,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt, ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
           from: whale,
         });
 
@@ -291,7 +291,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt, ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
           from: whale,
         });
 

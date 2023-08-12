@@ -371,7 +371,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits to SP
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // check rewards-per-unit-staked before
     const P_Before = (await stabilityPool.P()).toString();
@@ -606,7 +606,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 390ZKUSD to the Stability Pool
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // --- TEST ---
     // price drops to 1ETH:100ZKUSD, reducing TCR below 150%
@@ -784,7 +784,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
 
     // Alice deposits ZKUSD in the Stability Pool
     const spDeposit = B_totalDebt.add(toBN(1));
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // --- TEST ---
     // price drops to 1ETH:100ZKUSD, reducing TCR below 150%
@@ -877,7 +877,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
 
     // Alice deposits ZKUSD in the Stability Pool
     const spDeposit = B_totalDebt.add(toBN(1));
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // --- TEST ---
     // price drops to 1ETH:100ZKUSD, reducing TCR below 150%
@@ -950,7 +950,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)),  {
       from: alice,
     });
 
@@ -1032,7 +1032,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)),  {
       from: alice,
     });
 
@@ -1095,7 +1095,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(B_totalDebt.add(toBN(1)),  {
       from: alice,
     });
 
@@ -1192,7 +1192,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: totalLiquidatedDebt,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(totalLiquidatedDebt, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(totalLiquidatedDebt,  {
       from: whale,
     });
 
@@ -1339,7 +1339,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 1490 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP("1490000000000000000000", ZERO_ADDRESS, {
+    await stabilityPool.provideToSP("1490000000000000000000",  {
       from: alice,
     });
 
@@ -1394,7 +1394,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 100 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
 
@@ -1462,7 +1462,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 100 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
 
@@ -1521,7 +1521,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 100 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
 
@@ -1585,7 +1585,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 100 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
 
@@ -1649,7 +1649,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits 100 ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
 
@@ -1712,7 +1712,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     assert.isFalse(await sortedTroves.contains(bob));
 
     // Alice provides another 50 ZKUSD to pool
-    await stabilityPool.provideToSP(dec(50, 18), ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(dec(50, 18),  { from: alice });
 
     assert.isTrue(await th.checkRecoveryMode(contracts));
 
@@ -1763,7 +1763,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: dec(50, 18),
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(dec(50, 18), ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(dec(50, 18),  { from: whale });
 
     const { collateral: A_coll } = await openTrove({
       ICR: toBN(dec(200, 16)),
@@ -1826,7 +1826,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
   it("liquidate(): Doesn't liquidate undercollateralized trove if it is the only trove in the system", async () => {
     // Alice creates a single trove with 0.62 ETH and a debt of 62 ZKUSD, and provides 10 ZKUSD to SP
     await openTrove({ ICR: toBN(dec(200, 16)), extraParams: { from: alice } });
-    await stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(dec(10, 18),  { from: alice });
 
     assert.isFalse(await th.checkRecoveryMode(contracts));
 
@@ -1866,7 +1866,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await openTrove({ ICR: toBN(dec(200, 16)), extraParams: { from: alice } });
 
     // Alice proves 10 ZKUSD to SP
-    await stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(dec(10, 18),  { from: alice });
 
     assert.isFalse(await th.checkRecoveryMode(contracts));
 
@@ -1946,7 +1946,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await openTrove({ ICR: toBN(dec(142, 16)), extraParams: { from: C } });
 
     // C fills SP with 130 ZKUSD
-    await stabilityPool.provideToSP(dec(130, 18), ZERO_ADDRESS, { from: C });
+    await stabilityPool.provideToSP(dec(130, 18),  { from: C });
 
     await priceFeed.setPrice(dec(150, 18));
     const price = await priceFeed.getPrice();
@@ -2123,7 +2123,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await zkusdToken.transfer(dennis, spDeposit, { from: bob });
 
     //Dennis provides 200 ZKUSD to SP
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: dennis });
+    await stabilityPool.provideToSP(spDeposit,  { from: dennis });
 
     // Price drop
     await priceFeed.setPrice(dec(105, 18));
@@ -2239,7 +2239,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD in the Stability Pool
-    await stabilityPool.provideToSP(B_totalDebt, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(B_totalDebt,  { from: alice });
 
     // --- TEST ---
     // price drops to 1ETH:100ZKUSD, reducing TCR below 150%
@@ -2385,7 +2385,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: B_totalDebt_2,
       extraParams: { from: alice },
     });
-    await stabilityPool.provideToSP(B_totalDebt_2, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(B_totalDebt_2,  {
       from: alice,
     });
 
@@ -2470,7 +2470,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD to Stability Pool
-    await stabilityPool.provideToSP(liquidationAmount, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(liquidationAmount,  {
       from: alice,
     });
 
@@ -2619,7 +2619,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD to Stability Pool
-    await stabilityPool.provideToSP(liquidationAmount, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(liquidationAmount,  {
       from: alice,
     });
 
@@ -2853,7 +2853,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await openTrove({ ICR: toBN(dec(111, 16)), extraParams: { from: freddy } });
 
     // Whale puts some tokens in Stability Pool
-    await stabilityPool.provideToSP(dec(300, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(300, 18),  {
       from: whale,
     });
 
@@ -2909,7 +2909,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: dec(500, 18),
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(dec(500, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(500, 18),  {
       from: whale,
     });
 
@@ -3250,7 +3250,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops, but all troves remain active
     await priceFeed.setPrice(dec(100, 18));
@@ -3395,7 +3395,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops, but all troves remain active
     await priceFeed.setPrice(dec(100, 18));
@@ -3570,7 +3570,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: dec(4000, 18),
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(W_zkusdAmount, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(W_zkusdAmount,  {
       from: whale,
     });
 
@@ -3598,10 +3598,10 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // A, B provide to the SP
-    await stabilityPool.provideToSP(A_zkusdAmount, ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(A_zkusdAmount,  {
       from: alice,
     });
-    await stabilityPool.provideToSP(B_zkusdAmount, ZERO_ADDRESS, { from: bob });
+    await stabilityPool.provideToSP(B_zkusdAmount,  { from: bob });
 
     const totalDeposit = W_zkusdAmount.add(A_zkusdAmount).add(B_zkusdAmount);
 
@@ -3770,7 +3770,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: dec(400, 18),
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(dec(400, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(400, 18),  {
       from: whale,
     });
 
@@ -3787,10 +3787,10 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await openTrove({ ICR: toBN(dec(170, 16)), extraParams: { from: carol } });
 
     // A, B provide 100, 300 to the SP
-    await stabilityPool.provideToSP(dec(100, 18), ZERO_ADDRESS, {
+    await stabilityPool.provideToSP(dec(100, 18),  {
       from: alice,
     });
-    await stabilityPool.provideToSP(dec(300, 18), ZERO_ADDRESS, { from: bob });
+    await stabilityPool.provideToSP(dec(300, 18),  { from: bob });
 
     assert.equal((await sortedTroves.getSize()).toString(), "4");
 
@@ -3894,7 +3894,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -3952,7 +3952,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4023,7 +4023,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4093,7 +4093,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4162,7 +4162,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4232,7 +4232,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4346,7 +4346,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4413,7 +4413,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD to Stability Pool
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // price drops to 1ETH:85ZKUSD, reducing TCR below 150%
     await priceFeed.setPrice("85000000000000000000");
@@ -4548,7 +4548,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD to Stability Pool
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // price drops to 1ETH:85ZKUSD, reducing TCR below 150%
     await priceFeed.setPrice("85000000000000000000");
@@ -4682,7 +4682,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     });
 
     // Alice deposits ZKUSD to Stability Pool
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: alice });
+    await stabilityPool.provideToSP(spDeposit,  { from: alice });
 
     // to compensate borrowing fee
     await zkusdToken.transfer(alice, A_totalDebt, { from: whale });
@@ -4804,7 +4804,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4860,7 +4860,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -4931,7 +4931,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5002,7 +5002,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5077,7 +5077,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5145,7 +5145,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5254,7 +5254,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5315,7 +5315,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops
     await priceFeed.setPrice(dec(120, 18));
@@ -5503,7 +5503,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops, but all troves remain active
     await priceFeed.setPrice(dec(110, 18));
@@ -5599,7 +5599,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
     await priceFeed.setPrice(dec(110, 18));
     await stabilityPool.provideToSP(
       B_totalDebt.add(toBN(dec(50, 18))),
-      ZERO_ADDRESS,
+      
       { from: whale }
     );
 
@@ -5664,7 +5664,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops, but all troves remain active
     await priceFeed.setPrice(dec(100, 18));
@@ -5804,7 +5804,7 @@ contract("TroveManager - in Recovery Mode", async (accounts) => {
       extraZKUSDAmount: spDeposit,
       extraParams: { from: whale },
     });
-    await stabilityPool.provideToSP(spDeposit, ZERO_ADDRESS, { from: whale });
+    await stabilityPool.provideToSP(spDeposit,  { from: whale });
 
     // Price drops, but all troves remain active
     await priceFeed.setPrice(dec(100, 18));

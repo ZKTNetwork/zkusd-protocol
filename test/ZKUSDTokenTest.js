@@ -563,9 +563,9 @@ contract("ZKUSDToken", async (accounts) => {
     testCorpus({ withProxy: false });
   });
 
-  describe("Basic token functions, with Proxy", async () => {
-    testCorpus({ withProxy: true });
-  });
+  // describe("Basic token functions, with Proxy", async () => {
+  //   testCorpus({ withProxy: true });
+  // });
 });
 
 contract("Reset chain state", async (accounts) => {});

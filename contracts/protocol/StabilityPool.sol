@@ -181,7 +181,7 @@ contract StabilityPool is
 
     // remove frontEnd and use adminVault instead, each FrontEnds is treasury address with 99.9% kickbackRate
     address public treasury;
-    uint256 public constant DefaultKickbackRate =
+    uint256 public DefaultKickbackRate =
         DECIMAL_PRECISION - (10 * DECIMAL_PRECISION) / 1000;
 
     mapping(address => uint256) public frontEndStakes; // depositer address (front end address)[expired] -> last recorded total deposits, tagged with that front end
@@ -276,6 +276,11 @@ contract StabilityPool is
 
     function getTotalZKUSDDeposits() external view override returns (uint256) {
         return totalZKUSDDeposits;
+    }
+
+    function setDefaultKickbackRate(uint256 _defaultKickBackRate) external onlyOwner {
+        require(_defaultKickBackRate <= DECIMAL_PRECISION, "DECIMAL_PRECISION");
+        DefaultKickbackRate = _defaultKickBackRate;
     }
 
     // --- External Depositor Functions ---
