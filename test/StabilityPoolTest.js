@@ -16,10 +16,6 @@ const maxBytes32 = th.maxBytes32;
 
 const GAS_PRICE = 10000000;
 
-const getFrontEndTag = async (stabilityPool, depositor) => {
-  return (await stabilityPool.deposits(depositor))[1];
-};
-
 contract("StabilityPool", async (accounts) => {
   const [
     owner,
@@ -39,14 +35,13 @@ contract("StabilityPool", async (accounts) => {
     D,
     E,
     F,
-    frontEnd_1,
-    frontEnd_2,
-    frontEnd_3,
+    
+    
+    
   ] = accounts;
 
   const [bountyAddress, lpRewardsAddress, multisig] = accounts.slice(997, 1000);
 
-  const frontEnds = [frontEnd_1, frontEnd_2, frontEnd_3];
   let contracts;
   let priceFeed;
   let zkusdToken;
@@ -101,9 +96,6 @@ contract("StabilityPool", async (accounts) => {
       await deploymentHelper.connectZKTContracts(ZKTContracts);
       await deploymentHelper.connectCoreContracts(contracts, ZKTContracts);
       await deploymentHelper.connectZKTContractsToCore(ZKTContracts, contracts);
-
-      // Register 3 front ends
-      await th.registerFrontEnds(frontEnds, stabilityPool);
     });
 
     // --- provideToSP() ---
@@ -119,7 +111,7 @@ contract("StabilityPool", async (accounts) => {
       // --- TEST ---
 
       // provideToSP()
-      await stabilityPool.provideToSP(200, ZERO_ADDRESS, { from: alice });
+      await stabilityPool.provideToSP(200, { from: alice });
 
       // check ZKUSD balances after
       const stabilityPool_ZKUSD_After =
@@ -138,15 +130,15 @@ contract("StabilityPool", async (accounts) => {
       // --- TEST ---
       // check user's deposit record before
       const alice_depositRecord_Before = await stabilityPool.deposits(alice);
-      assert.equal(alice_depositRecord_Before[0], 0);
+      assert.equal(alice_depositRecord_Before, 0);
 
       // provideToSP()
-      await stabilityPool.provideToSP(200, frontEnd_1, { from: alice });
+      await stabilityPool.provideToSP(200,{ from: alice });
 
       // check user's deposit record after
       const alice_depositRecord_After = (
         await stabilityPool.deposits(alice)
-      )[0];
+      );
       assert.equal(alice_depositRecord_After, 200);
     });
 
@@ -163,7 +155,7 @@ contract("StabilityPool", async (accounts) => {
       const alice_ZKUSDBalance_Before = await zkusdToken.balanceOf(alice);
 
       // provideToSP()
-      await stabilityPool.provideToSP(200, frontEnd_1, { from: alice });
+      await stabilityPool.provideToSP(200, { from: alice });
 
       // check user's ZKUSD balance change
       const alice_ZKUSDBalance_After = await zkusdToken.balanceOf(alice);
@@ -182,7 +174,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(2000, 18), {
         from: whale,
       });
 
@@ -200,7 +192,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: whale, value: dec(50, "ether") },
       });
       const whaleZKUSD = await zkusdToken.balanceOf(whale);
-      await stabilityPool.provideToSP(whaleZKUSD, frontEnd_1, { from: whale });
+      await stabilityPool.provideToSP(whaleZKUSD,  { from: whale });
 
       // 2 Troves opened, each withdraws minimum debt
       await openTrove({
@@ -253,7 +245,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(alice_snapshot_G_Before, "0");
 
       // Make deposit
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
 
@@ -277,7 +269,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: whale, value: dec(50, "ether") },
       });
       const whaleZKUSD = await zkusdToken.balanceOf(whale);
-      await stabilityPool.provideToSP(whaleZKUSD, frontEnd_1, { from: whale });
+      await stabilityPool.provideToSP(whaleZKUSD,  { from: whale });
 
       // 3 Troves opened. Two users withdraw 160 ZKUSD each
       await openTrove({
@@ -304,7 +296,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(3, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(150, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(150, 18),  {
         from: alice,
       });
 
@@ -326,13 +318,13 @@ contract("StabilityPool", async (accounts) => {
 
       // Alice makes deposit #2
       const alice_topUp_1 = toBN(dec(100, 18));
-      await stabilityPool.provideToSP(alice_topUp_1, frontEnd_1, {
+      await stabilityPool.provideToSP(alice_topUp_1,  {
         from: alice,
       });
 
       const alice_newDeposit_1 = (
         await stabilityPool.deposits(alice)
-      )[0].toString();
+      ).toString();
       assert.equal(
         alice_compoundedDeposit_1.add(alice_topUp_1),
         alice_newDeposit_1
@@ -357,7 +349,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: bob },
       });
-      await stabilityPool.provideToSP(dec(427, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(427, 18),  {
         from: alice,
       });
 
@@ -373,7 +365,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(S_2.gt(S_1));
 
       // Alice makes deposit #3:  100ZKUSD
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
 
@@ -409,7 +401,7 @@ contract("StabilityPool", async (accounts) => {
 
       const aliceTxPromise = stabilityPool.provideToSP(
         aliceZKUSDbal.add(toBN(1)),
-        frontEnd_1,
+        
         { from: alice }
       );
       await assertRevert(aliceTxPromise, "revert");
@@ -418,7 +410,7 @@ contract("StabilityPool", async (accounts) => {
 
       const bobTxPromise = stabilityPool.provideToSP(
         bobZKUSDbal.add(toBN(dec(235534, 18))),
-        frontEnd_1,
+        
         { from: bob }
       );
       await assertRevert(bobTxPromise, "revert");
@@ -447,7 +439,7 @@ contract("StabilityPool", async (accounts) => {
 
       // Alice attempts to deposit 2^256-1 ZKUSD
       try {
-        aliceTx = await stabilityPool.provideToSP(maxBytes32, frontEnd_1, {
+        aliceTx = await stabilityPool.provideToSP(maxBytes32,  {
           from: alice,
         });
         assert.isFalse(tx.receipt.status);
@@ -464,7 +456,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: whale, value: dec(50, "ether") },
       });
-      await stabilityPool.provideToSP(dec(1850, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1850, 18),  {
         from: whale,
       });
 
@@ -488,9 +480,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // NonPayable makes deposit #1: 150 ZKUSD
-      const txData1 = th.getTransactionData("provideToSP(uint256,address)", [
+      const txData1 = th.getTransactionData("provideToSP(uint256)", [
         web3.utils.toHex(dec(150, 18)),
-        frontEnd_1,
       ]);
       const tx1 = await nonPayable.forward(stabilityPool.address, txData1);
 
@@ -518,9 +509,8 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // NonPayable tries to make deposit #2: 100ZKUSD (which also attempts to withdraw ETH gain)
-      const txData2 = th.getTransactionData("provideToSP(uint256,address)", [
+      const txData2 = th.getTransactionData("provideToSP(uint256)", [
         web3.utils.toHex(dec(100, 18)),
-        frontEnd_1,
       ]);
       await th.assertRevert(
         nonPayable.forward(stabilityPool.address, txData2),
@@ -552,11 +542,11 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18),  {
         from: carol,
       });
 
@@ -615,7 +605,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(ETHinSP.gt(mv._zeroBN));
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: dennis,
       });
       assert.equal(
@@ -677,11 +667,11 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18),  {
         from: carol,
       });
 
@@ -722,7 +712,7 @@ contract("StabilityPool", async (accounts) => {
       const TCR_Before = (await th.getTCR(contracts)).toString();
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: dennis,
       });
       assert.equal(
@@ -769,10 +759,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_1, { from: bob });
+      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
 
       // D opens a trove
       await openTrove({
@@ -831,7 +821,7 @@ contract("StabilityPool", async (accounts) => {
       ).toString();
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: dennis,
       });
       assert.equal(
@@ -915,10 +905,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B provide 100 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(1000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: bob });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: bob });
 
       // Confirm Bob has an active trove in the system
       assert.isTrue(await sortedTroves.contains(bob));
@@ -968,11 +958,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_1, { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
 
       const bob_Deposit_Before = (
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
@@ -984,7 +974,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(ZKUSDinSP_Before, dec(180, 18));
 
       // Bob provides 0 ZKUSD to the Stability Pool
-      const txPromise_B = stabilityPool.provideToSP(0, frontEnd_1, {
+      const txPromise_B = stabilityPool.provideToSP(0,  {
         from: bob,
       });
       await th.assertRevert(txPromise_B);
@@ -1016,7 +1006,7 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
 
       let currentEpoch = await stabilityPool.currentEpoch();
       let currentScale = await stabilityPool.currentScale();
@@ -1031,7 +1021,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: B });
 
       currentEpoch = await stabilityPool.currentEpoch();
       currentScale = await stabilityPool.currentScale();
@@ -1069,7 +1059,7 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1098,7 +1088,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: B });
 
       currentEpoch = await stabilityPool.currentEpoch();
       currentScale = await stabilityPool.currentScale();
@@ -1109,65 +1099,6 @@ contract("StabilityPool", async (accounts) => {
 
       // Expect G has not changed
       assert.isTrue(G_After.eq(G_Before));
-    });
-
-    it("provideToSP(), new deposit: sets the correct front end tag", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: whale, value: dec(50, "ether") },
-      });
-
-      // A, B, C, D open troves and make Stability Pool deposits
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(1000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(2000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-
-      // Check A, B, C D have no front end tags
-      const A_tagBefore = await getFrontEndTag(stabilityPool, A);
-      const B_tagBefore = await getFrontEndTag(stabilityPool, B);
-      const C_tagBefore = await getFrontEndTag(stabilityPool, C);
-      const D_tagBefore = await getFrontEndTag(stabilityPool, D);
-
-      assert.equal(A_tagBefore, ZERO_ADDRESS);
-      assert.equal(B_tagBefore, ZERO_ADDRESS);
-      assert.equal(C_tagBefore, ZERO_ADDRESS);
-      assert.equal(D_tagBefore, ZERO_ADDRESS);
-
-      // A, B, C, D provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: C });
-      await stabilityPool.provideToSP(dec(4000, 18), ZERO_ADDRESS, { from: D }); // transacts directly, no front end
-
-      // Check A, B, C D have no front end tags
-      const A_tagAfter = await getFrontEndTag(stabilityPool, A);
-      const B_tagAfter = await getFrontEndTag(stabilityPool, B);
-      const C_tagAfter = await getFrontEndTag(stabilityPool, C);
-      const D_tagAfter = await getFrontEndTag(stabilityPool, D);
-
-      // Check front end tags are correctly set
-      assert.equal(A_tagAfter, frontEnd_1);
-      assert.equal(B_tagAfter, frontEnd_2);
-      assert.equal(C_tagAfter, frontEnd_3);
-      assert.equal(D_tagAfter, ZERO_ADDRESS);
     });
 
     it("provideToSP(), new deposit: depositor does not receive any ZKT rewards", async () => {
@@ -1202,8 +1133,8 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // A, B provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), ZERO_ADDRESS, { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(2000, 18),  { from: B });
 
       // Get A, B, C ZKT balances after, and confirm they're still zero
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1252,10 +1183,10 @@ contract("StabilityPool", async (accounts) => {
       const initialDeposit_A = await zkusdToken.balanceOf(A);
       const initialDeposit_B = await zkusdToken.balanceOf(B);
       // A, B provide to SP
-      await stabilityPool.provideToSP(initialDeposit_A, frontEnd_1, {
+      await stabilityPool.provideToSP(initialDeposit_A,  {
         from: A,
       });
-      await stabilityPool.provideToSP(initialDeposit_B, frontEnd_2, {
+      await stabilityPool.provideToSP(initialDeposit_B,  {
         from: B,
       });
 
@@ -1266,7 +1197,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // C deposits. A, and B earn ZKT
-      await stabilityPool.provideToSP(dec(5, 18), ZERO_ADDRESS, { from: C });
+      await stabilityPool.provideToSP(dec(5, 18),  { from: C });
 
       // Price drops, defaulter is liquidated, A, B and C earn ETH
       await priceFeed.setPrice(dec(105, 18));
@@ -1295,8 +1226,8 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // A, B provide to SP
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(200, 18), ZERO_ADDRESS, { from: B });
+      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(200, 18),  { from: B });
 
       // Get A, B, C ZKT balances after, and confirm they have not changed
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1304,273 +1235,6 @@ contract("StabilityPool", async (accounts) => {
 
       assert.isTrue(A_ZKTBalance_After.eq(A_ZKTBalance_Before));
       assert.isTrue(B_ZKTBalance_After.eq(B_ZKTBalance_Before));
-    });
-
-    it("provideToSP(), new eligible deposit: tagged front end receives ZKT rewards", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(1000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(2000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(1000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(2000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: F },
-      });
-
-      // D, E, F provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: E });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: F });
-
-      // Get F1, F2, F3 ZKT balances before, and confirm they're zero
-      const frontEnd_1_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_1);
-      const frontEnd_2_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_2);
-      const frontEnd_3_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_3);
-
-      assert.equal(frontEnd_1_ZKTBalance_Before, "0");
-      assert.equal(frontEnd_2_ZKTBalance_Before, "0");
-      assert.equal(frontEnd_3_ZKTBalance_Before, "0");
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // console.log(`ZKTSupplyCap before: ${await communityIssuance.ZKTSupplyCap()}`)
-      // console.log(`totalZKTIssued before: ${await communityIssuance.totalZKTIssued()}`)
-      // console.log(`ZKT balance of CI before: ${await zkToken.balanceOf(communityIssuance.address)}`)
-
-      // A, B, C provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: C });
-
-      // console.log(`ZKTSupplyCap after: ${await communityIssuance.ZKTSupplyCap()}`)
-      // console.log(`totalZKTIssued after: ${await communityIssuance.totalZKTIssued()}`)
-      // console.log(`ZKT balance of CI after: ${await zkToken.balanceOf(communityIssuance.address)}`)
-
-      // Get F1, F2, F3 ZKT balances after, and confirm they have increased
-      const frontEnd_1_ZKTBalance_After = await zkToken.balanceOf(frontEnd_1);
-      const frontEnd_2_ZKTBalance_After = await zkToken.balanceOf(frontEnd_2);
-      const frontEnd_3_ZKTBalance_After = await zkToken.balanceOf(frontEnd_3);
-
-      assert.isTrue(
-        frontEnd_1_ZKTBalance_After.gt(frontEnd_1_ZKTBalance_Before)
-      );
-      assert.isTrue(
-        frontEnd_2_ZKTBalance_After.gt(frontEnd_2_ZKTBalance_Before)
-      );
-      assert.isTrue(
-        frontEnd_3_ZKTBalance_After.gt(frontEnd_3_ZKTBalance_Before)
-      );
-    });
-
-    it("provideToSP(), new eligible deposit: tagged front end's stake increases", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(1000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(2000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // Get front ends' stakes before
-      const F1_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      const deposit_A = dec(1000, 18);
-      const deposit_B = dec(2000, 18);
-      const deposit_C = dec(3000, 18);
-
-      // A, B, C provide to SP
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
-
-      // Get front ends' stakes after
-      const F1_Stake_After = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_After = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_After = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      const F1_Diff = F1_Stake_After.sub(F1_Stake_Before);
-      const F2_Diff = F2_Stake_After.sub(F2_Stake_Before);
-      const F3_Diff = F3_Stake_After.sub(F3_Stake_Before);
-
-      // Check front ends' stakes have increased by amount equal to the deposit made through them
-      assert.equal(F1_Diff, deposit_A);
-      assert.equal(F2_Diff, deposit_B);
-      assert.equal(F3_Diff, deposit_C);
-    });
-
-    it("provideToSP(), new eligible deposit: tagged front end's snapshots update", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(1000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(2000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(3000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // D opens trove
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(4000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-
-      await openTrove({
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: defaulter_1 },
-      });
-
-      // --- SETUP ---
-
-      await stabilityPool.provideToSP(dec(2000, 18), ZERO_ADDRESS, { from: D });
-
-      // fastforward time then  make an SP deposit, to make G > 0
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-      await stabilityPool.provideToSP(dec(2000, 18), ZERO_ADDRESS, { from: D });
-
-      // Perform a liquidation to make 0 < P < 1, and S > 0
-      await priceFeed.setPrice(dec(105, 18));
-      assert.isFalse(await th.checkRecoveryMode(contracts));
-
-      await troveManager.liquidate(defaulter_1);
-
-      const currentEpoch = await stabilityPool.currentEpoch();
-      const currentScale = await stabilityPool.currentScale();
-
-      const S_Before = await stabilityPool.epochToScaleToSum(
-        currentEpoch,
-        currentScale
-      );
-      const P_Before = await stabilityPool.P();
-      const G_Before = await stabilityPool.epochToScaleToG(
-        currentEpoch,
-        currentScale
-      );
-
-      // Confirm 0 < P < 1
-      assert.isTrue(P_Before.gt(toBN("0")) && P_Before.lt(toBN(dec(1, 18))));
-      // Confirm S, G are both > 0
-      assert.isTrue(S_Before.gt(toBN("0")));
-      assert.isTrue(G_Before.gt(toBN("0")));
-
-      // Get front ends' snapshots before
-      for (frontEnd of [frontEnd_1, frontEnd_2, frontEnd_3]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends, since S corresponds to ETH gain)
-        assert.equal(snapshot[1], "0"); // P
-        assert.equal(snapshot[2], "0"); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-
-      const deposit_A = dec(1000, 18);
-      const deposit_B = dec(2000, 18);
-      const deposit_C = dec(3000, 18);
-
-      // --- TEST ---
-
-      // A, B, C provide to SP
-      const G1 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
-
-      const G2 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
-
-      const G3 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
-
-      const frontEnds = [frontEnd_1, frontEnd_2, frontEnd_3];
-      const G_Values = [G1, G2, G3];
-
-      // Map frontEnds to the value of G at time the deposit was made
-      frontEndToG = th.zipToObject(frontEnds, G_Values);
-
-      // Get front ends' snapshots after
-      for (const [frontEnd, G] of Object.entries(frontEndToG)) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        // Check snapshots are the expected values
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends)
-        assert.isTrue(snapshot[1].eq(P_Before)); // P
-        assert.isTrue(snapshot[2].eq(G)); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
     });
 
     it("provideToSP(), new deposit: depositor does not receive ETH gains", async () => {
@@ -1606,25 +1270,25 @@ contract("StabilityPool", async (accounts) => {
 
       // A, B, C, D provide to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(100, 18),  {
           from: A,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(200, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(200, 18),  {
           from: B,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(300, 18), frontEnd_2, {
+        await stabilityPool.provideToSP(dec(300, 18),  {
           from: C,
           gasPrice: GAS_PRICE,
         })
       );
       const D_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(400, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(400, 18),  {
           from: D,
           gasPrice: GAS_PRICE,
         })
@@ -1679,10 +1343,10 @@ contract("StabilityPool", async (accounts) => {
 
       // --- SETUP ---
       // A, B, C, D provide to SP
-      await stabilityPool.provideToSP(dec(105, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(105, 18), ZERO_ADDRESS, { from: B });
-      await stabilityPool.provideToSP(dec(105, 18), frontEnd_1, { from: C });
-      await stabilityPool.provideToSP(dec(105, 18), ZERO_ADDRESS, { from: D });
+      await stabilityPool.provideToSP(dec(105, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(105, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(105, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(105, 18),  { from: D });
 
       // time passes
       await th.fastForwardTime(
@@ -1691,7 +1355,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B deposits. A,B,C,D earn ZKT
-      await stabilityPool.provideToSP(dec(5, 18), ZERO_ADDRESS, { from: B });
+      await stabilityPool.provideToSP(dec(5, 18),  { from: B });
 
       // Price drops, defaulter is liquidated, A, B, C, D earn ETH
       await priceFeed.setPrice(dec(105, 18));
@@ -1718,28 +1382,28 @@ contract("StabilityPool", async (accounts) => {
 
       // A, B, C, D provide to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(100, 18),  {
           from: A,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(200, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(200, 18),  {
           from: B,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(300, 18), frontEnd_2, {
+        await stabilityPool.provideToSP(dec(300, 18),  {
           from: C,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const D_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(400, 18), ZERO_ADDRESS, {
+        await stabilityPool.provideToSP(dec(400, 18),  {
           from: D,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
@@ -1790,9 +1454,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provide to SP
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(50, 18), frontEnd_1, { from: B });
-      await stabilityPool.provideToSP(dec(50, 18), frontEnd_1, { from: C });
+      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(50, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(50, 18),  { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1807,73 +1471,12 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B tops up
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, { from: B });
+      await stabilityPool.provideToSP(dec(100, 18),  { from: B });
 
       const G_After = await stabilityPool.epochToScaleToG(0, 0);
 
       // Expect G has increased from the ZKT reward event triggered by B's topup
       assert.isTrue(G_After.gt(G_Before));
-    });
-
-    it("provideToSP(), topup from different front end: doesn't change the front end tag", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // whale transfer to troves D and E
-      await zkusdToken.transfer(D, dec(100, 18), { from: whale });
-      await zkusdToken.transfer(E, dec(200, 18), { from: whale });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(200, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(300, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, D, E provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), ZERO_ADDRESS, { from: C });
-      await stabilityPool.provideToSP(dec(40, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(50, 18), ZERO_ADDRESS, { from: E });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // A, B, C, D, E top up, from different front ends
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_2, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_1, { from: B });
-      await stabilityPool.provideToSP(dec(15, 18), frontEnd_3, { from: C });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: D });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: E });
-
-      const frontEndTag_A = (await stabilityPool.deposits(A))[1];
-      const frontEndTag_B = (await stabilityPool.deposits(B))[1];
-      const frontEndTag_C = (await stabilityPool.deposits(C))[1];
-      const frontEndTag_D = (await stabilityPool.deposits(D))[1];
-      const frontEndTag_E = (await stabilityPool.deposits(E))[1];
-
-      // Check deposits are still tagged with their original front end
-      assert.equal(frontEndTag_A, frontEnd_1);
-      assert.equal(frontEndTag_B, frontEnd_2);
-      assert.equal(frontEndTag_C, ZERO_ADDRESS);
-      assert.equal(frontEndTag_D, frontEnd_1);
-      assert.equal(frontEndTag_E, ZERO_ADDRESS);
     });
 
     it("provideToSP(), topup: depositor receives ZKT rewards", async () => {
@@ -1901,9 +1504,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), ZERO_ADDRESS, { from: C });
+      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1916,9 +1519,9 @@ contract("StabilityPool", async (accounts) => {
       const C_ZKTBalance_Before = await zkToken.balanceOf(C);
 
       // A, B, C top up
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), ZERO_ADDRESS, { from: C });
+      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
 
       // Get ZKT balance after
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1929,134 +1532,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(A_ZKTBalance_After.gt(A_ZKTBalance_Before));
       assert.isTrue(B_ZKTBalance_After.gt(B_ZKTBalance_Before));
       assert.isTrue(C_ZKTBalance_After.gt(C_ZKTBalance_Before));
-    });
-
-    it("provideToSP(), topup: tagged front end receives ZKT rewards", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(200, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(300, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Get front ends' ZKT balance before
-      const F1_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_1);
-      const F2_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_2);
-      const F3_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_3);
-
-      // A, B, C top up  (front end param passed here is irrelevant)
-      await stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, { from: A }); // provides no front end param
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_1, { from: B }); // provides front end that doesn't match his tag
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C }); // provides front end that matches his tag
-
-      // Get front ends' ZKT balance after
-      const F1_ZKTBalance_After = await zkToken.balanceOf(A);
-      const F2_ZKTBalance_After = await zkToken.balanceOf(B);
-      const F3_ZKTBalance_After = await zkToken.balanceOf(C);
-
-      // Check ZKT Balance of front ends has increased
-      assert.isTrue(F1_ZKTBalance_After.gt(F1_ZKTBalance_Before));
-      assert.isTrue(F2_ZKTBalance_After.gt(F2_ZKTBalance_Before));
-      assert.isTrue(F3_ZKTBalance_After.gt(F3_ZKTBalance_Before));
-    });
-
-    it("provideToSP(), topup: tagged front end's stake increases", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, D, E, F open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(200, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(300, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(200, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(300, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: F },
-      });
-
-      // A, B, C, D, E, F provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C });
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: E });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: F });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Get front ends' stake before
-      const F1_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      // A, B, C top up  (front end param passed here is irrelevant)
-      await stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, { from: A }); // provides no front end param
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_1, { from: B }); // provides front end that doesn't match his tag
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C }); // provides front end that matches his tag
-
-      // Get front ends' stakes after
-      const F1_Stake_After = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_After = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_After = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      // Check front ends' stakes have increased
-      assert.isTrue(F1_Stake_After.gt(F1_Stake_Before));
-      assert.isTrue(F2_Stake_After.gt(F2_Stake_Before));
-      assert.isTrue(F3_Stake_After.gt(F3_Stake_Before));
     });
 
     it("provideToSP(), topup: tagged front end's snapshots update", async () => {
@@ -2102,9 +1577,9 @@ contract("StabilityPool", async (accounts) => {
       const deposit_C = dec(300, 18);
 
       // A, B, C make their initial deposits
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
+      await stabilityPool.provideToSP(deposit_A,  { from: A });
+      await stabilityPool.provideToSP(deposit_B,  { from: B });
+      await stabilityPool.provideToSP(deposit_C,  { from: C });
 
       // fastforward time then make an SP deposit, to make G > 0
       await th.fastForwardTime(
@@ -2114,7 +1589,7 @@ contract("StabilityPool", async (accounts) => {
 
       await stabilityPool.provideToSP(
         await zkusdToken.balanceOf(D),
-        ZERO_ADDRESS,
+        
         { from: D }
       );
 
@@ -2143,17 +1618,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(S_Before.gt(toBN("0")));
       assert.isTrue(G_Before.gt(toBN("0")));
 
-      // Get front ends' snapshots before
-      for (frontEnd of [frontEnd_1, frontEnd_2, frontEnd_3]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends, since S corresponds to ETH gain)
-        assert.equal(snapshot[1], dec(1, 18)); // P
-        assert.equal(snapshot[2], "0"); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-
       // --- TEST ---
 
       // A, B, C top up their deposits. Grab G at each stage, as it can increase a bit
@@ -2162,37 +1626,19 @@ contract("StabilityPool", async (accounts) => {
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(deposit_A,  { from: A });
 
       const G2 = await stabilityPool.epochToScaleToG(
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
+      await stabilityPool.provideToSP(deposit_B,  { from: B });
 
       const G3 = await stabilityPool.epochToScaleToG(
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
-
-      const frontEnds = [frontEnd_1, frontEnd_2, frontEnd_3];
-      const G_Values = [G1, G2, G3];
-
-      // Map frontEnds to the value of G at time the deposit was made
-      frontEndToG = th.zipToObject(frontEnds, G_Values);
-
-      // Get front ends' snapshots after
-      for (const [frontEnd, G] of Object.entries(frontEndToG)) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        // Check snapshots are the expected values
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends)
-        assert.isTrue(snapshot[1].eq(P_Before)); // P
-        assert.isTrue(snapshot[2].eq(G)); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
+      await stabilityPool.provideToSP(deposit_C,  { from: C });
     });
 
     it("provideToSP(): reverts when amount is zero", async () => {
@@ -2217,10 +1663,10 @@ contract("StabilityPool", async (accounts) => {
       await zkusdToken.transfer(C, dec(100, 18), { from: whale });
       await zkusdToken.transfer(D, dec(100, 18), { from: whale });
 
-      txPromise_A = stabilityPool.provideToSP(0, frontEnd_1, { from: A });
-      txPromise_B = stabilityPool.provideToSP(0, ZERO_ADDRESS, { from: B });
-      txPromise_C = stabilityPool.provideToSP(0, frontEnd_2, { from: C });
-      txPromise_D = stabilityPool.provideToSP(0, ZERO_ADDRESS, { from: D });
+      txPromise_A = stabilityPool.provideToSP(0,  { from: A });
+      txPromise_B = stabilityPool.provideToSP(0,  { from: B });
+      txPromise_C = stabilityPool.provideToSP(0,  { from: C });
+      txPromise_D = stabilityPool.provideToSP(0,  { from: D });
 
       await th.assertRevert(
         txPromise_A,
@@ -2240,114 +1686,6 @@ contract("StabilityPool", async (accounts) => {
       );
     });
 
-    it("provideToSP(): reverts if user is a registered front end", async () => {
-      // C, D, E, F open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: F },
-      });
-
-      // C, E, F registers as front end
-      await stabilityPool.registerFrontEnd(dec(1, 18), { from: C });
-      await stabilityPool.registerFrontEnd(dec(1, 18), { from: E });
-      await stabilityPool.registerFrontEnd(dec(1, 18), { from: F });
-
-      const txPromise_C = stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, {
-        from: C,
-      });
-      const txPromise_E = stabilityPool.provideToSP(dec(10, 18), frontEnd_1, {
-        from: E,
-      });
-      const txPromise_F = stabilityPool.provideToSP(dec(10, 18), F, {
-        from: F,
-      });
-      await th.assertRevert(
-        txPromise_C,
-        "StabilityPool: must not already be a registered front end"
-      );
-      await th.assertRevert(
-        txPromise_E,
-        "StabilityPool: must not already be a registered front end"
-      );
-      await th.assertRevert(
-        txPromise_F,
-        "StabilityPool: must not already be a registered front end"
-      );
-
-      const txD = await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, {
-        from: D,
-      });
-      assert.isTrue(txD.receipt.status);
-    });
-
-    it("provideToSP(): reverts if provided tag is not a registered front end", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-
-      const txPromise_C = stabilityPool.provideToSP(dec(10, 18), A, {
-        from: C,
-      }); // passes another EOA
-      const txPromise_D = stabilityPool.provideToSP(
-        dec(10, 18),
-        troveManager.address,
-        { from: D }
-      );
-      const txPromise_E = stabilityPool.provideToSP(
-        dec(10, 18),
-        stabilityPool.address,
-        { from: E }
-      );
-      const txPromise_F = stabilityPool.provideToSP(dec(10, 18), F, {
-        from: F,
-      }); // passes itself
-
-      await th.assertRevert(
-        txPromise_C,
-        "StabilityPool: Tag must be a registered front end, or the zero address"
-      );
-      await th.assertRevert(
-        txPromise_D,
-        "StabilityPool: Tag must be a registered front end, or the zero address"
-      );
-      await th.assertRevert(
-        txPromise_E,
-        "StabilityPool: Tag must be a registered front end, or the zero address"
-      );
-      await th.assertRevert(
-        txPromise_F,
-        "StabilityPool: Tag must be a registered front end, or the zero address"
-      );
-    });
-
     // --- withdrawFromSP ---
 
     it("withdrawFromSP(): reverts when user has no active deposit", async () => {
@@ -2362,16 +1700,16 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: bob },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
 
       const alice_initialDeposit = (
         await stabilityPool.deposits(alice)
-      )[0].toString();
+      ).toString();
       const bob_initialDeposit = (
         await stabilityPool.deposits(bob)
-      )[0].toString();
+      ).toString();
 
       assert.equal(alice_initialDeposit, dec(100, 18));
       assert.equal(bob_initialDeposit, "0");
@@ -2400,13 +1738,13 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: alice },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
 
       const alice_initialDeposit = (
         await stabilityPool.deposits(alice)
-      )[0].toString();
+      ).toString();
       assert.equal(alice_initialDeposit, dec(100, 18));
 
       // defaulter opens trove
@@ -2431,7 +1769,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -2453,7 +1791,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2505,7 +1843,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // check Alice's deposit has been updated to equal her compounded deposit minus her withdrawal */
-      const newDeposit = (await stabilityPool.deposits(alice))[0].toString();
+      const newDeposit = (await stabilityPool.deposits(alice)).toString();
       assert.isAtMost(
         th.getDifference(newDeposit, expectedNewDeposit_A),
         100000
@@ -2526,7 +1864,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -2547,7 +1885,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2597,7 +1935,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -2619,7 +1957,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2690,7 +2028,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(18500, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(18500, 18),  {
         from: whale,
       });
 
@@ -2712,7 +2050,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2728,7 +2066,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
 
       // Alice makes second deposit
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
       assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
@@ -2744,7 +2082,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(ETHinSP_Before, ETHinSP_1);
 
       // Third deposit
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
       assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
@@ -2764,7 +2102,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -2786,7 +2124,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2825,7 +2163,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -2843,7 +2181,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -2905,7 +2243,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: account,
         });
       }
@@ -2917,17 +2255,17 @@ contract("StabilityPool", async (accounts) => {
 
       // All depositors attempt to withdraw
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: alice });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: bob });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: carol });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: dennis });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: erin });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: flyn });
-      assert.equal((await stabilityPool.deposits(alice))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(alice)).toString(), "0");
 
       const totalDeposits = (
         await stabilityPool.getTotalZKUSDDeposits()
@@ -2965,7 +2303,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: account,
         });
       }
@@ -3042,13 +2380,13 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(20000, 18),  {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(30000, 18),  {
         from: carol,
       });
 
@@ -3096,11 +2434,11 @@ contract("StabilityPool", async (accounts) => {
 
       // Carol withdraws her Stability deposit
       assert.equal(
-        (await stabilityPool.deposits(carol))[0].toString(),
+        (await stabilityPool.deposits(carol)).toString(),
         dec(30000, 18)
       );
       await stabilityPool.withdrawFromSP(dec(30000, 18), { from: carol });
-      assert.equal((await stabilityPool.deposits(carol))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(carol)).toString(), "0");
 
       const alice_ZKUSDDeposit_After = (
         await stabilityPool.getCompoundedZKUSDDeposit(alice)
@@ -3148,13 +2486,13 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(20000, 18),  {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(30000, 18),  {
         from: carol,
       });
 
@@ -3190,11 +2528,11 @@ contract("StabilityPool", async (accounts) => {
 
       // Carol withdraws her Stability deposit
       assert.equal(
-        (await stabilityPool.deposits(carol))[0].toString(),
+        (await stabilityPool.deposits(carol)).toString(),
         dec(30000, 18)
       );
       await stabilityPool.withdrawFromSP(dec(30000, 18), { from: carol });
-      assert.equal((await stabilityPool.deposits(carol))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(carol)).toString(), "0");
 
       const activeDebt_After = (await activePool.getZKUSDDebt()).toString();
       const defaultedDebt_After = (await defaultPool.getZKUSDDebt()).toString();
@@ -3235,13 +2573,13 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B and C provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(20000, 18),  {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(30000, 18),  {
         from: carol,
       });
 
@@ -3290,11 +2628,11 @@ contract("StabilityPool", async (accounts) => {
 
       // Carol withdraws her Stability deposit
       assert.equal(
-        (await stabilityPool.deposits(carol))[0].toString(),
+        (await stabilityPool.deposits(carol)).toString(),
         dec(30000, 18)
       );
       await stabilityPool.withdrawFromSP(dec(30000, 18), { from: carol });
-      assert.equal((await stabilityPool.deposits(carol))[0].toString(), "0");
+      assert.equal((await stabilityPool.deposits(carol)).toString(), "0");
 
       const whale_Debt_After = (await troveManager.Troves(whale))[0].toString();
       const alice_Debt_After = (await troveManager.Troves(alice))[0].toString();
@@ -3343,9 +2681,9 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: A },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
 
-      const A_initialDeposit = (await stabilityPool.deposits(A))[0].toString();
+      const A_initialDeposit = (await stabilityPool.deposits(A)).toString();
       assert.equal(A_initialDeposit, dec(100, 18));
 
       // defaulters opens trove
@@ -3436,11 +2774,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_1, { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
 
       const bob_Deposit_Before = (
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
@@ -3511,7 +2849,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: dennis },
       });
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: dennis,
       });
 
@@ -3581,13 +2919,13 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provide ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(20000, 18),  {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(30000, 18),  {
         from: carol,
       });
 
@@ -3685,11 +3023,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(100, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_1, { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
 
       // Price drops
       await priceFeed.setPrice(dec(100, 18));
@@ -3773,19 +3111,19 @@ contract("StabilityPool", async (accounts) => {
 
       // A, B, C provides 10000, 5000, 3000 ZKUSD to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: alice,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(5000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(5000, 18),  {
           from: bob,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(3000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(3000, 18),  {
           from: carol,
           gasPrice: GAS_PRICE,
         })
@@ -3968,10 +3306,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, provide 10000, 5000 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(5000, 18), frontEnd_1, { from: bob });
+      await stabilityPool.provideToSP(dec(5000, 18),  { from: bob });
 
       //price drops
       await priceFeed.setPrice(dec(105, 18));
@@ -4005,7 +3343,7 @@ contract("StabilityPool", async (accounts) => {
       ).toString();
 
       // Whale deposits 10000 ZKUSD to Stability Pool
-      await stabilityPool.provideToSP(dec(1, 24), frontEnd_1, { from: whale });
+      await stabilityPool.provideToSP(dec(1, 24),  { from: whale });
 
       // Liquidation 2
       await troveManager.liquidate(defaulter_2);
@@ -4064,8 +3402,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: B,
       });
 
@@ -4098,67 +3436,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(G_2.gt(G_1));
     });
 
-    it("withdrawFromSP(), partial withdrawal: doesn't change the front end tag", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // whale transfer to troves D and E
-      await zkusdToken.transfer(D, dec(100, 18), { from: whale });
-      await zkusdToken.transfer(E, dec(200, 18), { from: whale });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, D, E provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), ZERO_ADDRESS, { from: C });
-      await stabilityPool.provideToSP(dec(40, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(50, 18), ZERO_ADDRESS, { from: E });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // A, B, C, D, E withdraw, from different front ends
-      await stabilityPool.withdrawFromSP(dec(5, 18), { from: A });
-      await stabilityPool.withdrawFromSP(dec(10, 18), { from: B });
-      await stabilityPool.withdrawFromSP(dec(15, 18), { from: C });
-      await stabilityPool.withdrawFromSP(dec(20, 18), { from: D });
-      await stabilityPool.withdrawFromSP(dec(25, 18), { from: E });
-
-      const frontEndTag_A = (await stabilityPool.deposits(A))[1];
-      const frontEndTag_B = (await stabilityPool.deposits(B))[1];
-      const frontEndTag_C = (await stabilityPool.deposits(C))[1];
-      const frontEndTag_D = (await stabilityPool.deposits(D))[1];
-      const frontEndTag_E = (await stabilityPool.deposits(E))[1];
-
-      // Check deposits are still tagged with their original front end
-      assert.equal(frontEndTag_A, frontEnd_1);
-      assert.equal(frontEndTag_B, frontEnd_2);
-      assert.equal(frontEndTag_C, ZERO_ADDRESS);
-      assert.equal(frontEndTag_D, frontEnd_1);
-      assert.equal(frontEndTag_E, ZERO_ADDRESS);
-    });
-
     it("withdrawFromSP(), partial withdrawal: depositor receives ZKT rewards", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
@@ -4184,9 +3461,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), ZERO_ADDRESS, { from: C });
+      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -4212,134 +3489,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(A_ZKTBalance_After.gt(A_ZKTBalance_Before));
       assert.isTrue(B_ZKTBalance_After.gt(B_ZKTBalance_Before));
       assert.isTrue(C_ZKTBalance_After.gt(C_ZKTBalance_Before));
-    });
-
-    it("withdrawFromSP(), partial withdrawal: tagged front end receives ZKT rewards", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Get front ends' ZKT balance before
-      const F1_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_1);
-      const F2_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_2);
-      const F3_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_3);
-
-      // A, B, C withdraw
-      await stabilityPool.withdrawFromSP(dec(1, 18), { from: A });
-      await stabilityPool.withdrawFromSP(dec(2, 18), { from: B });
-      await stabilityPool.withdrawFromSP(dec(3, 18), { from: C });
-
-      // Get front ends' ZKT balance after
-      const F1_ZKTBalance_After = await zkToken.balanceOf(A);
-      const F2_ZKTBalance_After = await zkToken.balanceOf(B);
-      const F3_ZKTBalance_After = await zkToken.balanceOf(C);
-
-      // Check ZKT Balance of front ends has increased
-      assert.isTrue(F1_ZKTBalance_After.gt(F1_ZKTBalance_Before));
-      assert.isTrue(F2_ZKTBalance_After.gt(F2_ZKTBalance_Before));
-      assert.isTrue(F3_ZKTBalance_After.gt(F3_ZKTBalance_Before));
-    });
-
-    it("withdrawFromSP(), partial withdrawal: tagged front end's stake decreases", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, D, E, F open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: F },
-      });
-
-      // A, B, C, D, E, F provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: C });
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(20, 18), frontEnd_2, { from: E });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_3, { from: F });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Get front ends' stake before
-      const F1_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      // A, B, C withdraw
-      await stabilityPool.withdrawFromSP(dec(1, 18), { from: A });
-      await stabilityPool.withdrawFromSP(dec(2, 18), { from: B });
-      await stabilityPool.withdrawFromSP(dec(3, 18), { from: C });
-
-      // Get front ends' stakes after
-      const F1_Stake_After = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_After = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_After = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      // Check front ends' stakes have decreased
-      assert.isTrue(F1_Stake_After.lt(F1_Stake_Before));
-      assert.isTrue(F2_Stake_After.lt(F2_Stake_Before));
-      assert.isTrue(F3_Stake_After.lt(F3_Stake_Before));
     });
 
     it("withdrawFromSP(), partial withdrawal: tagged front end's snapshots update", async () => {
@@ -4385,9 +3534,9 @@ contract("StabilityPool", async (accounts) => {
       const deposit_C = dec(30000, 18);
 
       // A, B, C make their initial deposits
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
+      await stabilityPool.provideToSP(deposit_A,  { from: A });
+      await stabilityPool.provideToSP(deposit_B,  { from: B });
+      await stabilityPool.provideToSP(deposit_C,  { from: C });
 
       // fastforward time then make an SP deposit, to make G > 0
       await th.fastForwardTime(
@@ -4395,7 +3544,7 @@ contract("StabilityPool", async (accounts) => {
         web3.currentProvider
       );
 
-      await stabilityPool.provideToSP(dec(1000, 18), ZERO_ADDRESS, { from: D });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: D });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -4422,17 +3571,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(S_Before.gt(toBN("0")));
       assert.isTrue(G_Before.gt(toBN("0")));
 
-      // Get front ends' snapshots before
-      for (frontEnd of [frontEnd_1, frontEnd_2, frontEnd_3]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends, since S corresponds to ETH gain)
-        assert.equal(snapshot[1], dec(1, 18)); // P
-        assert.equal(snapshot[2], "0"); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-
       // --- TEST ---
 
       await priceFeed.setPrice(dec(200, 18));
@@ -4456,86 +3594,6 @@ contract("StabilityPool", async (accounts) => {
         currentEpoch
       );
       await stabilityPool.withdrawFromSP(dec(3, 18), { from: C });
-
-      const frontEnds = [frontEnd_1, frontEnd_2, frontEnd_3];
-      const G_Values = [G1, G2, G3];
-
-      // Map frontEnds to the value of G at time the deposit was made
-      frontEndToG = th.zipToObject(frontEnds, G_Values);
-
-      // Get front ends' snapshots after
-      for (const [frontEnd, G] of Object.entries(frontEndToG)) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        // Check snapshots are the expected values
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends)
-        assert.isTrue(snapshot[1].eq(P_Before)); // P
-        assert.isTrue(snapshot[2].eq(G)); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-    });
-
-    it("withdrawFromSP(), full withdrawal: removes deposit's front end tag", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // Whale transfers to A, B
-      await zkusdToken.transfer(A, dec(10000, 18), { from: whale });
-      await zkusdToken.transfer(B, dec(20000, 18), { from: whale });
-
-      //C, D open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(40000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-
-      // A, B, C, D make their initial deposits
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
-        from: B,
-      });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_2, { from: C });
-      await stabilityPool.provideToSP(dec(40000, 18), ZERO_ADDRESS, {
-        from: D,
-      });
-
-      // Check deposits are tagged with correct front end
-      const A_tagBefore = await getFrontEndTag(stabilityPool, A);
-      const B_tagBefore = await getFrontEndTag(stabilityPool, B);
-      const C_tagBefore = await getFrontEndTag(stabilityPool, C);
-      const D_tagBefore = await getFrontEndTag(stabilityPool, D);
-
-      assert.equal(A_tagBefore, frontEnd_1);
-      assert.equal(B_tagBefore, ZERO_ADDRESS);
-      assert.equal(C_tagBefore, frontEnd_2);
-      assert.equal(D_tagBefore, ZERO_ADDRESS);
-
-      // All depositors make full withdrawal
-      await stabilityPool.withdrawFromSP(dec(10000, 18), { from: A });
-      await stabilityPool.withdrawFromSP(dec(20000, 18), { from: B });
-      await stabilityPool.withdrawFromSP(dec(30000, 18), { from: C });
-      await stabilityPool.withdrawFromSP(dec(40000, 18), { from: D });
-
-      // Check all deposits now have no front end tag
-      const A_tagAfter = await getFrontEndTag(stabilityPool, A);
-      const B_tagAfter = await getFrontEndTag(stabilityPool, B);
-      const C_tagAfter = await getFrontEndTag(stabilityPool, C);
-      const D_tagAfter = await getFrontEndTag(stabilityPool, D);
-
-      assert.equal(A_tagAfter, ZERO_ADDRESS);
-      assert.equal(B_tagAfter, ZERO_ADDRESS);
-      assert.equal(C_tagAfter, ZERO_ADDRESS);
-      assert.equal(D_tagAfter, ZERO_ADDRESS);
     });
 
     it("withdrawFromSP(), full withdrawal: zero's depositor's snapshots", async () => {
@@ -4558,14 +3616,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_3, { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
 
       // Fast-forward time and make a second deposit, to trigger ZKT reward and make G > 0
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_3, { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -4613,12 +3671,12 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, D make their initial deposits
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18), ZERO_ADDRESS, {
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20000, 18),  {
         from: B,
       });
-      await stabilityPool.provideToSP(dec(30000, 18), frontEnd_2, { from: C });
-      await stabilityPool.provideToSP(dec(40000, 18), ZERO_ADDRESS, {
+      await stabilityPool.provideToSP(dec(30000, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(40000, 18),  {
         from: D,
       });
 
@@ -4675,14 +3733,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_3, { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
 
       // Fast-forward time and make a second deposit, to trigger ZKT reward and make G > 0
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_3, { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -4724,39 +3782,14 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, make their initial deposits
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_2, { from: B });
-
-      // Check frontend snapshots are non-zero
-      for (frontEnd of [frontEnd_1, frontEnd_2]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        const ZERO = toBN("0");
-        // Check S,P, G snapshots are non-zero
-        assert.equal(snapshot[0], "0"); // S  (always zero for front-end)
-        assert.isTrue(snapshot[1].eq(P_Before)); // P
-        assert.isTrue(snapshot[2].gt(ZERO)); // GL increases a bit between each depositor op, so just check it is non-zero
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20000, 18),  { from: B });
 
       await priceFeed.setPrice(dec(200, 18));
 
       // All depositors make full withdrawal
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: A });
       await stabilityPool.withdrawFromSP(dec(20000, 18), { from: B });
-
-      // Check all front ends' snapshots have been zero'd
-      for (frontEnd of [frontEnd_1, frontEnd_2]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        // Check S, P, G snapshots are now zero
-        assert.equal(snapshot[0], "0"); // S  (always zero for front-end)
-        assert.equal(snapshot[1], "0"); // P
-        assert.equal(snapshot[2], "0"); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
     });
 
     it("withdrawFromSP(), reverts when initial deposit value is 0", async () => {
@@ -4772,7 +3805,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: A },
       });
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
 
       await openTrove({
         ICR: toBN(dec(2, 18)),
@@ -4786,7 +3819,7 @@ contract("StabilityPool", async (accounts) => {
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(100, 18), frontEnd_1, { from: A });
+      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -4801,7 +3834,7 @@ contract("StabilityPool", async (accounts) => {
       await stabilityPool.withdrawFromSP(dec(10100, 18), { from: A });
 
       // Confirm A's recorded deposit is 0
-      const A_deposit = (await stabilityPool.deposits(A))[0]; // get initialValue property on deposit struct
+      const A_deposit = (await stabilityPool.deposits(A)); // get initialValue property on deposit struct
       assert.equal(A_deposit, "0");
 
       // --- TEST ---
@@ -4841,16 +3874,16 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: bob },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
 
       const alice_initialDeposit = (
         await stabilityPool.deposits(alice)
-      )[0].toString();
+      ).toString();
       const bob_initialDeposit = (
         await stabilityPool.deposits(bob)
-      )[0].toString();
+      ).toString();
 
       assert.equal(alice_initialDeposit, dec(10000, 18));
       assert.equal(bob_initialDeposit, "0");
@@ -4884,7 +3917,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -4902,7 +3935,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -4946,7 +3979,7 @@ contract("StabilityPool", async (accounts) => {
       await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
 
       // check Alice's ZKUSDLoss has been applied to her deposit expectedCompoundedDeposit_A
-      alice_deposit_afterDefault = (await stabilityPool.deposits(alice))[0];
+      alice_deposit_afterDefault = (await stabilityPool.deposits(alice));
       assert.isAtMost(
         th.getDifference(
           alice_deposit_afterDefault,
@@ -4974,7 +4007,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -4992,7 +4025,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -5022,7 +4055,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -5040,7 +4073,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -5093,7 +4126,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(185000, 18),  {
         from: whale,
       });
 
@@ -5111,7 +4144,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(15000, 18),  {
         from: alice,
       });
 
@@ -5180,7 +4213,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: account,
         });
       }
@@ -5240,7 +4273,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+        await stabilityPool.provideToSP(dec(10000, 18),  {
           from: account,
         });
       }
@@ -5334,11 +4367,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 10000, 5000, 3000 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(5000, 18), frontEnd_1, { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(5000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18),  {
         from: carol,
       });
 
@@ -5435,7 +4468,7 @@ contract("StabilityPool", async (accounts) => {
       await zkusdToken.transfer(dennis, dec(10000, 18), { from: alice });
 
       // D deposits to Stability Pool
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, {
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: dennis,
       });
 
@@ -5480,8 +4513,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
+      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18),  {
         from: B,
       });
 
@@ -5529,74 +4562,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(G_2.gt(G_1));
     });
 
-    it("withdrawETHGainToTrove(), partial withdrawal: doesn't change the front end tag", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, D, E provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(30000, 18), ZERO_ADDRESS, {
-        from: C,
-      });
-
-      // Defaulter opens a trove, price drops, defaulter gets liquidated
-      await openTrove({
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: defaulter_1 },
-      });
-      await priceFeed.setPrice(dec(105, 18));
-      assert.isFalse(await th.checkRecoveryMode(contracts));
-      await troveManager.liquidate(defaulter_1);
-      assert.isFalse(await sortedTroves.contains(defaulter_1));
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Check A, B, C have non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(A)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(C)).gt(ZERO));
-
-      await priceFeed.setPrice(dec(200, 18));
-
-      // A, B, C withdraw to trove
-      await stabilityPool.withdrawETHGainToTrove(A, A, { from: A });
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
-      await stabilityPool.withdrawETHGainToTrove(C, C, { from: C });
-
-      const frontEndTag_A = (await stabilityPool.deposits(A))[1];
-      const frontEndTag_B = (await stabilityPool.deposits(B))[1];
-      const frontEndTag_C = (await stabilityPool.deposits(C))[1];
-
-      // Check deposits are still tagged with their original front end
-      assert.equal(frontEndTag_A, frontEnd_1);
-      assert.equal(frontEndTag_B, frontEnd_2);
-      assert.equal(frontEndTag_C, ZERO_ADDRESS);
-    });
-
     it("withdrawETHGainToTrove(), eligible deposit: depositor receives ZKT rewards", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
@@ -5622,9 +4587,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18), ZERO_ADDRESS, { from: C });
+      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(2000, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(3000, 18),  { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -5669,309 +4634,6 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(C_ZKTBalance_After.gt(C_ZKTBalance_Before));
     });
 
-    it("withdrawETHGainToTrove(), eligible deposit: tagged front end receives ZKT rewards", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: C });
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Defaulter opens a trove, price drops, defaulter gets liquidated
-      await openTrove({
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: defaulter_1 },
-      });
-      await priceFeed.setPrice(dec(105, 18));
-      assert.isFalse(await th.checkRecoveryMode(contracts));
-      await troveManager.liquidate(defaulter_1);
-      assert.isFalse(await sortedTroves.contains(defaulter_1));
-
-      // Get front ends' ZKT balance before
-      const F1_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_1);
-      const F2_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_2);
-      const F3_ZKTBalance_Before = await zkToken.balanceOf(frontEnd_3);
-
-      await priceFeed.setPrice(dec(200, 18));
-
-      // Check A, B, C have non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(A)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(C)).gt(ZERO));
-
-      // A, B, C withdraw
-      await stabilityPool.withdrawETHGainToTrove(A, A, { from: A });
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
-      await stabilityPool.withdrawETHGainToTrove(C, C, { from: C });
-
-      // Get front ends' ZKT balance after
-      const F1_ZKTBalance_After = await zkToken.balanceOf(frontEnd_1);
-      const F2_ZKTBalance_After = await zkToken.balanceOf(frontEnd_2);
-      const F3_ZKTBalance_After = await zkToken.balanceOf(frontEnd_3);
-
-      // Check ZKT Balance of front ends has increased
-      assert.isTrue(F1_ZKTBalance_After.gt(F1_ZKTBalance_Before));
-      assert.isTrue(F2_ZKTBalance_After.gt(F2_ZKTBalance_Before));
-      assert.isTrue(F3_ZKTBalance_After.gt(F3_ZKTBalance_Before));
-    });
-
-    it("withdrawETHGainToTrove(), eligible deposit: tagged front end's stake decreases", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, D, E, F open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(30000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: F },
-      });
-
-      // A, B, C, D, E, F provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: C });
-      await stabilityPool.provideToSP(dec(1000, 18), frontEnd_1, { from: D });
-      await stabilityPool.provideToSP(dec(2000, 18), frontEnd_2, { from: E });
-      await stabilityPool.provideToSP(dec(3000, 18), frontEnd_3, { from: F });
-
-      // Defaulter opens a trove, price drops, defaulter gets liquidated
-      await openTrove({
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: defaulter_1 },
-      });
-      await priceFeed.setPrice(dec(105, 18));
-      assert.isFalse(await th.checkRecoveryMode(contracts));
-      await troveManager.liquidate(defaulter_1);
-      assert.isFalse(await sortedTroves.contains(defaulter_1));
-
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      // Get front ends' stake before
-      const F1_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_Before = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      await priceFeed.setPrice(dec(200, 18));
-
-      // Check A, B, C have non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(A)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(C)).gt(ZERO));
-
-      // A, B, C withdraw to trove
-      await stabilityPool.withdrawETHGainToTrove(A, A, { from: A });
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
-      await stabilityPool.withdrawETHGainToTrove(C, C, { from: C });
-
-      // Get front ends' stakes after
-      const F1_Stake_After = await stabilityPool.frontEndStakes(frontEnd_1);
-      const F2_Stake_After = await stabilityPool.frontEndStakes(frontEnd_2);
-      const F3_Stake_After = await stabilityPool.frontEndStakes(frontEnd_3);
-
-      // Check front ends' stakes have decreased
-      assert.isTrue(F1_Stake_After.lt(F1_Stake_Before));
-      assert.isTrue(F2_Stake_After.lt(F2_Stake_Before));
-      assert.isTrue(F3_Stake_After.lt(F3_Stake_Before));
-    });
-
-    it("withdrawETHGainToTrove(), eligible deposit: tagged front end's snapshots update", async () => {
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(100000, 18)),
-        ICR: toBN(dec(10, 18)),
-        extraParams: { from: whale },
-      });
-
-      // A, B, C, open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(20000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: A },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(40000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: B },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(60000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-
-      // D opens trove
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10000, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-
-      await openTrove({
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: defaulter_1 },
-      });
-
-      // --- SETUP ---
-
-      const deposit_A = dec(100, 18);
-      const deposit_B = dec(200, 18);
-      const deposit_C = dec(300, 18);
-
-      // A, B, C make their initial deposits
-      await stabilityPool.provideToSP(deposit_A, frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(deposit_B, frontEnd_2, { from: B });
-      await stabilityPool.provideToSP(deposit_C, frontEnd_3, { from: C });
-
-      // fastforward time then make an SP deposit, to make G > 0
-      await th.fastForwardTime(
-        timeValues.SECONDS_IN_ONE_HOUR,
-        web3.currentProvider
-      );
-
-      await stabilityPool.provideToSP(dec(10000, 18), ZERO_ADDRESS, {
-        from: D,
-      });
-
-      // perform a liquidation to make 0 < P < 1, and S > 0
-      await priceFeed.setPrice(dec(105, 18));
-      assert.isFalse(await th.checkRecoveryMode(contracts));
-
-      await troveManager.liquidate(defaulter_1);
-
-      const currentEpoch = await stabilityPool.currentEpoch();
-      const currentScale = await stabilityPool.currentScale();
-
-      const S_Before = await stabilityPool.epochToScaleToSum(
-        currentEpoch,
-        currentScale
-      );
-      const P_Before = await stabilityPool.P();
-      const G_Before = await stabilityPool.epochToScaleToG(
-        currentEpoch,
-        currentScale
-      );
-
-      // Confirm 0 < P < 1
-      assert.isTrue(P_Before.gt(toBN("0")) && P_Before.lt(toBN(dec(1, 18))));
-      // Confirm S, G are both > 0
-      assert.isTrue(S_Before.gt(toBN("0")));
-      assert.isTrue(G_Before.gt(toBN("0")));
-
-      // Get front ends' snapshots before
-      for (frontEnd of [frontEnd_1, frontEnd_2, frontEnd_3]) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends, since S corresponds to ETH gain)
-        assert.equal(snapshot[1], dec(1, 18)); // P
-        assert.equal(snapshot[2], "0"); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-
-      // --- TEST ---
-
-      // Check A, B, C have non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(A)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(C)).gt(ZERO));
-
-      await priceFeed.setPrice(dec(200, 18));
-
-      // A, B, C withdraw ETH gain to troves. Grab G at each stage, as it can increase a bit
-      // between topups, because some block.timestamp time passes (and ZKT is issued) between ops
-      const G1 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.withdrawETHGainToTrove(A, A, { from: A });
-
-      const G2 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
-
-      const G3 = await stabilityPool.epochToScaleToG(
-        currentScale,
-        currentEpoch
-      );
-      await stabilityPool.withdrawETHGainToTrove(C, C, { from: C });
-
-      const frontEnds = [frontEnd_1, frontEnd_2, frontEnd_3];
-      const G_Values = [G1, G2, G3];
-
-      // Map frontEnds to the value of G at time the deposit was made
-      frontEndToG = th.zipToObject(frontEnds, G_Values);
-
-      // Get front ends' snapshots after
-      for (const [frontEnd, G] of Object.entries(frontEndToG)) {
-        const snapshot = await stabilityPool.frontEndSnapshots(frontEnd);
-
-        // Check snapshots are the expected values
-        assert.equal(snapshot[0], "0"); // S (should always be 0 for front ends)
-        assert.isTrue(snapshot[1].eq(P_Before)); // P
-        assert.isTrue(snapshot[2].eq(G)); // G
-        assert.equal(snapshot[3], "0"); // scale
-        assert.equal(snapshot[4], "0"); // epoch
-      }
-    });
-
     it("withdrawETHGainToTrove(): reverts when depositor has no ETH gain", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
@@ -5996,10 +4658,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, D provide to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: A });
-      await stabilityPool.provideToSP(dec(20, 18), ZERO_ADDRESS, { from: B });
-      await stabilityPool.provideToSP(dec(30, 18), frontEnd_2, { from: C });
-      await stabilityPool.provideToSP(dec(40, 18), ZERO_ADDRESS, { from: D });
+      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(40, 18),  { from: D });
 
       // fastforward time, and E makes a deposit, creating ZKT rewards for all
       await th.fastForwardTime(
@@ -6011,7 +4673,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(3000, 18), ZERO_ADDRESS, { from: E });
+      await stabilityPool.provideToSP(dec(3000, 18),  { from: E });
 
       // Confirm A, B, C have zero ETH gain
       assert.equal(await stabilityPool.getDepositorETHGain(A), "0");
@@ -6036,142 +4698,6 @@ contract("StabilityPool", async (accounts) => {
       await th.assertRevert(txPromise_B);
       await th.assertRevert(txPromise_C);
       await th.assertRevert(txPromise_D);
-    });
-
-    it("registerFrontEnd(): registers the front end and chosen kickback rate", async () => {
-      const unregisteredFrontEnds = [A, B, C, D, E];
-
-      for (const frontEnd of unregisteredFrontEnds) {
-        assert.isFalse((await stabilityPool.frontEnds(frontEnd))[1]); // check inactive
-        assert.equal((await stabilityPool.frontEnds(frontEnd))[0], "0"); // check no chosen kickback rate
-      }
-
-      await stabilityPool.registerFrontEnd(dec(1, 18), { from: A });
-      await stabilityPool.registerFrontEnd("897789897897897", { from: B });
-      await stabilityPool.registerFrontEnd("99990098", { from: C });
-      await stabilityPool.registerFrontEnd("37", { from: D });
-      await stabilityPool.registerFrontEnd("0", { from: E });
-
-      // Check front ends are registered as active, and have correct kickback rates
-      assert.isTrue((await stabilityPool.frontEnds(A))[1]);
-      assert.equal((await stabilityPool.frontEnds(A))[0], dec(1, 18));
-
-      assert.isTrue((await stabilityPool.frontEnds(B))[1]);
-      assert.equal((await stabilityPool.frontEnds(B))[0], "897789897897897");
-
-      assert.isTrue((await stabilityPool.frontEnds(C))[1]);
-      assert.equal((await stabilityPool.frontEnds(C))[0], "99990098");
-
-      assert.isTrue((await stabilityPool.frontEnds(D))[1]);
-      assert.equal((await stabilityPool.frontEnds(D))[0], "37");
-
-      assert.isTrue((await stabilityPool.frontEnds(E))[1]);
-      assert.equal((await stabilityPool.frontEnds(E))[0], "0");
-    });
-
-    it("registerFrontEnd(): reverts if the front end is already registered", async () => {
-      await stabilityPool.registerFrontEnd(dec(1, 18), { from: A });
-      await stabilityPool.registerFrontEnd("897789897897897", { from: B });
-      await stabilityPool.registerFrontEnd("99990098", { from: C });
-
-      const _2ndAttempt_A = stabilityPool.registerFrontEnd(dec(1, 18), {
-        from: A,
-      });
-      const _2ndAttempt_B = stabilityPool.registerFrontEnd("897789897897897", {
-        from: B,
-      });
-      const _2ndAttempt_C = stabilityPool.registerFrontEnd("99990098", {
-        from: C,
-      });
-
-      await th.assertRevert(
-        _2ndAttempt_A,
-        "StabilityPool: must not already be a registered front end"
-      );
-      await th.assertRevert(
-        _2ndAttempt_B,
-        "StabilityPool: must not already be a registered front end"
-      );
-      await th.assertRevert(
-        _2ndAttempt_C,
-        "StabilityPool: must not already be a registered front end"
-      );
-    });
-
-    it("registerFrontEnd(): reverts if the kickback rate >1", async () => {
-      const invalidKickbackTx_A = stabilityPool.registerFrontEnd(dec(1, 19), {
-        from: A,
-      });
-      const invalidKickbackTx_B = stabilityPool.registerFrontEnd(
-        "1000000000000000001",
-        { from: A }
-      );
-      const invalidKickbackTx_C = stabilityPool.registerFrontEnd(
-        dec(23423, 45),
-        { from: A }
-      );
-      const invalidKickbackTx_D = stabilityPool.registerFrontEnd(maxBytes32, {
-        from: A,
-      });
-
-      await th.assertRevert(
-        invalidKickbackTx_A,
-        "StabilityPool: Kickback rate must be in range [0,1]"
-      );
-      await th.assertRevert(
-        invalidKickbackTx_B,
-        "StabilityPool: Kickback rate must be in range [0,1]"
-      );
-      await th.assertRevert(
-        invalidKickbackTx_C,
-        "StabilityPool: Kickback rate must be in range [0,1]"
-      );
-      await th.assertRevert(
-        invalidKickbackTx_D,
-        "StabilityPool: Kickback rate must be in range [0,1]"
-      );
-    });
-
-    it("registerFrontEnd(): reverts if address has a non-zero deposit already", async () => {
-      // C, D, E open troves
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: C },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: D },
-      });
-      await openTrove({
-        extraZKUSDAmount: toBN(dec(10, 18)),
-        ICR: toBN(dec(2, 18)),
-        extraParams: { from: E },
-      });
-
-      // C, E provides to SP
-      await stabilityPool.provideToSP(dec(10, 18), frontEnd_1, { from: C });
-      await stabilityPool.provideToSP(dec(10, 18), ZERO_ADDRESS, { from: E });
-
-      const txPromise_C = stabilityPool.registerFrontEnd(dec(1, 18), {
-        from: C,
-      });
-      const txPromise_E = stabilityPool.registerFrontEnd(dec(1, 18), {
-        from: E,
-      });
-      await th.assertRevert(
-        txPromise_C,
-        "StabilityPool: User must have no deposit"
-      );
-      await th.assertRevert(
-        txPromise_E,
-        "StabilityPool: User must have no deposit"
-      );
-
-      // D, with no deposit, successfully registers a front end
-      const txD = await stabilityPool.registerFrontEnd(dec(1, 18), { from: D });
-      assert.isTrue(txD.receipt.status);
     });
   });
 });
