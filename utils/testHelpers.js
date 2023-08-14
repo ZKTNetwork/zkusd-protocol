@@ -1118,7 +1118,7 @@ class TestHelper {
     }
 
     static async getLCFromDeploymentTx(deployedLCTx) {
-        const deployedLCAddress = this.getLCAddressFromDeploymentTx(deployedLCTx)  // grab addr of deployed contract from event
+        const deployedLCAddress = this.getLCAddressFromDeploymentTx(deployedLCTx)  // grab addr of deployed.json contract from event
         const LC = await this.getLCFromAddress(deployedLCAddress)
         return LC
     }

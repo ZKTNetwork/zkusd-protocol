@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // BASE/QUOTE, which is computed from the BASE/USD price feed and the QUOTE/USD price feed.
 //
 // This contract only implements the swap functionality. It does not implement any pool balancing logic (e.g., skewing the
-// price to reflect an unbalanced pool) or depositing / withdrawing funds. When deployed, the contract needs to be sent
+// price to reflect an unbalanced pool) or depositing / withdrawing funds. When deployed.json, the contract needs to be sent
 // some quantity of both the base and quote token in order to function properly (using the ERC20 transfer function to
 // the contract's address).
 contract OracleSwap {

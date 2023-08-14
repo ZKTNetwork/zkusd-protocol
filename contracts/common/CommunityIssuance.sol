@@ -38,7 +38,7 @@ contract CommunityIssuance is ICommunityIssuance, CheckContract, Ownable {
 
     /*
      * The community ZKT supply cap is the starting balance of the Community Issuance contract.
-     * It should be minted to this contract by ZKToken, when the token is deployed.
+     * It should be minted to this contract by ZKToken, when the token is deployed.json.
      *
      * Set to 32M (slightly less than 1/3) of total ZKT supply.
      */
@@ -65,7 +65,7 @@ contract CommunityIssuance is ICommunityIssuance, CheckContract, Ownable {
         zkToken = IZKToken(_zkTokenAddress);
         stabilityPoolAddress = _stabilityPoolAddress;
 
-        // When ZKToken deployed, it should have transferred CommunityIssuance's ZKT entitlement
+        // When ZKToken deployed.json, it should have transferred CommunityIssuance's ZKT entitlement
         uint256 ZKTBalance = zkToken.balanceOf(address(this));
         assert(ZKTBalance >= ZKTSupplyCap);
 

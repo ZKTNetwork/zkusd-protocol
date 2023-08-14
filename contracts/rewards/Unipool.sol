@@ -61,13 +61,13 @@ contract LPTokenWrapper is ILPTokenWrapper {
  * - Liquidity providers can unstake UNIv2 LP tokens to exit the program (i.e., stop earning rewards) when they want
 
  * Funds for rewards will only be added once, on deployment of ZKT token,
- * which will happen after this contract is deployed and before this `setParams` in this contract is called.
+ * which will happen after this contract is deployed.json and before this `setParams` in this contract is called.
 
  * If at some point the total amount of staked tokens is zero, the clock will be “stopped”,
  * so the period will be extended by the time during which the staking pool is empty,
  * in order to avoid getting ZKT tokens locked.
  * That also means that the start time for the program will be the event that occurs first:
- * either ZKT token contract is deployed, and therefore ZKT tokens are minted to Unipool contract,
+ * either ZKT token contract is deployed.json, and therefore ZKT tokens are minted to Unipool contract,
  * or first liquidity provider stakes UNIv2 LP tokens into it.
  */
 contract Unipool is LPTokenWrapper, Ownable, CheckContract, IUnipool {

@@ -47,7 +47,7 @@ contract LockupContract {
 
         /*
          * Set the unlock time to a chosen instant in the future, as long as it is at least 1 year after
-         * the system was deployed
+         * the system was deployed.json
          */
         _requireUnlockTimeIsAtLeastOneYearAfterSystemDeployment(_unlockTime);
         unlockTime = _unlockTime;

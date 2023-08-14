@@ -169,7 +169,7 @@ contract("During the initial lockup period", async (accounts) => {
 
   describe("ZKT transfer during first year after ZKT deployment", async (accounts) => {
     // --- Liquity AG transfer restriction, 1st year ---
-    it("Liquity multisig can not transfer ZKT to a LC that was deployed directly", async () => {
+    it("Liquity multisig can not transfer ZKT to a LC that was deployed.json directly", async () => {
       // Liquity multisig deploys LC_A
       const LC_A = await LockupContract.new(
         zkToken.address,
@@ -458,7 +458,7 @@ contract("During the initial lockup period", async (accounts) => {
 
     // --- Anyone else ---
 
-    it("Anyone (other than Liquity multisig) can transfer ZKT to LCs deployed by anyone through the Factory", async () => {
+    it("Anyone (other than Liquity multisig) can transfer ZKT to LCs deployed.json by anyone through the Factory", async () => {
       // Start D, E, F with some ZKT
       await zkToken.unprotectedMint(D, dec(1, 24));
       await zkToken.unprotectedMint(E, dec(2, 24));
@@ -502,7 +502,7 @@ contract("During the initial lockup period", async (accounts) => {
       assert.equal(await zkToken.balanceOf(LCAddress_C), dec(3, 24));
     });
 
-    it("Anyone (other than Liquity multisig) can transfer ZKT to LCs deployed by anyone directly", async () => {
+    it("Anyone (other than Liquity multisig) can transfer ZKT to LCs deployed.json by anyone directly", async () => {
       // Start D, E, F with some ZKT
       await zkToken.unprotectedMint(D, dec(1, 24));
       await zkToken.unprotectedMint(E, dec(2, 24));
@@ -732,7 +732,7 @@ contract("During the initial lockup period", async (accounts) => {
 
   // --- LCs ---
   describe("Transferring ZKT to LCs", async (accounts) => {
-    it("Liquity multisig can transfer ZKT (vesting) to lockup contracts they deployed", async () => {
+    it("Liquity multisig can transfer ZKT (vesting) to lockup contracts they deployed.json", async () => {
       const initialZKTBalanceOfLC_T1 = await zkToken.balanceOf(LC_T1.address);
       const initialZKTBalanceOfLC_T2 = await zkToken.balanceOf(LC_T2.address);
       const initialZKTBalanceOfLC_T3 = await zkToken.balanceOf(LC_T3.address);
@@ -797,7 +797,7 @@ contract("During the initial lockup period", async (accounts) => {
       );
     });
 
-    it("Liquity multisig can transfer ZKT to lockup contracts deployed by anyone", async () => {
+    it("Liquity multisig can transfer ZKT to lockup contracts deployed.json by anyone", async () => {
       // A, B, C each deploy a lockup contract with themself as beneficiary
       const deployedLCtx_A = await lockupContractFactory.deployLockupContract(
         A,
@@ -828,7 +828,7 @@ contract("During the initial lockup period", async (accounts) => {
       // One month passes
       await th.fastForwardTime(SECONDS_IN_ONE_MONTH, web3.currentProvider);
 
-      // Liquity multisig transfers ZKT to LCs deployed by other accounts
+      // Liquity multisig transfers ZKT to LCs deployed.json by other accounts
       await zkToken.transfer(LC_A.address, dec(1, 24), { from: multisig });
       await zkToken.transfer(LC_B.address, dec(2, 24), { from: multisig });
       await zkToken.transfer(LC_C.address, dec(3, 24), { from: multisig });
@@ -1216,13 +1216,13 @@ contract("During the initial lockup period", async (accounts) => {
     });
 
     describe("Withdrawal Attempts on LCs before unlockTime has passed ", async (accounts) => {
-      it("Liquity multisig can't withdraw from a funded LC they deployed for another beneficiary through the Factory before the unlockTime", async () => {
+      it("Liquity multisig can't withdraw from a funded LC they deployed.json for another beneficiary through the Factory before the unlockTime", async () => {
         // Check currentTime < unlockTime
         const currentTime = toBN(await th.getLatestBlockTimestamp(web3));
         const unlockTime = await LC_T1.unlockTime();
         assert.isTrue(currentTime.lt(unlockTime));
 
-        // Liquity multisig attempts withdrawal from LC they deployed through the Factory
+        // Liquity multisig attempts withdrawal from LC they deployed.json through the Factory
         try {
           const withdrawalAttempt = await LC_T1.withdrawZKT({
             from: multisig,
@@ -1236,7 +1236,7 @@ contract("During the initial lockup period", async (accounts) => {
         }
       });
 
-      it("Liquity multisig can't withdraw from a funded LC that someone else deployed before the unlockTime", async () => {
+      it("Liquity multisig can't withdraw from a funded LC that someone else deployed.json before the unlockTime", async () => {
         // Account D deploys a new LC via the Factory
         const deployedLCtx_B = await lockupContractFactory.deployLockupContract(
           B,
@@ -1245,7 +1245,7 @@ contract("During the initial lockup period", async (accounts) => {
         );
         const LC_B = await th.getLCFromDeploymentTx(deployedLCtx_B);
 
-        //ZKT multisig fund the newly deployed LCs
+        //ZKT multisig fund the newly deployed.json LCs
         await zkToken.transfer(LC_B.address, dec(2, 18), { from: multisig });
 
         // Check currentTime < unlockTime
@@ -1332,7 +1332,7 @@ contract("During the initial lockup period", async (accounts) => {
           E,
         ];
 
-        // Several EOAs attempt to withdraw from LC deployed by D
+        // Several EOAs attempt to withdraw from LC deployed.json by D
         for (account of variousEOAs) {
           try {
             const withdrawalAttempt = await LC_B.withdrawZKT({
@@ -1347,7 +1347,7 @@ contract("During the initial lockup period", async (accounts) => {
           }
         }
 
-        // Several EOAs attempt to withdraw from LC_T1 deployed by ZKT deployer
+        // Several EOAs attempt to withdraw from LC_T1 deployed.json by ZKT deployer
         for (account of variousEOAs) {
           try {
             const withdrawalAttempt = await LC_T1.withdrawZKT({

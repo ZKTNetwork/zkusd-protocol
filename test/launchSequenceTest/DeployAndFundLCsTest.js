@@ -502,7 +502,7 @@ contract(
     });
 
     describe("Funding LCs", async (accounts) => {
-      it("ZKT transfer from ZKT deployer to their deployed LC increases the ZKT balance of the LC", async () => {
+      it("ZKT transfer from ZKT deployer to their deployed.json LC increases the ZKT balance of the LC", async () => {
         // Deploy 5 LCs
         const deployedLCtx_A = await lockupContractFactory.deployLockupContract(
           A,
@@ -577,7 +577,7 @@ contract(
         assert.equal(await zkToken.balanceOf(LCAddress_E), ZKTEntitlement_E);
       });
 
-      it("ZKT Multisig can transfer ZKT to LCs deployed through the factory by anyone", async () => {
+      it("ZKT Multisig can transfer ZKT to LCs deployed.json through the factory by anyone", async () => {
         // Various accts deploy 5 LCs
         const deployedLCtx_A = await lockupContractFactory.deployLockupContract(
           A,
@@ -642,7 +642,7 @@ contract(
         assert.equal(await zkToken.balanceOf(LCAddress_E), dec(5, 18));
       });
 
-      // can't transfer ZKT to any LCs that were deployed directly
+      // can't transfer ZKT to any LCs that were deployed.json directly
     });
 
     describe("Withdrawal attempts on funded, inactive LCs immediately after funding", async (accounts) => {

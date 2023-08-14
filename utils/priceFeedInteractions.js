@@ -34,11 +34,11 @@
 // const testnetWallet = new ethers.Wallet(privateKey, testnetProvider)
 // const mainnetWallet = new ethers.Wallet(privateKey, mainnetProvider)
 
-// // Addresses of the deployed Chainlink aggregator reference contracts
+// // Addresses of the deployed.json Chainlink aggregator reference contracts
 // const aggregatorAddressMainnet = "0x79fEbF6B9F76853EDBcBc913e6aAE8232cFB9De9";
 // const aggregatorAddressTestnet = "0x8468b2bDCE073A157E560AA4D9CcF6dB1DB98507"
 
-// // Addresses of our deployed PriceFeeds
+// // Addresses of our deployed.json PriceFeeds
 // const priceFeedAddressMainnet = "0xfD7838852b42dE1F9189025523e7A7150b81df72"
 // const priceFeedAddressTestnet = "0xEF23fa01A1cFf44058495ea20daC9D64f285ffc4"
 
@@ -72,8 +72,8 @@
 //     // Call our testnet PriceFeed - get current price, and timestamp
 //     const price_PriceFeedTestnet = await testnetPriceFeed.getLatestPrice_Testnet()
 //     const timestamp_PriceFeedTestnet = await testnetPriceFeed.getLatestTimestamp_Testnet()
-//     console.log(`Testnet: Latest ETH:USD price from deployed PriceFeed: ${price_PriceFeedTestnet}`)
-//     console.log(`Testnet: Timestamp of latest price from deployed PriceFeed: ${timestamp_PriceFeedTestnet}`)
+//     console.log(`Testnet: Latest ETH:USD price from deployed.json PriceFeed: ${price_PriceFeedTestnet}`)
+//     console.log(`Testnet: Timestamp of latest price from deployed.json PriceFeed: ${timestamp_PriceFeedTestnet}`)
 //     console.log('\n')
    
 //     let price = await testnetPriceFeed.getPrice()
@@ -103,9 +103,9 @@
 //     const price_PriceFeedMainnet = (await mainnetPriceFeed.getLatestPrice()).toString()
 //     const timestap_PriceFeedMainnet = (await mainnetPriceFeed.getLatestTimestamp()).toString()
 //     const latestAnswerID_PriceFeedMainnet = (await mainnetPriceFeed.getLatestAnswerID()).toString()
-//     console.log(`Mainnet: Latest ETH:USD price from deployed PriceFeed: ${price_PriceFeedMainnet}`)
-//     console.log(`Mainnet: Timestamp of latest price from deployed PriceFeed: ${timestap_PriceFeedMainnet}`)
-//     console.log(`Mainnet: ID of latest price answer from deployed PriceFeed: ${latestAnswerID_PriceFeedMainnet}`)
+//     console.log(`Mainnet: Latest ETH:USD price from deployed.json PriceFeed: ${price_PriceFeedMainnet}`)
+//     console.log(`Mainnet: Timestamp of latest price from deployed.json PriceFeed: ${timestap_PriceFeedMainnet}`)
+//     console.log(`Mainnet: ID of latest price answer from deployed.json PriceFeed: ${latestAnswerID_PriceFeedMainnet}`)
 //     console.log('\n')
 
 //     // --- Gas costs of updatePrice() ---

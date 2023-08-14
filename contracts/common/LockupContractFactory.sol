@@ -9,15 +9,15 @@ import "../dependencies/CheckContract.sol";
 import "./LockupContract.sol";
 
 /*
- * The LockupContractFactory deploys LockupContracts - its main purpose is to keep a registry of valid deployed
+ * The LockupContractFactory deploys LockupContracts - its main purpose is to keep a registry of valid deployed.json
  * LockupContracts.
  *
  * This registry is checked by ZKToken when the Liquity deployer attempts to transfer ZKT tokens. During the first year
  * since system deployment, the Liquity deployer is only allowed to transfer ZKT to valid LockupContracts that have been
- * deployed by and recorded in the LockupContractFactory. This ensures the deployer's ZKT can't be traded or staked in the
+ * deployed.json by and recorded in the LockupContractFactory. This ensures the deployer's ZKT can't be traded or staked in the
  * first year, and can only be sent to a verified LockupContract which unlocks at least one year after system deployment.
  *
- * LockupContracts can of course be deployed directly, but only those deployed through and recorded in the LockupContractFactory
+ * LockupContracts can of course be deployed.json directly, but only those deployed.json through and recorded in the LockupContractFactory
  * will be considered "valid" by ZKToken. This is a convenient way to verify that the target address is a genuine
  * LockupContract.
  */

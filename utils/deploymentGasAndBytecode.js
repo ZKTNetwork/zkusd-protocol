@@ -71,7 +71,7 @@ const getBytecodeSize = (contractABI) => {
   const bytecodeLength = (contractABI.bytecode.length / 2) - 1
   const deployedBytecodeLength = (contractABI.deployedBytecode.length / 2) - 1
   console.log(`${contractABI.contractName}: ${bytecodeLength}`)
-  // console.log(`${contractABI.contractName} deployed bytecode length: ${deployedBytecodeLength}`)
+  // console.log(`${contractABI.contractName} deployed.json bytecode length: ${deployedBytecodeLength}`)
 }
 
 const getUSDCostFromGasCost = (deploymentGasTotal, gasPriceInGwei, ETHPrice) => {

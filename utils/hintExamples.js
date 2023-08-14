@@ -33,7 +33,7 @@ async function main() {
   const ZKUSDAmount = toBN(toWei('2500')) // borrower wants to withdraw 2500 ZKUSD
   const ETHColl = toBN(toWei('5')) // borrower wants to lock 5 ETH collateral
 
-  // Call deployed TroveManager contract to read the liquidation reserve and latest borrowing fee
+  // Call deployed.json TroveManager contract to read the liquidation reserve and latest borrowing fee
   const liquidationReserve = await troveManager.ZKUSD_GAS_COMPENSATION()
   const expectedFee = await troveManager.getBorrowingFeeWithDecay(ZKUSDAmount)
   
@@ -44,13 +44,13 @@ async function main() {
   const _1e20 = toBN(toWei('100'))
   let NICR = ETHColl.mul(_1e20).div(expectedDebt)
 
-  // Get an approximate address hint from the deployed HintHelper contract. Use (15 * number of troves) trials 
+  // Get an approximate address hint from the deployed.json HintHelper contract. Use (15 * number of troves) trials
   // to get an approx. hint that is close to the right position.
   let numTroves = await sortedTroves.getSize()
   let numTrials = numTroves.mul(toBN('15'))
   let { 0: approxHint } = await hintHelpers.getApproxHint(NICR, numTrials, 42)  // random seed of 42
 
-  // Use the approximate hint to get the exact upper and lower hints from the deployed SortedTroves contract
+  // Use the approximate hint to get the exact upper and lower hints from the deployed.json SortedTroves contract
   let { 0: upperHint, 1: lowerHint } = await sortedTroves.findInsertPosition(NICR, approxHint, approxHint)
 
   // Finally, call openTrove with the exact upperHint and lowerHint
@@ -70,13 +70,13 @@ async function main() {
 
   NICR = newColl.mul(_1e20).div(newDebt)
 
-  // Get an approximate address hint from the deployed HintHelper contract. Use (15 * number of troves) trials 
+  // Get an approximate address hint from the deployed.json HintHelper contract. Use (15 * number of troves) trials
   // to get an approx. hint that is close to the right position.
   numTroves = await sortedTroves.getSize()
   numTrials = numTroves.mul(toBN('15'))
   ({0: approxHint} = await hintHelpers.getApproxHint(NICR, numTrials, 42))
 
-  // Use the approximate hint to get the exact upper and lower hints from the deployed SortedTroves contract
+  // Use the approximate hint to get the exact upper and lower hints from the deployed.json SortedTroves contract
   ({ 0: upperHint, 1: lowerHint } = await sortedTroves.findInsertPosition(NICR, approxHint, approxHint))
 
   // Call adjustTrove with the exact upperHint and lowerHint
@@ -85,7 +85,7 @@ async function main() {
 
   // --- RedeemCollateral ---
 
-  // Get the redemptions hints from the deployed HintHelpers contract
+  // Get the redemptions hints from the deployed.json HintHelpers contract
   const redemptionhint = await hintHelpers.getRedemptionHints(ZKUSDAmount, price, 50)
 
   const {0: firstRedemptionHint, 1: partialRedemptionNewICR, 2: truncatedZKUSDAmount} = redemptionhint
@@ -97,7 +97,7 @@ async function main() {
   } = await contracts.hintHelpers.getApproxHint(partialRedemptionNewICR, numTrials, 42)
   
   /* Use the approximate partial redemption hint to get the exact partial redemption hint from the 
-  * deployed SortedTroves contract
+  * deployed.json SortedTroves contract
   */
   const exactPartialRedemptionHint = (await sortedTroves.findInsertPosition(partialRedemptionNewICR,
     approxPartialRedemptionHint,
