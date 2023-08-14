@@ -21,7 +21,7 @@ interface ICollSurplusPool {
         address _activePoolAddress
     ) external;
 
-    function getETH() external view returns (uint256);
+    function getNEON() external view returns (uint256);
 
     function getCollateral(address _account) external view returns (uint256);
 

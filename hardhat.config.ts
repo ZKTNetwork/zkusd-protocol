@@ -47,6 +47,8 @@ const config = {
   },
   namedAccounts: {
     deployer: 0,
+    alice: 1,
+    bob: 2,
   },
   networks: {
     hardhat: {
@@ -96,6 +98,19 @@ const config = {
         process.env.pk_scroll_sepolia === undefined
           ? []
           : [process.env.pk_scroll_sepolia],
+    },
+    neondev: {
+      url: "https://devnet.neonevm.org",
+      chainId: 245022926,
+      zksync: false,
+      accounts:
+        process.env.pk_neondev === undefined
+          ? []
+          : [
+              process.env.pk_neondev,
+              process.env.pk_neondev_alice,
+              process.env.pk_neondev_bob,
+            ],
     },
   },
   gasReporter: {

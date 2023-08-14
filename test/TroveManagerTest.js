@@ -1,6 +1,7 @@
 const deploymentHelper = require("../utils/deploymentHelpers.js");
 const testHelpers = require("../utils/testHelpers.js");
 const { skip } = require("node:test");
+const { ethers } = require("hardhat");
 const TroveManagerTester = artifacts.require("./TroveManagerTester.sol");
 const ZKUSDTokenTester = artifacts.require("./ZKUSDTokenTester.sol");
 
@@ -13,10 +14,10 @@ const timeValues = testHelpers.TimeValues;
 
 const GAS_PRICE = 10000000;
 
-/* NOTE: Some tests involving ETH redemption fees do not test for specific fee values.
+/* NOTE: Some tests involving NEON redemption fees do not test for specific fee values.
  * Some only test that the fees are non-zero when they should occur.
  *
- * Specific ETH gain values will depend on the final fee schedule used, and the final choices for
+ * Specific NEON gain values will depend on the final fee schedule used, and the final choices for
  * the parameter BETA in the TroveManager, which is still TBD based on economic modelling.
  *
  */
@@ -128,7 +129,7 @@ contract("TroveManager", async (accounts) => {
     const ICR_AfterWithdrawal = await troveManager.getCurrentICR(alice, price);
     assert.isAtMost(th.getDifference(ICR_AfterWithdrawal, targetICR), 100);
 
-    // price drops to 1ETH:100ZKUSD, reducing Alice's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Alice's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -144,7 +145,7 @@ contract("TroveManager", async (accounts) => {
     assert.isFalse(alice_Trove_isInSortedList);
   });
 
-  it("liquidate(): decreases ActivePool ETH and ZKUSDDebt by correct amounts", async () => {
+  it("liquidate(): decreases ActivePool NEON and ZKUSDDebt by correct amounts", async () => {
     // --- SETUP ---
     const { collateral: A_collateral, totalDebt: A_totalDebt } =
       await openTrove({ ICR: toBN(dec(4, 18)), extraParams: { from: alice } });
@@ -153,8 +154,8 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // check ActivePool ETH and ZKUSD debt before
-    const activePool_ETH_Before = (await activePool.getETH()).toString();
+    // check ActivePool NEON and ZKUSD debt before
+    const activePool_NEON_Before = (await activePool.getNEON()).toString();
     const activePool_RawEther_Before = (
       await web3.eth.getBalance(activePool.address)
     ).toString();
@@ -162,14 +163,14 @@ contract("TroveManager", async (accounts) => {
       await activePool.getZKUSDDebt()
     ).toString();
 
-    assert.equal(activePool_ETH_Before, A_collateral.add(B_collateral));
+    assert.equal(activePool_NEON_Before, A_collateral.add(B_collateral));
     assert.equal(activePool_RawEther_Before, A_collateral.add(B_collateral));
     th.assertIsApproximatelyEqual(
       activePool_ZKUSDDebt_Before,
       A_totalDebt.add(B_totalDebt)
     );
 
-    // price drops to 1ETH:100ZKUSD, reducing Bob's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Bob's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -179,8 +180,8 @@ contract("TroveManager", async (accounts) => {
     leaving Alice’s ether and ZKUSD debt in the ActivePool. */
     await troveManager.liquidate(bob, { from: owner });
 
-    // check ActivePool ETH and ZKUSD debt
-    const activePool_ETH_After = (await activePool.getETH()).toString();
+    // check ActivePool NEON and ZKUSD debt
+    const activePool_NEON_After = (await activePool.getNEON()).toString();
     const activePool_RawEther_After = (
       await web3.eth.getBalance(activePool.address)
     ).toString();
@@ -188,12 +189,12 @@ contract("TroveManager", async (accounts) => {
       await activePool.getZKUSDDebt()
     ).toString();
 
-    assert.equal(activePool_ETH_After, A_collateral);
+    assert.equal(activePool_NEON_After, A_collateral);
     assert.equal(activePool_RawEther_After, A_collateral);
     th.assertIsApproximatelyEqual(activePool_ZKUSDDebt_After, A_totalDebt);
   });
 
-  it("liquidate(): increases DefaultPool ETH and ZKUSD debt by correct amounts", async () => {
+  it("liquidate(): increases DefaultPool NEON and ZKUSD debt by correct amounts", async () => {
     // --- SETUP ---
     const { collateral: A_collateral, totalDebt: A_totalDebt } =
       await openTrove({ ICR: toBN(dec(4, 18)), extraParams: { from: alice } });
@@ -202,8 +203,8 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // check DefaultPool ETH and ZKUSD debt before
-    const defaultPool_ETH_Before = await defaultPool.getETH();
+    // check DefaultPool NEON and ZKUSD debt before
+    const defaultPool_NEON_Before = await defaultPool.getNEON();
     const defaultPool_RawEther_Before = (
       await web3.eth.getBalance(defaultPool.address)
     ).toString();
@@ -211,11 +212,11 @@ contract("TroveManager", async (accounts) => {
       await defaultPool.getZKUSDDebt()
     ).toString();
 
-    assert.equal(defaultPool_ETH_Before, "0");
+    assert.equal(defaultPool_NEON_Before, "0");
     assert.equal(defaultPool_RawEther_Before, "0");
     assert.equal(defaultPool_ZKUSDDebt_Before, "0");
 
-    // price drops to 1ETH:100ZKUSD, reducing Bob's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Bob's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -225,7 +226,7 @@ contract("TroveManager", async (accounts) => {
     await troveManager.liquidate(bob, { from: owner });
 
     // check after
-    const defaultPool_ETH_After = (await defaultPool.getETH()).toString();
+    const defaultPool_NEON_After = (await defaultPool.getNEON()).toString();
     const defaultPool_RawEther_After = (
       await web3.eth.getBalance(defaultPool.address)
     ).toString();
@@ -233,9 +234,9 @@ contract("TroveManager", async (accounts) => {
       await defaultPool.getZKUSDDebt()
     ).toString();
 
-    const defaultPool_ETH = th.applyLiquidationFee(B_collateral);
-    assert.equal(defaultPool_ETH_After, defaultPool_ETH);
-    assert.equal(defaultPool_RawEther_After, defaultPool_ETH);
+    const defaultPool_NEON = th.applyLiquidationFee(B_collateral);
+    assert.equal(defaultPool_NEON_After, defaultPool_NEON);
+    assert.equal(defaultPool_RawEther_After, defaultPool_NEON);
     th.assertIsApproximatelyEqual(defaultPool_ZKUSDDebt_After, B_totalDebt);
   });
 
@@ -252,7 +253,7 @@ contract("TroveManager", async (accounts) => {
     const totalStakes_Before = (await troveManager.totalStakes()).toString();
     assert.equal(totalStakes_Before, A_collateral.add(B_collateral));
 
-    // price drops to 1ETH:100ZKUSD, reducing Bob's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Bob's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -350,7 +351,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal(totalStakesSnapshot_Before, "0");
     assert.equal(totalCollateralSnapshot_Before, "0");
 
-    // price drops to 1ETH:100ZKUSD, reducing Bob's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Bob's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -362,7 +363,7 @@ contract("TroveManager", async (accounts) => {
     /* check snapshots after. Total stakes should be equal to the  remaining stake then the system:
     10 ether, Alice's stake.
 
-    Total collateral should be equal to Alice's collateral plus her pending ETH reward (Bob’s collaterale*0.995 ether), earned
+    Total collateral should be equal to Alice's collateral plus her pending NEON reward (Bob’s collaterale*0.995 ether), earned
     from the liquidation of Bob's Trove */
     const totalStakesSnapshot_After = (
       await troveManager.totalStakesSnapshot()
@@ -378,7 +379,7 @@ contract("TroveManager", async (accounts) => {
     );
   });
 
-  it("liquidate(): updates the L_ETH and L_ZKUSDDebt reward-per-unit-staked totals", async () => {
+  it("liquidate(): updates the L_NEON and L_ZKUSDDebt reward-per-unit-staked totals", async () => {
     // --- SETUP ---
     const { collateral: A_collateral, totalDebt: A_totalDebt } =
       await openTrove({ ICR: toBN(dec(8, 18)), extraParams: { from: alice } });
@@ -392,7 +393,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // price drops to 1ETH:100ZKUSD, reducing Carols's ICR below MCR
+    // price drops to 1NEON:100ZKUSD, reducing Carols's ICR below MCR
     await priceFeed.setPrice("100000000000000000000");
 
     // Confirm system is not in Recovery Mode
@@ -404,10 +405,10 @@ contract("TroveManager", async (accounts) => {
     assert.isFalse(await sortedTroves.contains(carol));
 
     // Carol's ether*0.995 and ZKUSD should be added to the DefaultPool.
-    const L_ETH_AfterCarolLiquidated = await troveManager.L_ETH();
+    const L_NEON_AfterCarolLiquidated = await troveManager.L_NEON();
     const L_ZKUSDDebt_AfterCarolLiquidated = await troveManager.L_ZKUSDDebt();
 
-    const L_ETH_expected_1 = th
+    const L_NEON_expected_1 = th
       .applyLiquidationFee(C_collateral)
       .mul(mv._1e18BN)
       .div(A_collateral.add(B_collateral));
@@ -415,7 +416,7 @@ contract("TroveManager", async (accounts) => {
       A_collateral.add(B_collateral)
     );
     assert.isAtMost(
-      th.getDifference(L_ETH_AfterCarolLiquidated, L_ETH_expected_1),
+      th.getDifference(L_NEON_AfterCarolLiquidated, L_NEON_expected_1),
       100
     );
     assert.isAtMost(
@@ -435,7 +436,7 @@ contract("TroveManager", async (accounts) => {
     // Confirm system is not in Recovery Mode
     assert.isFalse(await th.checkRecoveryMode(contracts));
 
-    // price drops to 1ETH:50ZKUSD, reducing Bob's ICR below MCR
+    // price drops to 1NEON:50ZKUSD, reducing Bob's ICR below MCR
     await priceFeed.setPrice(dec(50, 18));
     const price = await priceFeed.getPrice();
 
@@ -452,15 +453,15 @@ contract("TroveManager", async (accounts) => {
 
    The system rewards-per-unit-staked should now be:
 
-   L_ETH = (0.995 / 20) + (10.4975*0.995  / 10) = 1.09425125 ETH
+   L_NEON = (0.995 / 20) + (10.4975*0.995  / 10) = 1.09425125 NEON
    L_ZKUSDDebt = (180 / 20) + (890 / 10) = 98 ZKUSD */
-    const L_ETH_AfterBobLiquidated = await troveManager.L_ETH();
+    const L_NEON_AfterBobLiquidated = await troveManager.L_NEON();
     const L_ZKUSDDebt_AfterBobLiquidated = await troveManager.L_ZKUSDDebt();
 
-    const L_ETH_expected_2 = L_ETH_expected_1.add(
+    const L_NEON_expected_2 = L_NEON_expected_1.add(
       th
         .applyLiquidationFee(
-          B_collateral.add(B_collateral.mul(L_ETH_expected_1).div(mv._1e18BN))
+          B_collateral.add(B_collateral.mul(L_NEON_expected_1).div(mv._1e18BN))
         )
         .mul(mv._1e18BN)
         .div(A_collateral)
@@ -472,7 +473,7 @@ contract("TroveManager", async (accounts) => {
         .div(A_collateral)
     );
     assert.isAtMost(
-      th.getDifference(L_ETH_AfterBobLiquidated, L_ETH_expected_2),
+      th.getDifference(L_NEON_AfterBobLiquidated, L_NEON_expected_2),
       100
     );
     assert.isAtMost(
@@ -487,14 +488,14 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: bob, value: dec(100, "ether") },
     });
 
-    // Alice creates a single trove with 0.7 ETH and a debt of 70 ZKUSD, and provides 10 ZKUSD to SP
+    // Alice creates a single trove with 0.7 NEON and a debt of 70 ZKUSD, and provides 10 ZKUSD to SP
     const { collateral: A_collateral, totalDebt: A_totalDebt } =
       await openTrove({ ICR: toBN(dec(2, 18)), extraParams: { from: alice } });
 
     // Alice proves 10 ZKUSD to SP
     await stabilityPool.provideToSP(dec(10, 18), { from: alice });
 
-    // Set ETH:USD price to 105
+    // Set NEON:USD price to 105
     await priceFeed.setPrice("105000000000000000000");
     const price = await priceFeed.getPrice();
 
@@ -853,7 +854,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(expectedTCR_4.eq(TCR_4));
   });
 
-  it("liquidate(): does not affect the SP deposit or ETH gain when called on an SP depositor's address that has no trove", async () => {
+  it("liquidate(): does not affect the SP deposit or NEON gain when called on an SP depositor's address that has no trove", async () => {
     await openTrove({ ICR: toBN(dec(10, 18)), extraParams: { from: whale } });
     const spDeposit = toBN(dec(1, 24));
     await openTrove({
@@ -880,19 +881,19 @@ contract("TroveManager", async (accounts) => {
       th.getEmittedLiquidationValues(liquidationTX_C);
 
     assert.isFalse(await sortedTroves.contains(carol));
-    // Check Dennis' SP deposit has absorbed Carol's debt, and he has received her liquidated ETH
+    // Check Dennis' SP deposit has absorbed Carol's debt, and he has received her liquidated NEON
     const dennis_Deposit_Before = (
       await stabilityPool.getCompoundedZKUSDDeposit(dennis)
     ).toString();
-    const dennis_ETHGain_Before = (
-      await stabilityPool.getDepositorETHGain(dennis)
+    const dennis_NEONGain_Before = (
+      await stabilityPool.getDepositorNEONGain(dennis)
     ).toString();
     assert.isAtMost(
       th.getDifference(dennis_Deposit_Before, spDeposit.sub(liquidatedDebt)),
       1000000
     );
     assert.isAtMost(
-      th.getDifference(dennis_ETHGain_Before, liquidatedColl),
+      th.getDifference(dennis_NEONGain_Before, liquidatedColl),
       1000
     );
 
@@ -912,14 +913,14 @@ contract("TroveManager", async (accounts) => {
     const dennis_Deposit_After = (
       await stabilityPool.getCompoundedZKUSDDeposit(dennis)
     ).toString();
-    const dennis_ETHGain_After = (
-      await stabilityPool.getDepositorETHGain(dennis)
+    const dennis_NEONGain_After = (
+      await stabilityPool.getDepositorNEONGain(dennis)
     ).toString();
     assert.equal(dennis_Deposit_Before, dennis_Deposit_After);
-    assert.equal(dennis_ETHGain_Before, dennis_ETHGain_After);
+    assert.equal(dennis_NEONGain_Before, dennis_NEONGain_After);
   });
 
-  it("liquidate(): does not liquidate a SP depositor's trove with ICR > 110%, and does not affect their SP deposit or ETH gain", async () => {
+  it("liquidate(): does not liquidate a SP depositor's trove with ICR > 110%, and does not affect their SP deposit or NEON gain", async () => {
     await openTrove({ ICR: toBN(dec(10, 18)), extraParams: { from: whale } });
     const spDeposit = toBN(dec(1, 24));
     await openTrove({
@@ -948,18 +949,21 @@ contract("TroveManager", async (accounts) => {
     const price = await priceFeed.getPrice();
     assert.isTrue((await troveManager.getCurrentICR(bob, price)).gt(mv._MCR));
 
-    // Check Bob' SP deposit has absorbed Carol's debt, and he has received her liquidated ETH
+    // Check Bob' SP deposit has absorbed Carol's debt, and he has received her liquidated NEON
     const bob_Deposit_Before = (
       await stabilityPool.getCompoundedZKUSDDeposit(bob)
     ).toString();
-    const bob_ETHGain_Before = (
-      await stabilityPool.getDepositorETHGain(bob)
+    const bob_NEONGain_Before = (
+      await stabilityPool.getDepositorNEONGain(bob)
     ).toString();
     assert.isAtMost(
       th.getDifference(bob_Deposit_Before, spDeposit.sub(liquidatedDebt)),
       1000000
     );
-    assert.isAtMost(th.getDifference(bob_ETHGain_Before, liquidatedColl), 1000);
+    assert.isAtMost(
+      th.getDifference(bob_NEONGain_Before, liquidatedColl),
+      1000
+    );
 
     // Confirm system is not in Recovery Mode
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -977,14 +981,14 @@ contract("TroveManager", async (accounts) => {
     const bob_Deposit_After = (
       await stabilityPool.getCompoundedZKUSDDeposit(bob)
     ).toString();
-    const bob_ETHGain_After = (
-      await stabilityPool.getDepositorETHGain(bob)
+    const bob_NEONGain_After = (
+      await stabilityPool.getDepositorNEONGain(bob)
     ).toString();
     assert.equal(bob_Deposit_Before, bob_Deposit_After);
-    assert.equal(bob_ETHGain_Before, bob_ETHGain_After);
+    assert.equal(bob_NEONGain_Before, bob_NEONGain_After);
   });
 
-  it("liquidate(): liquidates a SP depositor's trove with ICR < 110%, and the liquidation correctly impacts their SP deposit and ETH gain", async () => {
+  it("liquidate(): liquidates a SP depositor's trove with ICR < 110%, and the liquidation correctly impacts their SP deposit and NEON gain", async () => {
     const A_spDeposit = toBN(dec(3, 24));
     const B_spDeposit = toBN(dec(1, 24));
     await openTrove({ ICR: toBN(dec(20, 18)), extraParams: { from: whale } });
@@ -1011,18 +1015,18 @@ contract("TroveManager", async (accounts) => {
     await priceFeed.setPrice(dec(100, 18));
     await troveManager.liquidate(carol);
 
-    // Check Bob' SP deposit has absorbed Carol's debt, and he has received her liquidated ETH
+    // Check Bob' SP deposit has absorbed Carol's debt, and he has received her liquidated NEON
     const bob_Deposit_Before = await stabilityPool.getCompoundedZKUSDDeposit(
       bob
     );
-    const bob_ETHGain_Before = await stabilityPool.getDepositorETHGain(bob);
+    const bob_NEONGain_Before = await stabilityPool.getDepositorNEONGain(bob);
     assert.isAtMost(
       th.getDifference(bob_Deposit_Before, B_spDeposit.sub(C_debt)),
       1000000
     );
     assert.isAtMost(
       th.getDifference(
-        bob_ETHGain_Before,
+        bob_NEONGain_Before,
         th.applyLiquidationFee(C_collateral)
       ),
       1000
@@ -1043,17 +1047,17 @@ contract("TroveManager", async (accounts) => {
     assert.equal(bob_Trove_Status, 3); // check closed by liquidation
 
     /* Alice's ZKUSD Loss = (300 / 400) * 200 = 150 ZKUSD
-       Alice's ETH gain = (300 / 400) * 2*0.995 = 1.4925 ETH
+       Alice's NEON gain = (300 / 400) * 2*0.995 = 1.4925 NEON
 
        Bob's ZKUSDLoss = (100 / 400) * 200 = 50 ZKUSD
-       Bob's ETH gain = (100 / 400) * 2*0.995 = 0.4975 ETH
+       Bob's NEON gain = (100 / 400) * 2*0.995 = 0.4975 NEON
 
-     Check Bob' SP deposit has been reduced to 50 ZKUSD, and his ETH gain has increased to 1.5 ETH. */
+     Check Bob' SP deposit has been reduced to 50 ZKUSD, and his NEON gain has increased to 1.5 NEON. */
     const alice_Deposit_After = (
       await stabilityPool.getCompoundedZKUSDDeposit(alice)
     ).toString();
-    const alice_ETHGain_After = (
-      await stabilityPool.getDepositorETHGain(alice)
+    const alice_NEONGain_After = (
+      await stabilityPool.getDepositorNEONGain(alice)
     ).toString();
 
     const totalDeposits = bob_Deposit_Before.add(A_spDeposit);
@@ -1067,7 +1071,7 @@ contract("TroveManager", async (accounts) => {
     );
     assert.isAtMost(
       th.getDifference(
-        alice_ETHGain_After,
+        alice_NEONGain_After,
         th.applyLiquidationFee(B_collateral).mul(A_spDeposit).div(totalDeposits)
       ),
       1000000
@@ -1076,7 +1080,7 @@ contract("TroveManager", async (accounts) => {
     const bob_Deposit_After = await stabilityPool.getCompoundedZKUSDDeposit(
       bob
     );
-    const bob_ETHGain_After = await stabilityPool.getDepositorETHGain(bob);
+    const bob_NEONGain_After = await stabilityPool.getDepositorNEONGain(bob);
 
     assert.isAtMost(
       th.getDifference(
@@ -1089,8 +1093,8 @@ contract("TroveManager", async (accounts) => {
     );
     assert.isAtMost(
       th.getDifference(
-        bob_ETHGain_After,
-        bob_ETHGain_Before.add(
+        bob_NEONGain_After,
+        bob_NEONGain_Before.add(
           th
             .applyLiquidationFee(B_collateral)
             .mul(bob_Deposit_Before)
@@ -1172,7 +1176,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: carol },
     });
 
-    // Defaulter opens with 60 ZKUSD, 0.6 ETH
+    // Defaulter opens with 60 ZKUSD, 0.6 NEON
     await openTrove({
       ICR: toBN(dec(2, 18)),
       extraParams: { from: defaulter_1 },
@@ -1199,11 +1203,11 @@ contract("TroveManager", async (accounts) => {
     // Confirm system is not in Recovery Mode
     assert.isFalse(await th.checkRecoveryMode(contracts));
 
-    /* Liquidate defaulter. 30 ZKUSD and 0.3 ETH is distributed between A, B and C.
+    /* Liquidate defaulter. 30 ZKUSD and 0.3 NEON is distributed between A, B and C.
 
-    A receives (30 * 2/4) = 15 ZKUSD, and (0.3*2/4) = 0.15 ETH
-    B receives (30 * 1/4) = 7.5 ZKUSD, and (0.3*1/4) = 0.075 ETH
-    C receives (30 * 1/4) = 7.5 ZKUSD, and (0.3*1/4) = 0.075 ETH
+    A receives (30 * 2/4) = 15 ZKUSD, and (0.3*2/4) = 0.15 NEON
+    B receives (30 * 1/4) = 7.5 ZKUSD, and (0.3*1/4) = 0.075 NEON
+    C receives (30 * 1/4) = 7.5 ZKUSD, and (0.3*1/4) = 0.075 NEON
     */
     await troveManager.liquidate(defaulter_1);
 
@@ -1279,7 +1283,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -1330,7 +1334,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -1401,14 +1405,14 @@ contract("TroveManager", async (accounts) => {
     assert.isFalse(await troveManager.hasPendingRewards(E));
 
     // Check C's pending coll and debt rewards are <= the coll and debt in the DefaultPool
-    const pendingETH_C = await troveManager.getPendingETHReward(C);
+    const pendingNEON_C = await troveManager.getPendingNEONReward(C);
     const pendingZKUSDDebt_C = await troveManager.getPendingZKUSDDebtReward(C);
-    const defaultPoolETH = await defaultPool.getETH();
+    const defaultPoolNEON = await defaultPool.getNEON();
     const defaultPoolZKUSDDebt = await defaultPool.getZKUSDDebt();
-    assert.isTrue(pendingETH_C.lte(defaultPoolETH));
+    assert.isTrue(pendingNEON_C.lte(defaultPoolNEON));
     assert.isTrue(pendingZKUSDDebt_C.lte(defaultPoolZKUSDDebt));
     //Check only difference is dust
-    assert.isAtMost(th.getDifference(pendingETH_C, defaultPoolETH), 1000);
+    assert.isAtMost(th.getDifference(pendingNEON_C, defaultPoolNEON), 1000);
     assert.isAtMost(
       th.getDifference(pendingZKUSDDebt_C, defaultPoolZKUSDDebt),
       1000
@@ -1455,7 +1459,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing Bob and Carol's ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing Bob and Carol's ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -1651,7 +1655,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(bob_ICR_Before.gte(mv._MCR));
     assert.isTrue(carol_ICR_Before.lte(mv._MCR));
 
-    // Liquidate defaulter. 30 ZKUSD and 0.3 ETH is distributed uniformly between A, B and C. Each receive 10 ZKUSD, 0.1 ETH
+    // Liquidate defaulter. 30 ZKUSD and 0.3 NEON is distributed uniformly between A, B and C. Each receive 10 ZKUSD, 0.1 NEON
     await troveManager.liquidate(defaulter_1);
 
     const alice_ICR_After = await troveManager.getCurrentICR(alice, price);
@@ -2029,7 +2033,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(TCR_After.gte(TCR_Before.mul(toBN(995)).div(toBN(1000))));
   });
 
-  it("liquidateTroves(): Liquidating troves with SP deposits correctly impacts their SP deposit and ETH gain", async () => {
+  it("liquidateTroves(): Liquidating troves with SP deposits correctly impacts their SP deposit and NEON gain", async () => {
     // Whale provides 400 ZKUSD to the SP
     const whaleDeposit = toBN(dec(40000, 18));
     await openTrove({
@@ -2102,7 +2106,7 @@ contract("TroveManager", async (accounts) => {
     Then, liquidation hits A,B,C:
 
     Total liquidated debt = 150 + 350 + 150 = 650 ZKUSD
-    Total liquidated ETH = 1.1 + 3.1 + 1.1 = 5.3 ETH
+    Total liquidated NEON = 1.1 + 3.1 + 1.1 = 5.3 NEON
 
     whale zkusd loss: 650 * (400/800) = 325 zkusd
     alice zkusd loss:  650 *(100/800) = 81.25 zkusd
@@ -2117,9 +2121,9 @@ contract("TroveManager", async (accounts) => {
     bob eth gain: 5*0.995 * (300/800) = 1.865625 eth
 
     Total remaining deposits: 150 ZKUSD
-    Total ETH gain: 4.975 ETH */
+    Total NEON gain: 4.975 NEON */
 
-    // Check remaining ZKUSD Deposits and ETH gain, for whale and depositors whose troves were liquidated
+    // Check remaining ZKUSD Deposits and NEON gain, for whale and depositors whose troves were liquidated
     const whale_Deposit_After = await stabilityPool.getCompoundedZKUSDDeposit(
       whale
     );
@@ -2130,9 +2134,9 @@ contract("TroveManager", async (accounts) => {
       bob
     );
 
-    const whale_ETHGain = await stabilityPool.getDepositorETHGain(whale);
-    const alice_ETHGain = await stabilityPool.getDepositorETHGain(alice);
-    const bob_ETHGain = await stabilityPool.getDepositorETHGain(bob);
+    const whale_NEONGain = await stabilityPool.getDepositorNEONGain(whale);
+    const alice_NEONGain = await stabilityPool.getDepositorNEONGain(alice);
+    const bob_NEONGain = await stabilityPool.getDepositorNEONGain(bob);
 
     assert.isAtMost(
       th.getDifference(
@@ -2158,7 +2162,7 @@ contract("TroveManager", async (accounts) => {
 
     assert.isAtMost(
       th.getDifference(
-        whale_ETHGain,
+        whale_NEONGain,
         th
           .applyLiquidationFee(liquidatedColl)
           .mul(whaleDeposit)
@@ -2168,31 +2172,31 @@ contract("TroveManager", async (accounts) => {
     );
     assert.isAtMost(
       th.getDifference(
-        alice_ETHGain,
+        alice_NEONGain,
         th.applyLiquidationFee(liquidatedColl).mul(A_deposit).div(totalDeposits)
       ),
       100000
     );
     assert.isAtMost(
       th.getDifference(
-        bob_ETHGain,
+        bob_NEONGain,
         th.applyLiquidationFee(liquidatedColl).mul(B_deposit).div(totalDeposits)
       ),
       100000
     );
 
-    // Check total remaining deposits and ETH gain in Stability Pool
+    // Check total remaining deposits and NEON gain in Stability Pool
     const total_ZKUSDinSP = (
       await stabilityPool.getTotalZKUSDDeposits()
     ).toString();
-    const total_ETHinSP = (await stabilityPool.getETH()).toString();
+    const total_NEONinSP = (await stabilityPool.getNEON()).toString();
 
     assert.isAtMost(
       th.getDifference(total_ZKUSDinSP, totalDeposits.sub(liquidatedDebt)),
       1000
     );
     assert.isAtMost(
-      th.getDifference(total_ETHinSP, th.applyLiquidationFee(liquidatedColl)),
+      th.getDifference(total_NEONinSP, th.applyLiquidationFee(liquidatedColl)),
       1000
     );
   });
@@ -2229,7 +2233,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -2289,7 +2293,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -2361,14 +2365,14 @@ contract("TroveManager", async (accounts) => {
     assert.isFalse(await troveManager.hasPendingRewards(E));
 
     // Check C's pending coll and debt rewards are <= the coll and debt in the DefaultPool
-    const pendingETH_C = await troveManager.getPendingETHReward(C);
+    const pendingNEON_C = await troveManager.getPendingNEONReward(C);
     const pendingZKUSDDebt_C = await troveManager.getPendingZKUSDDebtReward(C);
-    const defaultPoolETH = await defaultPool.getETH();
+    const defaultPoolNEON = await defaultPool.getNEON();
     const defaultPoolZKUSDDebt = await defaultPool.getZKUSDDebt();
-    assert.isTrue(pendingETH_C.lte(defaultPoolETH));
+    assert.isTrue(pendingNEON_C.lte(defaultPoolNEON));
     assert.isTrue(pendingZKUSDDebt_C.lte(defaultPoolZKUSDDebt));
     //Check only difference is dust
-    assert.isAtMost(th.getDifference(pendingETH_C, defaultPoolETH), 1000);
+    assert.isAtMost(th.getDifference(pendingNEON_C, defaultPoolNEON), 1000);
     assert.isAtMost(
       th.getDifference(pendingZKUSDDebt_C, defaultPoolZKUSDDebt),
       1000
@@ -2415,7 +2419,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2483,7 +2487,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2547,7 +2551,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2610,7 +2614,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2662,7 +2666,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2750,7 +2754,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // Price drops to 1ETH:100ZKUSD, reducing A, B, C ICR below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing A, B, C ICR below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
 
@@ -2835,7 +2839,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -2891,7 +2895,7 @@ contract("TroveManager", async (accounts) => {
       web3.currentProvider
     );
 
-    // Price drops to 1ETH:100ZKUSD, reducing defaulters to below MCR
+    // Price drops to 1NEON:100ZKUSD, reducing defaulters to below MCR
     await priceFeed.setPrice(dec(100, 18));
     const price = await priceFeed.getPrice();
     assert.isFalse(await th.checkRecoveryMode(contracts));
@@ -2994,7 +2998,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: dennis },
     });
 
-    const dennis_ETHBalance_Before = toBN(await web3.eth.getBalance(dennis));
+    const dennis_NEONBalance_Before = toBN(await web3.eth.getBalance(dennis));
 
     const dennis_ZKUSDBalance_Before = await zkusdToken.balanceOf(dennis);
 
@@ -3038,7 +3042,7 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
     const alice_Trove_After = await troveManager.Troves(alice);
     const bob_Trove_After = await troveManager.Troves(bob);
@@ -3058,25 +3062,27 @@ contract("TroveManager", async (accounts) => {
     assert.equal(bob_debt_After, "0");
     assert.equal(carol_debt_After, "0");
 
-    const dennis_ETHBalance_After = toBN(await web3.eth.getBalance(dennis));
-    const receivedETH = dennis_ETHBalance_After.sub(dennis_ETHBalance_Before);
+    const dennis_NEONBalance_After = toBN(await web3.eth.getBalance(dennis));
+    const receivedNEON = dennis_NEONBalance_After.sub(
+      dennis_NEONBalance_Before
+    );
 
-    const expectedTotalETHDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to ETH, at ETH:USD price 200
-    const expectedReceivedETH = expectedTotalETHDrawn
-      .sub(toBN(ETHFee))
-      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received ETH
+    const expectedTotalNEONDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to NEON, at NEON:USD price 200
+    const expectedReceivedNEON = expectedTotalNEONDrawn
+      .sub(toBN(NEONFee))
+      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received NEON
 
     // console.log("*********************************************************************************")
-    // console.log("ETHFee: " + ETHFee)
-    // console.log("dennis_ETHBalance_Before: " + dennis_ETHBalance_Before)
+    // console.log("NEONFee: " + NEONFee)
+    // console.log("dennis_NEONBalance_Before: " + dennis_NEONBalance_Before)
     // console.log("GAS_USED: " + th.gasUsed(redemptionTx))
-    // console.log("dennis_ETHBalance_After: " + dennis_ETHBalance_After)
-    // console.log("expectedTotalETHDrawn: " + expectedTotalETHDrawn)
-    // console.log("recived  : " + receivedETH)
-    // console.log("expected : " + expectedReceivedETH)
-    // console.log("wanted :   " + expectedReceivedETH.sub(toBN(GAS_PRICE)))
+    // console.log("dennis_NEONBalance_After: " + dennis_NEONBalance_After)
+    // console.log("expectedTotalNEONDrawn: " + expectedTotalNEONDrawn)
+    // console.log("recived  : " + receivedNEON)
+    // console.log("expected : " + expectedReceivedNEON)
+    // console.log("wanted :   " + expectedReceivedNEON.sub(toBN(GAS_PRICE)))
     // console.log("*********************************************************************************")
-    th.assertIsApproximatelyEqual(expectedReceivedETH, receivedETH);
+    th.assertIsApproximatelyEqual(expectedReceivedNEON, receivedNEON);
 
     const dennis_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(dennis)
@@ -3115,7 +3121,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: dennis },
     });
 
-    const dennis_ETHBalance_Before = toBN(await web3.eth.getBalance(dennis));
+    const dennis_NEONBalance_Before = toBN(await web3.eth.getBalance(dennis));
 
     const dennis_ZKUSDBalance_Before = await zkusdToken.balanceOf(dennis);
 
@@ -3159,7 +3165,7 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
     const alice_Trove_After = await troveManager.Troves(alice);
     const bob_Trove_After = await troveManager.Troves(bob);
@@ -3179,15 +3185,17 @@ contract("TroveManager", async (accounts) => {
     assert.equal(bob_debt_After, "0");
     assert.equal(carol_debt_After, "0");
 
-    const dennis_ETHBalance_After = toBN(await web3.eth.getBalance(dennis));
-    const receivedETH = dennis_ETHBalance_After.sub(dennis_ETHBalance_Before);
+    const dennis_NEONBalance_After = toBN(await web3.eth.getBalance(dennis));
+    const receivedNEON = dennis_NEONBalance_After.sub(
+      dennis_NEONBalance_Before
+    );
 
-    const expectedTotalETHDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to ETH, at ETH:USD price 200
-    const expectedReceivedETH = expectedTotalETHDrawn
-      .sub(toBN(ETHFee))
-      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received ETH
+    const expectedTotalNEONDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to NEON, at NEON:USD price 200
+    const expectedReceivedNEON = expectedTotalNEONDrawn
+      .sub(toBN(NEONFee))
+      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received NEON
 
-    th.assertIsApproximatelyEqual(expectedReceivedETH, receivedETH);
+    th.assertIsApproximatelyEqual(expectedReceivedNEON, receivedNEON);
 
     const dennis_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(dennis)
@@ -3226,7 +3234,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: dennis },
     });
 
-    const dennis_ETHBalance_Before = toBN(await web3.eth.getBalance(dennis));
+    const dennis_NEONBalance_Before = toBN(await web3.eth.getBalance(dennis));
 
     const dennis_ZKUSDBalance_Before = await zkusdToken.balanceOf(dennis);
 
@@ -3270,7 +3278,7 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
     const alice_Trove_After = await troveManager.Troves(alice);
     const bob_Trove_After = await troveManager.Troves(bob);
@@ -3290,15 +3298,17 @@ contract("TroveManager", async (accounts) => {
     assert.equal(bob_debt_After, "0");
     assert.equal(carol_debt_After, "0");
 
-    const dennis_ETHBalance_After = toBN(await web3.eth.getBalance(dennis));
-    const receivedETH = dennis_ETHBalance_After.sub(dennis_ETHBalance_Before);
+    const dennis_NEONBalance_After = toBN(await web3.eth.getBalance(dennis));
+    const receivedNEON = dennis_NEONBalance_After.sub(
+      dennis_NEONBalance_Before
+    );
 
-    const expectedTotalETHDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to ETH, at ETH:USD price 200
-    const expectedReceivedETH = expectedTotalETHDrawn
-      .sub(toBN(ETHFee))
-      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received ETH
+    const expectedTotalNEONDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to NEON, at NEON:USD price 200
+    const expectedReceivedNEON = expectedTotalNEONDrawn
+      .sub(toBN(NEONFee))
+      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received NEON
 
-    th.assertIsApproximatelyEqual(expectedReceivedETH, receivedETH);
+    th.assertIsApproximatelyEqual(expectedReceivedNEON, receivedNEON);
 
     const dennis_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(dennis)
@@ -3337,7 +3347,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: dennis },
     });
 
-    const dennis_ETHBalance_Before = toBN(await web3.eth.getBalance(dennis));
+    const dennis_NEONBalance_Before = toBN(await web3.eth.getBalance(dennis));
 
     const dennis_ZKUSDBalance_Before = await zkusdToken.balanceOf(dennis);
 
@@ -3386,7 +3396,7 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
     const alice_Trove_After = await troveManager.Troves(alice);
     const bob_Trove_After = await troveManager.Troves(bob);
@@ -3406,15 +3416,17 @@ contract("TroveManager", async (accounts) => {
     assert.equal(bob_debt_After, "0");
     assert.equal(carol_debt_After, "0");
 
-    const dennis_ETHBalance_After = toBN(await web3.eth.getBalance(dennis));
-    const receivedETH = dennis_ETHBalance_After.sub(dennis_ETHBalance_Before);
+    const dennis_NEONBalance_After = toBN(await web3.eth.getBalance(dennis));
+    const receivedNEON = dennis_NEONBalance_After.sub(
+      dennis_NEONBalance_Before
+    );
 
-    const expectedTotalETHDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to ETH, at ETH:USD price 200
-    const expectedReceivedETH = expectedTotalETHDrawn
-      .sub(toBN(ETHFee))
-      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received ETH
+    const expectedTotalNEONDrawn = redemptionAmount.div(toBN(200)); // convert redemptionAmount ZKUSD to NEON, at NEON:USD price 200
+    const expectedReceivedNEON = expectedTotalNEONDrawn
+      .sub(toBN(NEONFee))
+      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received NEON
 
-    th.assertIsApproximatelyEqual(expectedReceivedETH, receivedETH);
+    th.assertIsApproximatelyEqual(expectedReceivedNEON, receivedNEON);
 
     const dennis_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(dennis)
@@ -3459,7 +3471,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // open trove from redeemer.  Redeemer has highest ICR (100ETH, 100 ZKUSD), 20000%
+    // open trove from redeemer.  Redeemer has highest ICR (100NEON, 100 ZKUSD), 20000%
     const { zkusdAmount: F_zkusdAmount } = await openTrove({
       ICR: toBN(dec(200, 18)),
       extraZKUSDAmount: redemptionAmount.mul(toBN(2)),
@@ -3547,7 +3559,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    // open trove from redeemer.  Redeemer has highest ICR (100ETH, 100 ZKUSD), 20000%
+    // open trove from redeemer.  Redeemer has highest ICR (100NEON, 100 ZKUSD), 20000%
     const { zkusdAmount: F_zkusdAmount } = await openTrove({
       ICR: toBN(dec(200, 18)),
       extraZKUSDAmount: redemptionAmount.mul(toBN(2)),
@@ -3736,7 +3748,7 @@ contract("TroveManager", async (accounts) => {
       extraParams: { from: dennis },
     });
 
-    const dennis_ETHBalance_Before = toBN(await web3.eth.getBalance(dennis));
+    const dennis_NEONBalance_Before = toBN(await web3.eth.getBalance(dennis));
 
     const dennis_ZKUSDBalance_Before = await zkusdToken.balanceOf(dennis);
 
@@ -3802,7 +3814,7 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
     // Since Alice already redeemed 1 ZKUSD from Carol's Trove, Dennis was  able to redeem:
     //  - 9 ZKUSD from Carol's
@@ -3813,18 +3825,20 @@ contract("TroveManager", async (accounts) => {
     // got in the way, he would have needed to redeem 3 ZKUSD to fully complete his redemption of 20 ZKUSD.
     // This would have required a different hint, therefore he ended up with a partial redemption.
 
-    const dennis_ETHBalance_After = toBN(await web3.eth.getBalance(dennis));
-    const receivedETH = dennis_ETHBalance_After.sub(dennis_ETHBalance_Before);
+    const dennis_NEONBalance_After = toBN(await web3.eth.getBalance(dennis));
+    const receivedNEON = dennis_NEONBalance_After.sub(
+      dennis_NEONBalance_Before
+    );
 
-    // Expect only 17 worth of ETH drawn
-    const expectedTotalETHDrawn = fullfilledRedemptionAmount
+    // Expect only 17 worth of NEON drawn
+    const expectedTotalNEONDrawn = fullfilledRedemptionAmount
       .sub(frontRunRedepmtion)
-      .div(toBN(200)); // redempted ZKUSD converted to ETH, at ETH:USD price 200
-    const expectedReceivedETH = expectedTotalETHDrawn
-      .sub(ETHFee)
-      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received ETH
+      .div(toBN(200)); // redempted ZKUSD converted to NEON, at NEON:USD price 200
+    const expectedReceivedNEON = expectedTotalNEONDrawn
+      .sub(NEONFee)
+      .sub(toBN(th.gasUsed(redemptionTx) * GAS_PRICE)); // substract gas used for troveManager.redeemCollateral from expected received NEON
 
-    th.assertIsApproximatelyEqual(expectedReceivedETH, receivedETH);
+    th.assertIsApproximatelyEqual(expectedReceivedNEON, receivedNEON);
 
     const dennis_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(dennis)
@@ -3838,7 +3852,7 @@ contract("TroveManager", async (accounts) => {
   });
 
   // active debt cannot be zero, as there’s a positive min debt enforced, and at least a trove must exist
-/*
+  /*
   it.skip("redeemCollateral(): can redeem if there is zero active debt but non-zero debt in DefaultPool", async () => {
     // --- SETUP ---
 
@@ -3860,7 +3874,7 @@ contract("TroveManager", async (accounts) => {
 
     // --- TEST ---
 
-    const carol_ETHBalance_Before = toBN(await web3.eth.getBalance(carol));
+    const carol_NEONBalance_Before = toBN(await web3.eth.getBalance(carol));
 
     // skip bootstrapping phase
     await th.fastForwardTime(
@@ -3882,15 +3896,15 @@ contract("TroveManager", async (accounts) => {
       }
     );
 
-    const ETHFee = th.getEmittedRedemptionValues(redemptionTx)[3];
+    const NEONFee = th.getEmittedRedemptionValues(redemptionTx)[3];
 
-    const carol_ETHBalance_After = toBN(await web3.eth.getBalance(carol));
+    const carol_NEONBalance_After = toBN(await web3.eth.getBalance(carol));
 
-    const expectedTotalETHDrawn = toBN(amount).div(toBN(100)); // convert 100 ZKUSD to ETH at ETH:USD price of 100
-    const expectedReceivedETH = expectedTotalETHDrawn.sub(ETHFee);
+    const expectedTotalNEONDrawn = toBN(amount).div(toBN(100)); // convert 100 ZKUSD to NEON at NEON:USD price of 100
+    const expectedReceivedNEON = expectedTotalNEONDrawn.sub(NEONFee);
 
-    const receivedETH = carol_ETHBalance_After.sub(carol_ETHBalance_Before);
-    assert.isTrue(expectedReceivedETH.eq(receivedETH));
+    const receivedNEON = carol_NEONBalance_After.sub(carol_NEONBalance_Before);
+    assert.isTrue(expectedReceivedNEON.eq(receivedNEON));
 
     const carol_ZKUSDBalance_After = (
       await zkusdToken.balanceOf(carol)
@@ -4318,9 +4332,9 @@ contract("TroveManager", async (accounts) => {
 
     // Attempt with maxFee > 5.5%
     const price = await priceFeed.getPrice();
-    const ETHDrawn = attemptedZKUSDRedemption.mul(mv._1e18BN).div(price);
+    const NEONDrawn = attemptedZKUSDRedemption.mul(mv._1e18BN).div(price);
     const slightlyMoreThanFee = await troveManager.getRedemptionFeeWithDecay(
-      ETHDrawn
+      NEONDrawn
     );
     const tx1 = await th.redeemCollateralAndGetTxObject(
       A,
@@ -4333,7 +4347,9 @@ contract("TroveManager", async (accounts) => {
     await troveManager.setBaseRate(0); // Artificially zero the baseRate
 
     // Attempt with maxFee = 5.5%
-    const exactSameFee = await troveManager.getRedemptionFeeWithDecay(ETHDrawn);
+    const exactSameFee = await troveManager.getRedemptionFeeWithDecay(
+      NEONDrawn
+    );
     const tx2 = await th.redeemCollateralAndGetTxObject(
       C,
       contracts,
@@ -4376,7 +4392,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(tx5.receipt.status);
   });
 
-  it("redeemCollateral(): doesn't affect the Stability Pool deposits or ETH gain of redeemed-from troves", async () => {
+  it("redeemCollateral(): doesn't affect the Stability Pool deposits or NEON gain of redeemed-from troves", async () => {
     await openTrove({ ICR: toBN(dec(20, 18)), extraParams: { from: whale } });
 
     // B, C, D, F open trove
@@ -4448,21 +4464,21 @@ contract("TroveManager", async (accounts) => {
       await stabilityPool.getCompoundedZKUSDDeposit(dennis)
     ).toString();
 
-    const bob_ETHGain_before = (
-      await stabilityPool.getDepositorETHGain(bob)
+    const bob_NEONGain_before = (
+      await stabilityPool.getDepositorNEONGain(bob)
     ).toString();
-    const carol_ETHGain_before = (
-      await stabilityPool.getDepositorETHGain(carol)
+    const carol_NEONGain_before = (
+      await stabilityPool.getDepositorNEONGain(carol)
     ).toString();
-    const dennis_ETHGain_before = (
-      await stabilityPool.getDepositorETHGain(dennis)
+    const dennis_NEONGain_before = (
+      await stabilityPool.getDepositorNEONGain(dennis)
     ).toString();
 
-    // Check the remaining ZKUSD and ETH in Stability Pool after liquidation is non-zero
+    // Check the remaining ZKUSD and NEON in Stability Pool after liquidation is non-zero
     const ZKUSDinSP = await stabilityPool.getTotalZKUSDDeposits();
-    const ETHinSP = await stabilityPool.getETH();
+    const NEONinSP = await stabilityPool.getNEON();
     assert.isTrue(ZKUSDinSP.gte(mv._zeroBN));
-    assert.isTrue(ETHinSP.gte(mv._zeroBN));
+    assert.isTrue(NEONinSP.gte(mv._zeroBN));
 
     // skip bootstrapping phase
     await th.fastForwardTime(
@@ -4493,24 +4509,24 @@ contract("TroveManager", async (accounts) => {
       await stabilityPool.getCompoundedZKUSDDeposit(dennis)
     ).toString();
 
-    const bob_ETHGain_after = (
-      await stabilityPool.getDepositorETHGain(bob)
+    const bob_NEONGain_after = (
+      await stabilityPool.getDepositorNEONGain(bob)
     ).toString();
-    const carol_ETHGain_after = (
-      await stabilityPool.getDepositorETHGain(carol)
+    const carol_NEONGain_after = (
+      await stabilityPool.getDepositorNEONGain(carol)
     ).toString();
-    const dennis_ETHGain_after = (
-      await stabilityPool.getDepositorETHGain(dennis)
+    const dennis_NEONGain_after = (
+      await stabilityPool.getDepositorNEONGain(dennis)
     ).toString();
 
-    // Check B, C, D Stability Pool deposits and ETH gain have not been affected by redemptions from their troves
+    // Check B, C, D Stability Pool deposits and NEON gain have not been affected by redemptions from their troves
     assert.equal(bob_SPDeposit_before, bob_SPDeposit_after);
     assert.equal(carol_SPDeposit_before, carol_SPDeposit_after);
     assert.equal(dennis_SPDeposit_before, dennis_SPDeposit_after);
 
-    assert.equal(bob_ETHGain_before, bob_ETHGain_after);
-    assert.equal(carol_ETHGain_before, carol_ETHGain_after);
-    assert.equal(dennis_ETHGain_before, dennis_ETHGain_after);
+    assert.equal(bob_NEONGain_before, bob_NEONGain_after);
+    assert.equal(carol_NEONGain_before, carol_NEONGain_after);
+    assert.equal(dennis_NEONGain_before, dennis_NEONGain_after);
   });
 
   it("redeemCollateral(): caller can redeem their entire ZKUSDToken balance", async () => {
@@ -4556,7 +4572,7 @@ contract("TroveManager", async (accounts) => {
 
     // Get active debt and coll before redemption
     const activePool_debt_before = await activePool.getZKUSDDebt();
-    const activePool_coll_before = await activePool.getETH();
+    const activePool_coll_before = await activePool.getNEON();
 
     th.assertIsApproximatelyEqual(activePool_debt_before, totalDebt);
     assert.equal(activePool_coll_before.toString(), totalColl);
@@ -4598,10 +4614,10 @@ contract("TroveManager", async (accounts) => {
       dec(400, 18)
     );
 
-    /* Check ActivePool coll reduced by $400 worth of Ether: at ETH:USD price of $200, this should be 2 ETH.
+    /* Check ActivePool coll reduced by $400 worth of Ether: at NEON:USD price of $200, this should be 2 NEON.
 
-    therefore remaining ActivePool ETH should be 198 */
-    const activePool_coll_after = await activePool.getETH();
+    therefore remaining ActivePool NEON should be 198 */
+    const activePool_coll_after = await activePool.getNEON();
     // console.log(`activePool_coll_after: ${activePool_coll_after}`)
     assert.equal(
       activePool_coll_after.toString(),
@@ -4656,7 +4672,7 @@ contract("TroveManager", async (accounts) => {
 
     // Get active debt and coll before redemption
     const activePool_debt_before = await activePool.getZKUSDDebt();
-    const activePool_coll_before = (await activePool.getETH()).toString();
+    const activePool_coll_before = (await activePool.getNEON()).toString();
 
     th.assertIsApproximatelyEqual(activePool_debt_before, totalDebt);
     assert.equal(activePool_coll_before, totalColl);
@@ -4822,7 +4838,7 @@ contract("TroveManager", async (accounts) => {
     }
   });
 
-  it("redeemCollateral(): value of issued ETH == face value of redeemed ZKUSD (assuming 1 ZKUSD has value of $1)", async () => {
+  it("redeemCollateral(): value of issued NEON == face value of redeemed ZKUSD (assuming 1 ZKUSD has value of $1)", async () => {
     const { collateral: W_coll } = await openTrove({
       ICR: toBN(dec(20, 18)),
       extraParams: { from: whale },
@@ -4864,8 +4880,8 @@ contract("TroveManager", async (accounts) => {
     const _950_ZKUSD = "950000000000000000000";
 
     // Check Ether in activePool
-    const activeETH_0 = await activePool.getETH();
-    assert.equal(activeETH_0, totalColl.toString());
+    const activeNEON_0 = await activePool.getNEON();
+    assert.equal(activeNEON_0, totalColl.toString());
 
     let firstRedemptionHint;
     let partialRedemptionHintNICR;
@@ -4900,14 +4916,14 @@ contract("TroveManager", async (accounts) => {
 
     assert.isTrue(redemption_1.receipt.status);
 
-    /* 120 ZKUSD redeemed.  Expect $120 worth of ETH removed. At ETH:USD price of $200,
-    ETH removed = (120/200) = 0.6 ETH
-    Total active ETH = 280 - 0.6 = 279.4 ETH */
+    /* 120 ZKUSD redeemed.  Expect $120 worth of NEON removed. At NEON:USD price of $200,
+    NEON removed = (120/200) = 0.6 NEON
+    Total active NEON = 280 - 0.6 = 279.4 NEON */
 
-    const activeETH_1 = await activePool.getETH();
+    const activeNEON_1 = await activePool.getNEON();
     assert.equal(
-      activeETH_1.toString(),
-      activeETH_0.sub(toBN(_120_ZKUSD).mul(mv._1e18BN).div(price))
+      activeNEON_1.toString(),
+      activeNEON_0.sub(toBN(_120_ZKUSD).mul(mv._1e18BN).div(price))
     );
 
     // Flyn redeems 373 ZKUSD
@@ -4934,13 +4950,13 @@ contract("TroveManager", async (accounts) => {
 
     assert.isTrue(redemption_2.receipt.status);
 
-    /* 373 ZKUSD redeemed.  Expect $373 worth of ETH removed. At ETH:USD price of $200,
-    ETH removed = (373/200) = 1.865 ETH
-    Total active ETH = 279.4 - 1.865 = 277.535 ETH */
-    const activeETH_2 = await activePool.getETH();
+    /* 373 ZKUSD redeemed.  Expect $373 worth of NEON removed. At NEON:USD price of $200,
+    NEON removed = (373/200) = 1.865 NEON
+    Total active NEON = 279.4 - 1.865 = 277.535 NEON */
+    const activeNEON_2 = await activePool.getNEON();
     assert.equal(
-      activeETH_2.toString(),
-      activeETH_1.sub(toBN(_373_ZKUSD).mul(mv._1e18BN).div(price))
+      activeNEON_2.toString(),
+      activeNEON_1.sub(toBN(_373_ZKUSD).mul(mv._1e18BN).div(price))
     );
 
     // Graham redeems 950 ZKUSD
@@ -4967,13 +4983,13 @@ contract("TroveManager", async (accounts) => {
 
     assert.isTrue(redemption_3.receipt.status);
 
-    /* 950 ZKUSD redeemed.  Expect $950 worth of ETH removed. At ETH:USD price of $200,
-    ETH removed = (950/200) = 4.75 ETH
-    Total active ETH = 277.535 - 4.75 = 272.785 ETH */
-    const activeETH_3 = (await activePool.getETH()).toString();
+    /* 950 ZKUSD redeemed.  Expect $950 worth of NEON removed. At NEON:USD price of $200,
+    NEON removed = (950/200) = 4.75 NEON
+    Total active NEON = 277.535 - 4.75 = 272.785 NEON */
+    const activeNEON_3 = (await activePool.getNEON()).toString();
     assert.equal(
-      activeETH_3.toString(),
-      activeETH_2.sub(toBN(_950_ZKUSD).mul(mv._1e18BN).div(price))
+      activeNEON_3.toString(),
+      activeNEON_2.sub(toBN(_950_ZKUSD).mul(mv._1e18BN).div(price))
     );
   });
 
@@ -5269,7 +5285,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(lastFeeOpTime_3.gt(lastFeeOpTime_1));
   });
 
-  it("redeemCollateral(): a redemption made at zero base rate send a non-zero ETHFee to ZKT staking contract", async () => {
+  it("redeemCollateral(): a redemption made at zero base rate send a non-zero NEONFee to ZKT staking contract", async () => {
     // time fast-forwards 1 year, and multisig stakes 1 ZKT
     await th.fastForwardTime(
       timeValues.SECONDS_IN_ONE_YEAR,
@@ -5327,7 +5343,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(zktStakingBalance_After.gt(toBN("0")));
   });
 
-  it("redeemCollateral(): a redemption made at zero base increases the ETH-fees-per-ZKT-staked in ZKT Staking contract", async () => {
+  it("redeemCollateral(): a redemption made at zero base increases the NEON-fees-per-ZKT-staked in ZKT Staking contract", async () => {
     // time fast-forwards 1 year, and multisig stakes 1 ZKT
     await th.fastForwardTime(
       timeValues.SECONDS_IN_ONE_YEAR,
@@ -5357,9 +5373,9 @@ contract("TroveManager", async (accounts) => {
     // Check baseRate == 0
     assert.equal(await troveManager.baseRate(), "0");
 
-    // Check ZKT Staking ETH-fees-per-ZKT-staked before is zero
-    const F_ETH_Before = await zktStaking.F_ETH();
-    assert.equal(F_ETH_Before, "0");
+    // Check ZKT Staking NEON-fees-per-ZKT-staked before is zero
+    const F_NEON_Before = await zktStaking.F_NEON();
+    assert.equal(F_NEON_Before, "0");
 
     const A_balanceBefore = await zkusdToken.balanceOf(A);
 
@@ -5376,12 +5392,12 @@ contract("TroveManager", async (accounts) => {
     const baseRate_1 = await troveManager.baseRate();
     assert.isTrue(baseRate_1.gt(toBN("0")));
 
-    // Check ZKT Staking ETH-fees-per-ZKT-staked after is non-zero
-    const F_ETH_After = await zktStaking.F_ETH();
-    assert.isTrue(F_ETH_After.gt("0"));
+    // Check ZKT Staking NEON-fees-per-ZKT-staked after is non-zero
+    const F_NEON_After = await zktStaking.F_NEON();
+    assert.isTrue(F_NEON_After.gt("0"));
   });
 
-  it("redeemCollateral(): a redemption made at a non-zero base rate send a non-zero ETHFee to ZKT staking contract", async () => {
+  it("redeemCollateral(): a redemption made at a non-zero base rate send a non-zero NEONFee to ZKT staking contract", async () => {
     // time fast-forwards 1 year, and multisig stakes 1 ZKT
     await th.fastForwardTime(
       timeValues.SECONDS_IN_ONE_YEAR,
@@ -5448,7 +5464,7 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(zktStakingBalance_After.gt(zktStakingBalance_Before));
   });
 
-  it("redeemCollateral(): a redemption made at a non-zero base rate increases ETH-per-ZKT-staked in the staking contract", async () => {
+  it("redeemCollateral(): a redemption made at a non-zero base rate increases NEON-per-ZKT-staked in the staking contract", async () => {
     // time fast-forwards 1 year, and multisig stakes 1 ZKT
     await th.fastForwardTime(
       timeValues.SECONDS_IN_ONE_YEAR,
@@ -5494,8 +5510,8 @@ contract("TroveManager", async (accounts) => {
     const baseRate_1 = await troveManager.baseRate();
     assert.isTrue(baseRate_1.gt(toBN("0")));
 
-    // Check ZKT Staking ETH-fees-per-ZKT-staked before is zero
-    const F_ETH_Before = await zktStaking.F_ETH();
+    // Check ZKT Staking NEON-fees-per-ZKT-staked before is zero
+    const F_NEON_Before = await zktStaking.F_NEON();
 
     // B redeems 10 ZKUSD
     await th.redeemCollateral(B, contracts, dec(10, 18), GAS_PRICE);
@@ -5506,13 +5522,13 @@ contract("TroveManager", async (accounts) => {
       B_balanceBefore.sub(toBN(dec(10, 18))).toString()
     );
 
-    const F_ETH_After = await zktStaking.F_ETH();
+    const F_NEON_After = await zktStaking.F_NEON();
 
     // check ZKT Staking balance has increased
-    assert.isTrue(F_ETH_After.gt(F_ETH_Before));
+    assert.isTrue(F_NEON_After.gt(F_NEON_Before));
   });
 
-  it("redeemCollateral(): a redemption sends the ETH remainder (ETHDrawn - ETHFee) to the redeemer", async () => {
+  it("redeemCollateral(): a redemption sends the NEON remainder (NEONDrawn - NEONFee) to the redeemer", async () => {
     // time fast-forwards 1 year, and multisig stakes 1 ZKT
     await th.fastForwardTime(
       timeValues.SECONDS_IN_ONE_YEAR,
@@ -5568,25 +5584,25 @@ contract("TroveManager", async (accounts) => {
     );
 
     /*
-    At ETH:USD price of 200:
-    ETHDrawn = (9 / 200) = 0.045 ETH
-    ETHfee = (0.005 + (1/2) *( 9/260)) * ETHDrawn = 0.00100384615385 ETH
-    ETHRemainder = 0.045 - 0.001003... = 0.0439961538462
+    At NEON:USD price of 200:
+    NEONDrawn = (9 / 200) = 0.045 NEON
+    NEONfee = (0.005 + (1/2) *( 9/260)) * NEONDrawn = 0.00100384615385 NEON
+    NEONRemainder = 0.045 - 0.001003... = 0.0439961538462
     */
 
     const A_balanceAfter = toBN(await web3.eth.getBalance(A));
 
-    // check A's ETH balance has increased by 0.045 ETH
+    // check A's NEON balance has increased by 0.045 NEON
     const price = await priceFeed.getPrice();
-    const ETHDrawn = redemptionAmount.mul(mv._1e18BN).div(price);
+    const NEONDrawn = redemptionAmount.mul(mv._1e18BN).div(price);
     th.assertIsApproximatelyEqual(
       A_balanceAfter.sub(A_balanceBefore),
-      ETHDrawn.sub(
+      NEONDrawn.sub(
         toBN(dec(5, 15))
           .add(redemptionAmount.mul(mv._1e18BN).div(totalDebt).div(toBN(2)))
-          .mul(ETHDrawn)
+          .mul(NEONDrawn)
           .div(mv._1e18BN)
-      ).sub(toBN(gasUsed * GAS_PRICE)), // substract gas used for troveManager.redeemCollateral from expected received ETH
+      ).sub(toBN(gasUsed * GAS_PRICE)), // substract gas used for troveManager.redeemCollateral from expected received NEON
       100000
     );
   });
@@ -5711,11 +5727,11 @@ contract("TroveManager", async (accounts) => {
     assert.isTrue(await sortedTroves.contains(D));
 
     /*
-    At ETH:USD price of 200, with full redemptions from A, B, C:
+    At NEON:USD price of 200, with full redemptions from A, B, C:
 
-    ETHDrawn from A = 100/200 = 0.5 ETH --> Surplus = (1-0.5) = 0.5
-    ETHDrawn from B = 120/200 = 0.6 ETH --> Surplus = (1-0.6) = 0.4
-    ETHDrawn from C = 130/200 = 0.65 ETH --> Surplus = (2-0.65) = 1.35
+    NEONDrawn from A = 100/200 = 0.5 NEON --> Surplus = (1-0.5) = 0.5
+    NEONDrawn from B = 120/200 = 0.6 NEON --> Surplus = (1-0.6) = 0.4
+    NEONDrawn from C = 130/200 = 0.65 NEON --> Surplus = (2-0.65) = 1.35
     */
 
     const A_balanceAfter = toBN(await web3.eth.getBalance(A));
@@ -5838,8 +5854,8 @@ contract("TroveManager", async (accounts) => {
     assert.equal(C_emittedDebt, "0");
     assert.equal(C_emittedColl, "0");
 
-    /* Expect D to have lost 15 debt and (at ETH price of 200) 15/200 = 0.075 ETH.
-    So, expect remaining debt = (85 - 15) = 70, and remaining ETH = 1 - 15/200 = 0.925 remaining. */
+    /* Expect D to have lost 15 debt and (at NEON price of 200) 15/200 = 0.075 NEON.
+    So, expect remaining debt = (85 - 15) = 70, and remaining NEON = 1 - 15/200 = 0.925 remaining. */
     const price = await priceFeed.getPrice();
     th.assertIsApproximatelyEqual(
       D_emittedDebt,
@@ -5851,7 +5867,7 @@ contract("TroveManager", async (accounts) => {
     );
   });
 
-  it("redeemCollateral(): a redemption that closes a trove leaves the trove's ETH surplus (collateral - ETH drawn) available for the trove owner to claim", async () => {
+  it("redeemCollateral(): a redemption that closes a trove leaves the trove's NEON surplus (collateral - NEON drawn) available for the trove owner to claim", async () => {
     const { A_netDebt, A_coll, B_netDebt, B_coll, C_netDebt, C_coll } =
       await redeemCollateral3Full1Partial();
 
@@ -5899,7 +5915,7 @@ contract("TroveManager", async (accounts) => {
     );
   });
 
-  it("redeemCollateral(): a redemption that closes a trove leaves the trove's ETH surplus (collateral - ETH drawn) available for the trove owner after re-opening trove", async () => {
+  it("redeemCollateral(): a redemption that closes a trove leaves the trove's NEON surplus (collateral - NEON drawn) available for the trove owner after re-opening trove", async () => {
     const {
       A_netDebt,
       A_coll: A_collBefore,
@@ -6091,7 +6107,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal(carol_PendingZKUSDDebtReward, 0);
   });
 
-  it("getPendingETHReward(): Returns 0 if there is no pending ETH reward", async () => {
+  it("getPendingNEONReward(): Returns 0 if there is no pending NEON reward", async () => {
     // make some troves
     const { totalDebt } = await openTrove({
       ICR: toBN(dec(2, 18)),
@@ -6121,16 +6137,16 @@ contract("TroveManager", async (accounts) => {
     assert.isFalse(await sortedTroves.contains(defaulter_1));
 
     // Confirm there are no pending rewards from liquidation
-    const current_L_ETH = await troveManager.L_ETH();
-    assert.equal(current_L_ETH, 0);
+    const current_L_NEON = await troveManager.L_NEON();
+    assert.equal(current_L_NEON, 0);
 
-    const carolSnapshot_L_ETH = (await troveManager.rewardSnapshots(carol))[0];
-    assert.equal(carolSnapshot_L_ETH, 0);
+    const carolSnapshot_L_NEON = (await troveManager.rewardSnapshots(carol))[0];
+    assert.equal(carolSnapshot_L_NEON, 0);
 
-    const carol_PendingETHReward = await troveManager.getPendingETHReward(
+    const carol_PendingNEONReward = await troveManager.getPendingNEONReward(
       carol
     );
-    assert.equal(carol_PendingETHReward, 0);
+    assert.equal(carol_PendingNEONReward, 0);
   });
 
   // --- computeICR ---
@@ -6145,7 +6161,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal(ICR, 0);
   });
 
-  it("computeICR(): Returns 2^256-1 for ETH:USD = 100, coll = 1 ETH, debt = 100 ZKUSD", async () => {
+  it("computeICR(): Returns 2^256-1 for NEON:USD = 100, coll = 1 NEON, debt = 100 ZKUSD", async () => {
     const price = dec(100, 18);
     const coll = dec(1, "ether");
     const debt = dec(100, 18);
@@ -6155,7 +6171,7 @@ contract("TroveManager", async (accounts) => {
     assert.equal(ICR, dec(1, 18));
   });
 
-  it("computeICR(): returns correct ICR for ETH:USD = 100, coll = 200 ETH, debt = 30 ZKUSD", async () => {
+  it("computeICR(): returns correct ICR for NEON:USD = 100, coll = 200 NEON, debt = 30 ZKUSD", async () => {
     const price = dec(100, 18);
     const coll = dec(200, "ether");
     const debt = dec(30, 18);
@@ -6165,7 +6181,7 @@ contract("TroveManager", async (accounts) => {
     assert.isAtMost(th.getDifference(ICR, "666666666666666666666"), 1000);
   });
 
-  it("computeICR(): returns correct ICR for ETH:USD = 250, coll = 1350 ETH, debt = 127 ZKUSD", async () => {
+  it("computeICR(): returns correct ICR for NEON:USD = 250, coll = 1350 NEON, debt = 127 ZKUSD", async () => {
     const price = "250000000000000000000";
     const coll = "1350000000000000000000";
     const debt = "127000000000000000000";
@@ -6175,7 +6191,7 @@ contract("TroveManager", async (accounts) => {
     assert.isAtMost(th.getDifference(ICR, "2657480314960630000000"), 1000000);
   });
 
-  it("computeICR(): returns correct ICR for ETH:USD = 100, coll = 1 ETH, debt = 54321 ZKUSD", async () => {
+  it("computeICR(): returns correct ICR for NEON:USD = 100, coll = 1 NEON, debt = 54321 ZKUSD", async () => {
     const price = dec(100, 18);
     const coll = dec(1, "ether");
     const debt = "54321000000000000000000";
@@ -6342,6 +6358,44 @@ contract("TroveManager", async (accounts) => {
   it("hasPendingRewards(): Returns false it trove is not active", async () => {
     assert.isFalse(await troveManager.hasPendingRewards(alice));
   });
+
+  // skip("redeemCollateral(): owner can redeem their entire ZKUSDToken balance", async () => {
+  //   const { collateral: W_coll, totalDebt: W_totalDebt } = await openTrove({
+  //     ICR: toBN(dec(3, 18)),
+  //     extraParams: { from: alice },
+  //   });
+  //
+  //   const price = await priceFeed.getPrice();
+  //
+  //   // skip bootstrapping phase
+  //   await th.fastForwardTime(
+  //     timeValues.SECONDS_IN_ONE_WEEK * 2,
+  //     web3.currentProvider
+  //   );
+  //
+  //   console.log((await zkusdToken.balanceOf(alice)).toString())
+  //   // Erin attempts to redeem 400 ZKUSD
+  //   const { firstRedemptionHint, partialRedemptionHintNICR } =
+  //     await hintHelpers.getRedemptionHints(dec(1, 18), price, 0);
+  //
+  //   const { 0: upperPartialRedemptionHint, 1: lowerPartialRedemptionHint } =
+  //     await sortedTroves.findInsertPosition(
+  //       partialRedemptionHintNICR,
+  //       erin,
+  //       erin
+  //     );
+  //
+  //   await troveManager.redeemCollateral(
+  //     dec(1, 18),
+  //     alice,
+  //     alice,
+  //     alice,
+  //     ethers.BigNumber.from('5500000000000000000'),
+  //     0,
+  //     th._100pct,
+  //     { from: alice }
+  //   );
+  // });
 });
 
 contract("Reset chain state", async (accounts) => {});

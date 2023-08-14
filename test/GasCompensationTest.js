@@ -99,8 +99,8 @@ contract("Gas compensation tests", async (accounts) => {
 
   it("_getCollGasCompensation(): returns the 0.5% of collaterall if it is < $10 in value", async () => {
     /* 
-    ETH:USD price = 1
-    coll = 1 ETH: $1 in value
+    NEON:USD price = 1
+    coll = 1 NEON: $1 in value
     -> Expect 0.5% of collaterall as gas compensation */
     await priceFeed.setPrice(dec(1, 18));
     // const price_1 = await priceFeed.getPrice()
@@ -110,8 +110,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(gasCompensation_1, dec(5, 15));
 
     /* 
-    ETH:USD price = 28.4
-    coll = 0.1 ETH: $2.84 in value
+    NEON:USD price = 28.4
+    coll = 0.1 NEON: $2.84 in value
     -> Expect 0.5% of collaterall as gas compensation */
     await priceFeed.setPrice("28400000000000000000");
     // const price_2 = await priceFeed.getPrice()
@@ -121,8 +121,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(gasCompensation_2, dec(5, 14));
 
     /* 
-    ETH:USD price = 1000000000 (1 billion)
-    coll = 0.000000005 ETH (5e9 wei): $5 in value 
+    NEON:USD price = 1000000000 (1 billion)
+    coll = 0.000000005 NEON (5e9 wei): $5 in value 
     -> Expect 0.5% of collaterall as gas compensation */
     await priceFeed.setPrice(dec(1, 27));
     // const price_3 = await priceFeed.getPrice()
@@ -137,27 +137,27 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200
-    coll = 9.999 ETH  
-    0.5% of coll = 0.04995 ETH. USD value: $9.99
+    NEON:USD price = 200
+    coll = 9.999 NEON  
+    0.5% of coll = 0.04995 NEON. USD value: $9.99
     -> Expect 0.5% of collaterall as gas compensation */
     const gasCompensation_1 = (
       await troveManagerTester.getCollGasCompensation("9999000000000000000")
     ).toString();
     assert.equal(gasCompensation_1, "49995000000000000");
 
-    /* ETH:USD price = 200
-     coll = 0.055 ETH  
-     0.5% of coll = 0.000275 ETH. USD value: $0.055
+    /* NEON:USD price = 200
+     coll = 0.055 NEON  
+     0.5% of coll = 0.000275 NEON. USD value: $0.055
      -> Expect 0.5% of collaterall as gas compensation */
     const gasCompensation_2 = (
       await troveManagerTester.getCollGasCompensation("55000000000000000")
     ).toString();
     assert.equal(gasCompensation_2, dec(275, 12));
 
-    /* ETH:USD price = 200
-    coll = 6.09232408808723580 ETH  
-    0.5% of coll = 0.004995 ETH. USD value: $6.09
+    /* NEON:USD price = 200
+    coll = 6.09232408808723580 NEON  
+    0.5% of coll = 0.004995 NEON. USD value: $6.09
     -> Expect 0.5% of collaterall as gas compensation */
     const gasCompensation_3 = (
       await troveManagerTester.getCollGasCompensation("6092324088087235800")
@@ -170,9 +170,9 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200
-    coll = 10 ETH  
-    0.5% of coll = 0.5 ETH. USD value: $10
+    NEON:USD price = 200
+    coll = 10 NEON  
+    0.5% of coll = 0.5 NEON. USD value: $10
     -> Expect 0.5% of collaterall as gas compensation */
     const gasCompensation = (
       await troveManagerTester.getCollGasCompensation(dec(10, "ether"))
@@ -185,40 +185,40 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 100 ETH  
-    0.5% of coll = 0.5 ETH. USD value: $100
-    -> Expect $100 gas compensation, i.e. 0.5 ETH */
+    NEON:USD price = 200 $/E
+    coll = 100 NEON  
+    0.5% of coll = 0.5 NEON. USD value: $100
+    -> Expect $100 gas compensation, i.e. 0.5 NEON */
     const gasCompensation_1 = (
       await troveManagerTester.getCollGasCompensation(dec(100, "ether"))
     ).toString();
     assert.equal(gasCompensation_1, dec(500, "finney"));
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 10.001 ETH  
-    0.5% of coll = 0.050005 ETH. USD value: $10.001
-    -> Expect $100 gas compensation, i.e.  0.050005  ETH */
+    NEON:USD price = 200 $/E
+    coll = 10.001 NEON  
+    0.5% of coll = 0.050005 NEON. USD value: $10.001
+    -> Expect $100 gas compensation, i.e.  0.050005  NEON */
     const gasCompensation_2 = (
       await troveManagerTester.getCollGasCompensation("10001000000000000000")
     ).toString();
     assert.equal(gasCompensation_2, "50005000000000000");
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 37.5 ETH  
-    0.5% of coll = 0.1875 ETH. USD value: $37.5
-    -> Expect $37.5 gas compensation i.e.  0.1875  ETH */
+    NEON:USD price = 200 $/E
+    coll = 37.5 NEON  
+    0.5% of coll = 0.1875 NEON. USD value: $37.5
+    -> Expect $37.5 gas compensation i.e.  0.1875  NEON */
     const gasCompensation_3 = (
       await troveManagerTester.getCollGasCompensation("37500000000000000000")
     ).toString();
     assert.equal(gasCompensation_3, "187500000000000000");
 
     /* 
-    ETH:USD price = 45323.54542 $/E
-    coll = 94758.230582309850 ETH  
-    0.5% of coll = 473.7911529 ETH. USD value: $21473894.84
-    -> Expect $21473894.8385808 gas compensation, i.e.  473.7911529115490  ETH */
+    NEON:USD price = 45323.54542 $/E
+    coll = 94758.230582309850 NEON  
+    0.5% of coll = 473.7911529 NEON. USD value: $21473894.84
+    -> Expect $21473894.8385808 gas compensation, i.e.  473.7911529115490  NEON */
     await priceFeed.setPrice("45323545420000000000000");
     const gasCompensation_4 = await troveManagerTester.getCollGasCompensation(
       "94758230582309850000000"
@@ -229,10 +229,10 @@ contract("Gas compensation tests", async (accounts) => {
     );
 
     /* 
-    ETH:USD price = 1000000 $/E (1 million)
-    coll = 300000000 ETH   (300 million)
-    0.5% of coll = 1500000 ETH. USD value: $150000000000
-    -> Expect $150000000000 gas compensation, i.e. 1500000 ETH */
+    NEON:USD price = 1000000 $/E (1 million)
+    coll = 300000000 NEON   (300 million)
+    0.5% of coll = 1500000 NEON. USD value: $150000000000
+    -> Expect $150000000000 gas compensation, i.e. 1500000 NEON */
     await priceFeed.setPrice(dec(1, 24));
     const price_2 = await priceFeed.getPrice();
     const gasCompensation_5 = (
@@ -251,28 +251,28 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200
-    coll = 9.999 ETH 
+    NEON:USD price = 200
+    coll = 9.999 NEON 
     debt = 10 ZKUSD
-    0.5% of coll = 0.04995 ETH. USD value: $9.99
+    0.5% of coll = 0.04995 NEON. USD value: $9.99
     -> Expect composite debt = 10 + 200  = 2100 ZKUSD*/
     const compositeDebt_1 = await troveManagerTester.getCompositeDebt(
       dec(10, 18)
     );
     assert.equal(compositeDebt_1, dec(210, 18));
 
-    /* ETH:USD price = 200
-     coll = 0.055 ETH  
+    /* NEON:USD price = 200
+     coll = 0.055 NEON  
      debt = 0 ZKUSD
-     0.5% of coll = 0.000275 ETH. USD value: $0.055
+     0.5% of coll = 0.000275 NEON. USD value: $0.055
      -> Expect composite debt = 0 + 200 = 200 ZKUSD*/
     const compositeDebt_2 = await troveManagerTester.getCompositeDebt(0);
     assert.equal(compositeDebt_2, dec(200, 18));
 
-    // /* ETH:USD price = 200
-    // coll = 6.09232408808723580 ETH
+    // /* NEON:USD price = 200
+    // coll = 6.09232408808723580 NEON
     // debt = 200 ZKUSD
-    // 0.5% of coll = 0.004995 ETH. USD value: $6.09
+    // 0.5% of coll = 0.004995 NEON. USD value: $6.09
     // -> Expect  composite debt =  200 + 200 = 400  ZKUSD */
     const compositeDebt_3 = await troveManagerTester.getCompositeDebt(
       dec(200, 18)
@@ -280,16 +280,16 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(compositeDebt_3, "400000000000000000000");
   });
 
-  // returns $10 worth of ETH when 0.5% of coll == $10
+  // returns $10 worth of NEON when 0.5% of coll == $10
   it("getCompositeDebt(): returns (debt + 50) collateral = $10 in value", async () => {
     const price = await priceFeed.getPrice();
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200
-    coll = 10 ETH  
+    NEON:USD price = 200
+    coll = 10 NEON  
     debt = 123.45 ZKUSD
-    0.5% of coll = 0.5 ETH. USD value: $10
+    0.5% of coll = 0.5 NEON. USD value: $10
     -> Expect composite debt = (123.45 + 200) = 323.45 ZKUSD  */
     const compositeDebt = await troveManagerTester.getCompositeDebt(
       "123450000000000000000"
@@ -305,8 +305,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(price, dec(200, 18));
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 100 ETH  
+    NEON:USD price = 200 $/E
+    coll = 100 NEON  
     debt = 2000 ZKUSD
     -> Expect composite debt = (2000 + 200) = 2200 ZKUSD  */
     const compositeDebt_1 = (
@@ -315,8 +315,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(compositeDebt_1, "2200000000000000000000");
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 10.001 ETH  
+    NEON:USD price = 200 $/E
+    coll = 10.001 NEON  
     debt = 200 ZKUSD
     -> Expect composite debt = (200 + 200) = 400 ZKUSD  */
     const compositeDebt_2 = (
@@ -325,8 +325,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(compositeDebt_2, "400000000000000000000");
 
     /* 
-    ETH:USD price = 200 $/E
-    coll = 37.5 ETH  
+    NEON:USD price = 200 $/E
+    coll = 37.5 NEON  
     debt = 500 ZKUSD
     -> Expect composite debt = (500 + 200) = 700 ZKUSD  */
     const compositeDebt_3 = (
@@ -335,8 +335,8 @@ contract("Gas compensation tests", async (accounts) => {
     assert.equal(compositeDebt_3, "700000000000000000000");
 
     /* 
-    ETH:USD price = 45323.54542 $/E
-    coll = 94758.230582309850 ETH  
+    NEON:USD price = 45323.54542 $/E
+    coll = 94758.230582309850 NEON  
     debt = 1 billion ZKUSD
     -> Expect composite debt = (1000000000 + 200) = 1000000200 ZKUSD  */
     await priceFeed.setPrice("45323545420000000000000");
@@ -350,8 +350,8 @@ contract("Gas compensation tests", async (accounts) => {
     );
 
     /* 
-    ETH:USD price = 1000000 $/E (1 million)
-    coll = 300000000 ETH   (300 million)
+    NEON:USD price = 1000000 $/E (1 million)
+    coll = 300000000 NEON   (300 million)
     debt = 54321.123456789 ZKUSD
    -> Expect composite debt = (54321.123456789 + 200) = 54521.123456789 ZKUSD */
     await priceFeed.setPrice(dec(1, 24));
@@ -367,7 +367,7 @@ contract("Gas compensation tests", async (accounts) => {
     const price = await priceFeed.getPrice();
     await openTrove({ ICR: toBN(dec(200, 18)), extraParams: { from: whale } });
 
-    // A opens with 1 ETH, 110 ZKUSD
+    // A opens with 1 NEON, 110 ZKUSD
     await openTrove({
       ICR: toBN("1818181818181818181"),
       extraParams: { from: alice },
@@ -378,13 +378,13 @@ contract("Gas compensation tests", async (accounts) => {
     // Expect aliceICR = (1 * 200) / (110) = 181.81%
     assert.isAtMost(th.getDifference(alice_ICR, "1818181818181818181"), 1000);
 
-    // B opens with 0.5 ETH, 50 ZKUSD
+    // B opens with 0.5 NEON, 50 ZKUSD
     await openTrove({ ICR: toBN(dec(2, 18)), extraParams: { from: bob } });
     const bob_ICR = (await troveManager.getCurrentICR(bob, price)).toString();
     // Expect Bob's ICR = (0.5 * 200) / 50 = 200%
     assert.isAtMost(th.getDifference(bob_ICR, dec(2, 18)), 1000);
 
-    // F opens with 1 ETH, 100 ZKUSD
+    // F opens with 1 NEON, 100 ZKUSD
     await openTrove({
       ICR: toBN(dec(2, 18)),
       extraZKUSDAmount: dec(100, 18),
@@ -394,7 +394,7 @@ contract("Gas compensation tests", async (accounts) => {
     // Expect Flyn's ICR = (1 * 200) / 100 = 200%
     assert.isAtMost(th.getDifference(flyn_ICR, dec(2, 18)), 1000);
 
-    // C opens with 2.5 ETH, 160 ZKUSD
+    // C opens with 2.5 NEON, 160 ZKUSD
     await openTrove({ ICR: toBN(dec(3125, 15)), extraParams: { from: carol } });
     const carol_ICR = (
       await troveManager.getCurrentICR(carol, price)
@@ -402,7 +402,7 @@ contract("Gas compensation tests", async (accounts) => {
     // Expect Carol's ICR = (2.5 * 200) / (160) = 312.50%
     assert.isAtMost(th.getDifference(carol_ICR, "3125000000000000000"), 1000);
 
-    // D opens with 1 ETH, 0 ZKUSD
+    // D opens with 1 NEON, 0 ZKUSD
     await openTrove({ ICR: toBN(dec(4, 18)), extraParams: { from: dennis } });
     const dennis_ICR = (
       await troveManager.getCurrentICR(dennis, price)
@@ -410,7 +410,7 @@ contract("Gas compensation tests", async (accounts) => {
     // Expect Dennis's ICR = (1 * 200) / (50) = 400.00%
     assert.isAtMost(th.getDifference(dennis_ICR, dec(4, 18)), 1000);
 
-    // E opens with 4405.45 ETH, 32598.35 ZKUSD
+    // E opens with 4405.45 NEON, 32598.35 ZKUSD
     await openTrove({
       ICR: toBN("27028668628933700000"),
       extraParams: { from: erin },
@@ -419,7 +419,7 @@ contract("Gas compensation tests", async (accounts) => {
     // Expect Erin's ICR = (4405.45 * 200) / (32598.35) = 2702.87%
     assert.isAtMost(th.getDifference(erin_ICR, "27028668628933700000"), 100000);
 
-    // H opens with 1 ETH, 180 ZKUSD
+    // H opens with 1 NEON, 180 ZKUSD
     await openTrove({
       ICR: toBN("1111111111111111111"),
       extraParams: { from: harriet },
@@ -481,7 +481,7 @@ contract("Gas compensation tests", async (accounts) => {
     const price_1 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 9.99
+    NEON:USD price = 9.99
     -> Expect 0.5% of collaterall to be sent to liquidator, as gas compensation */
 
     // Check collateral value in USD is < $10
@@ -503,7 +503,7 @@ contract("Gas compensation tests", async (accounts) => {
       await web3.eth.getBalance(liquidator)
     );
 
-    // Check liquidator's balance increases by 0.5% of A's coll (1 ETH)
+    // Check liquidator's balance increases by 0.5% of A's coll (1 NEON)
     const compensationReceived_A = liquidatorBalance_after_A
       .sub(liquidatorBalance_before_A)
       .add(toBN(A_GAS_Used_Liquidator * GAS_PRICE))
@@ -515,16 +515,16 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_A = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_A.lte(ZKUSDinSP_0));
 
-    // Check ETH in SP has received the liquidation
-    const ETHinSP_A = await stabilityPool.getETH();
-    assert.equal(ETHinSP_A.toString(), aliceColl.sub(_0pt5percent_aliceColl)); // 1 ETH - 0.5%
+    // Check NEON in SP has received the liquidation
+    const NEONinSP_A = await stabilityPool.getNEON();
+    assert.equal(NEONinSP_A.toString(), aliceColl.sub(_0pt5percent_aliceColl)); // 1 NEON - 0.5%
 
     // --- Price drops to 3 ---
     await priceFeed.setPrice(dec(3, 18));
     const price_2 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 3
+    NEON:USD price = 3
     -> Expect 0.5% of collaterall to be sent to liquidator, as gas compensation */
 
     // Check collateral value in USD is < $10
@@ -545,35 +545,35 @@ contract("Gas compensation tests", async (accounts) => {
       await web3.eth.getBalance(liquidator)
     );
 
-    // Check liquidator's balance increases by B's 0.5% of coll, 2 ETH
+    // Check liquidator's balance increases by B's 0.5% of coll, 2 NEON
     const compensationReceived_B = liquidatorBalance_after_B
       .sub(liquidatorBalance_before_B)
       .add(toBN(B_GAS_Used_Liquidator * GAS_PRICE))
       .toString();
     const _0pt5percent_bobColl = bobColl.div(web3.utils.toBN("200"));
-    assert.equal(compensationReceived_B, _0pt5percent_bobColl); // 0.5% of 2 ETH
+    assert.equal(compensationReceived_B, _0pt5percent_bobColl); // 0.5% of 2 NEON
 
     // Check SP ZKUSD has decreased due to the liquidation of B
     const ZKUSDinSP_B = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_B.lt(ZKUSDinSP_A));
 
-    // Check ETH in SP has received the liquidation
-    const ETHinSP_B = await stabilityPool.getETH();
+    // Check NEON in SP has received the liquidation
+    const NEONinSP_B = await stabilityPool.getNEON();
     assert.equal(
-      ETHinSP_B.toString(),
+      NEONinSP_B.toString(),
       aliceColl
         .sub(_0pt5percent_aliceColl)
         .add(bobColl)
         .sub(_0pt5percent_bobColl)
-    ); // (1 + 2 ETH) * 0.995
+    ); // (1 + 2 NEON) * 0.995
 
     // --- Price drops to 3 ---
     await priceFeed.setPrice("3141592653589793238");
     const price_3 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 3.141592653589793238
-    Carol coll = 3 ETH. Value = (3 * 3.141592653589793238) = $6
+    NEON:USD price = 3.141592653589793238
+    Carol coll = 3 NEON. Value = (3 * 3.141592653589793238) = $6
     -> Expect 0.5% of collaterall to be sent to liquidator, as gas compensation */
 
     // Check collateral value in USD is < $10
@@ -594,7 +594,7 @@ contract("Gas compensation tests", async (accounts) => {
       await web3.eth.getBalance(liquidator)
     );
 
-    // Check liquidator's balance increases by C's 0.5% of coll, 3 ETH
+    // Check liquidator's balance increases by C's 0.5% of coll, 3 NEON
     const compensationReceived_C = liquidatorBalance_after_C
       .sub(liquidatorBalance_before_C)
       .add(toBN(C_GAS_Used_Liquidator * GAS_PRICE))
@@ -606,17 +606,17 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_C = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_C.lt(ZKUSDinSP_B));
 
-    // Check ETH in SP has not changed due to the lquidation of C
-    const ETHinSP_C = await stabilityPool.getETH();
+    // Check NEON in SP has not changed due to the lquidation of C
+    const NEONinSP_C = await stabilityPool.getNEON();
     assert.equal(
-      ETHinSP_C.toString(),
+      NEONinSP_C.toString(),
       aliceColl
         .sub(_0pt5percent_aliceColl)
         .add(bobColl)
         .sub(_0pt5percent_bobColl)
         .add(carolColl)
         .sub(_0pt5percent_carolColl)
-    ); // (1+2+3 ETH) * 0.995
+    ); // (1+2+3 NEON) * 0.995
   });
 
   it("gas compensation from pool-offset liquidations: 0.5% collateral < $10 in value. Compensates $10 worth of collateral, liquidates the remainder", async () => {
@@ -661,19 +661,19 @@ contract("Gas compensation tests", async (accounts) => {
     });
 
     const ZKUSDinSP_0 = await stabilityPool.getTotalZKUSDDeposits();
-    const ETHinSP_0 = await stabilityPool.getETH();
+    const NEONinSP_0 = await stabilityPool.getNEON();
 
     // --- Price drops to 199.999 ---
     await priceFeed.setPrice("199999000000000000000");
     const price_1 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 199.999
-    Alice coll = 1 ETH. Value: $199.999
-    0.5% of coll  = 0.05 ETH. Value: (0.05 * 199.999) = $9.99995
-    Minimum comp = $10 = 0.05000025000125001 ETH.
-    -> Expect 0.05000025000125001 ETH sent to liquidator, 
-    and (1 - 0.05000025000125001) = 0.94999974999875 ETH remainder liquidated */
+    NEON:USD price = 199.999
+    Alice coll = 1 NEON. Value: $199.999
+    0.5% of coll  = 0.05 NEON. Value: (0.05 * 199.999) = $9.99995
+    Minimum comp = $10 = 0.05000025000125001 NEON.
+    -> Expect 0.05000025000125001 NEON sent to liquidator, 
+    and (1 - 0.05000025000125001) = 0.94999974999875 NEON remainder liquidated */
 
     // Check collateral value in USD is > $10
     const aliceColl = (await troveManager.Troves(alice))[1];
@@ -709,25 +709,25 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_A = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_A.lt(ZKUSDinSP_0));
 
-    // Check ETH in SP has increased by the remainder of B's coll
+    // Check NEON in SP has increased by the remainder of B's coll
     const collRemainder_A = aliceColl.sub(_0pt5percent_aliceColl);
-    const ETHinSP_A = await stabilityPool.getETH();
+    const NEONinSP_A = await stabilityPool.getNEON();
 
-    const SPETHIncrease_A = ETHinSP_A.sub(ETHinSP_0);
+    const SPNEONIncrease_A = NEONinSP_A.sub(NEONinSP_0);
 
-    assert.isAtMost(th.getDifference(SPETHIncrease_A, collRemainder_A), 1000);
+    assert.isAtMost(th.getDifference(SPNEONIncrease_A, collRemainder_A), 1000);
 
     // --- Price drops to 15 ---
     await priceFeed.setPrice(dec(15, 18));
     const price_2 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 15
-    Bob coll = 15 ETH. Value: $165
-    0.5% of coll  = 0.75 ETH. Value: (0.75 * 11) = $8.25
-    Minimum comp = $10 =  0.66666...ETH.
-    -> Expect 0.666666666666666666 ETH sent to liquidator, 
-    and (15 - 0.666666666666666666) ETH remainder liquidated */
+    NEON:USD price = 15
+    Bob coll = 15 NEON. Value: $165
+    0.5% of coll  = 0.75 NEON. Value: (0.75 * 11) = $8.25
+    Minimum comp = $10 =  0.66666...NEON.
+    -> Expect 0.666666666666666666 NEON sent to liquidator, 
+    and (15 - 0.666666666666666666) NEON remainder liquidated */
 
     // Check collateral value in USD is > $10
     const bobColl = (await troveManager.Troves(bob))[1];
@@ -763,13 +763,13 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_B = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_B.lt(ZKUSDinSP_A));
 
-    // Check ETH in SP has increased by the remainder of B's coll
+    // Check NEON in SP has increased by the remainder of B's coll
     const collRemainder_B = bobColl.sub(_0pt5percent_bobColl);
-    const ETHinSP_B = await stabilityPool.getETH();
+    const NEONinSP_B = await stabilityPool.getNEON();
 
-    const SPETHIncrease_B = ETHinSP_B.sub(ETHinSP_A);
+    const SPNEONIncrease_B = NEONinSP_B.sub(NEONinSP_A);
 
-    assert.isAtMost(th.getDifference(SPETHIncrease_B, collRemainder_B), 1000);
+    assert.isAtMost(th.getDifference(SPNEONIncrease_B, collRemainder_B), 1000);
   });
 
   it("gas compensation from pool-offset liquidations: 0.5% collateral > $10 in value. Compensates 0.5% of  collateral, liquidates the remainder", async () => {
@@ -815,18 +815,18 @@ contract("Gas compensation tests", async (accounts) => {
     });
 
     const ZKUSDinSP_0 = await stabilityPool.getTotalZKUSDDeposits();
-    const ETHinSP_0 = await stabilityPool.getETH();
+    const NEONinSP_0 = await stabilityPool.getNEON();
 
     await priceFeed.setPrice(dec(200, 18));
     const price_1 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 200
-    Alice coll = 10.001 ETH. Value: $2000.2
-    0.5% of coll  = 0.050005 ETH. Value: (0.050005 * 200) = $10.01
-    Minimum comp = $10 = 0.05 ETH.
-    -> Expect  0.050005 ETH sent to liquidator, 
-    and (10.001 - 0.050005) ETH remainder liquidated */
+    NEON:USD price = 200
+    Alice coll = 10.001 NEON. Value: $2000.2
+    0.5% of coll  = 0.050005 NEON. Value: (0.050005 * 200) = $10.01
+    Minimum comp = $10 = 0.05 NEON.
+    -> Expect  0.050005 NEON sent to liquidator, 
+    and (10.001 - 0.050005) NEON remainder liquidated */
 
     // Check value of 0.5% of collateral in USD is > $10
     const aliceColl = (await troveManager.Troves(alice))[1];
@@ -862,21 +862,21 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_A = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_A.lt(ZKUSDinSP_0));
 
-    // Check ETH in SP has increased by the remainder of A's coll
+    // Check NEON in SP has increased by the remainder of A's coll
     const collRemainder_A = aliceColl.sub(_0pt5percent_aliceColl);
-    const ETHinSP_A = await stabilityPool.getETH();
+    const NEONinSP_A = await stabilityPool.getNEON();
 
-    const SPETHIncrease_A = ETHinSP_A.sub(ETHinSP_0);
+    const SPNEONIncrease_A = NEONinSP_A.sub(NEONinSP_0);
 
-    assert.isAtMost(th.getDifference(SPETHIncrease_A, collRemainder_A), 1000);
+    assert.isAtMost(th.getDifference(SPNEONIncrease_A, collRemainder_A), 1000);
 
     /* 
-   ETH:USD price = 200
-   Bob coll = 37.5 ETH. Value: $7500
-   0.5% of coll  = 0.1875 ETH. Value: (0.1875 * 200) = $37.5
-   Minimum comp = $10 = 0.05 ETH.
-   -> Expect 0.1875 ETH sent to liquidator, 
-   and (37.5 - 0.1875 ETH) ETH remainder liquidated */
+   NEON:USD price = 200
+   Bob coll = 37.5 NEON. Value: $7500
+   0.5% of coll  = 0.1875 NEON. Value: (0.1875 * 200) = $37.5
+   Minimum comp = $10 = 0.05 NEON.
+   -> Expect 0.1875 NEON sent to liquidator, 
+   and (37.5 - 0.1875 NEON) NEON remainder liquidated */
 
     // Check value of 0.5% of collateral in USD is > $10
     const bobColl = (await troveManager.Troves(bob))[1];
@@ -912,13 +912,13 @@ contract("Gas compensation tests", async (accounts) => {
     const ZKUSDinSP_B = await stabilityPool.getTotalZKUSDDeposits();
     assert.isTrue(ZKUSDinSP_B.lt(ZKUSDinSP_A));
 
-    // Check ETH in SP has increased by the remainder of B's coll
+    // Check NEON in SP has increased by the remainder of B's coll
     const collRemainder_B = bobColl.sub(_0pt5percent_bobColl);
-    const ETHinSP_B = await stabilityPool.getETH();
+    const NEONinSP_B = await stabilityPool.getNEON();
 
-    const SPETHIncrease_B = ETHinSP_B.sub(ETHinSP_A);
+    const SPNEONIncrease_B = NEONinSP_B.sub(NEONinSP_A);
 
-    assert.isAtMost(th.getDifference(SPETHIncrease_B, collRemainder_B), 1000);
+    assert.isAtMost(th.getDifference(SPNEONIncrease_B, collRemainder_B), 1000);
   });
 
   // --- Event emission in single liquidation ---
@@ -967,7 +967,7 @@ contract("Gas compensation tests", async (accounts) => {
     const price_1 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 9.99
+    NEON:USD price = 9.99
     -> Expect 0.5% of collaterall to be sent to liquidator, as gas compensation */
 
     // Check collateral value in USD is < $10
@@ -1005,7 +1005,7 @@ contract("Gas compensation tests", async (accounts) => {
     const price_2 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 3
+    NEON:USD price = 3
     -> Expect 0.5% of collaterall to be sent to liquidator, as gas compensation */
 
     // Check collateral value in USD is < $10
@@ -1073,19 +1073,19 @@ contract("Gas compensation tests", async (accounts) => {
     await stabilityPool.provideToSP(dec(1, 23), ZERO_ADDRESS, { from: erin });
 
     const ZKUSDinSP_0 = await stabilityPool.getTotalZKUSDDeposits();
-    const ETHinSP_0 = await stabilityPool.getETH();
+    const NEONinSP_0 = await stabilityPool.getNEON();
 
     // --- Price drops to 199.999 ---
     await priceFeed.setPrice("199999000000000000000");
     const price_1 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 199.999
-    Alice coll = 1 ETH. Value: $199.999
-    0.5% of coll  = 0.05 ETH. Value: (0.05 * 199.999) = $9.99995
-    Minimum comp = $10 = 0.05000025000125001 ETH.
-    -> Expect 0.05000025000125001 ETH sent to liquidator, 
-    and (1 - 0.05000025000125001) = 0.94999974999875 ETH remainder liquidated */
+    NEON:USD price = 199.999
+    Alice coll = 1 NEON. Value: $199.999
+    0.5% of coll  = 0.05 NEON. Value: (0.05 * 199.999) = $9.99995
+    Minimum comp = $10 = 0.05000025000125001 NEON.
+    -> Expect 0.05000025000125001 NEON sent to liquidator, 
+    and (1 - 0.05000025000125001) = 0.94999974999875 NEON remainder liquidated */
 
     // Check collateral value in USD is > $10
     const aliceColl = (await troveManager.Troves(alice))[1];
@@ -1132,12 +1132,12 @@ contract("Gas compensation tests", async (accounts) => {
     const price_2 = await priceFeed.getPrice();
 
     /* 
-    ETH:USD price = 15
-    Bob coll = 15 ETH. Value: $165
-    0.5% of coll  = 0.75 ETH. Value: (0.75 * 11) = $8.25
-    Minimum comp = $10 =  0.66666...ETH.
-    -> Expect 0.666666666666666666 ETH sent to liquidator, 
-    and (15 - 0.666666666666666666) ETH remainder liquidated */
+    NEON:USD price = 15
+    Bob coll = 15 NEON. Value: $165
+    0.5% of coll  = 0.75 NEON. Value: (0.75 * 11) = $8.25
+    Minimum comp = $10 =  0.66666...NEON.
+    -> Expect 0.666666666666666666 NEON sent to liquidator, 
+    and (15 - 0.666666666666666666) NEON remainder liquidated */
 
     // Check collateral value in USD is > $10
     const bobColl = (await troveManager.Troves(bob))[1];
@@ -1210,7 +1210,7 @@ contract("Gas compensation tests", async (accounts) => {
     await stabilityPool.provideToSP(dec(1, 23), ZERO_ADDRESS, { from: erin });
 
     const ZKUSDinSP_0 = await stabilityPool.getTotalZKUSDDeposits();
-    const ETHinSP_0 = await stabilityPool.getETH();
+    const NEONinSP_0 = await stabilityPool.getNEON();
 
     await priceFeed.setPrice(dec(200, 18));
     const price_1 = await priceFeed.getPrice();
@@ -1249,12 +1249,12 @@ contract("Gas compensation tests", async (accounts) => {
     assert.isAtMost(th.getDifference(expectedGasComp_A, loggedGasComp_A), 1000);
 
     /* 
-   ETH:USD price = 200
-   Bob coll = 37.5 ETH. Value: $7500
-   0.5% of coll  = 0.1875 ETH. Value: (0.1875 * 200) = $37.5
-   Minimum comp = $10 = 0.05 ETH.
-   -> Expect 0.1875 ETH sent to liquidator, 
-   and (37.5 - 0.1875 ETH) ETH remainder liquidated */
+   NEON:USD price = 200
+   Bob coll = 37.5 NEON. Value: $7500
+   0.5% of coll  = 0.1875 NEON. Value: (0.1875 * 200) = $37.5
+   Minimum comp = $10 = 0.05 NEON.
+   -> Expect 0.1875 NEON sent to liquidator, 
+   and (37.5 - 0.1875 NEON) NEON remainder liquidated */
 
     // Check value of 0.5% of collateral in USD is > $10
     const bobColl = (await troveManager.Troves(bob))[1];
@@ -1413,9 +1413,9 @@ contract("Gas compensation tests", async (accounts) => {
       .toString();
     assert.equal(expectedGasComp, compensationReceived);
 
-    // Check ETH in stability pool now equals the expected liquidated collateral
-    const ETHinSP = (await stabilityPool.getETH()).toString();
-    assert.equal(expectedLiquidatedColl, ETHinSP);
+    // Check NEON in stability pool now equals the expected liquidated collateral
+    const NEONinSP = (await stabilityPool.getNEON()).toString();
+    assert.equal(expectedLiquidatedColl, NEONinSP);
   });
 
   // liquidateTroves - full redistribution
@@ -1526,10 +1526,10 @@ contract("Gas compensation tests", async (accounts) => {
       1000
     );
 
-    // Check ETH in defaultPool now equals the expected liquidated collateral
-    const ETHinDefaultPool = (await defaultPool.getETH()).toString();
+    // Check NEON in defaultPool now equals the expected liquidated collateral
+    const NEONinDefaultPool = (await defaultPool.getNEON()).toString();
     assert.isAtMost(
-      th.getDifference(expectedLiquidatedColl, ETHinDefaultPool),
+      th.getDifference(expectedLiquidatedColl, NEONinDefaultPool),
       1000
     );
   });
@@ -1807,7 +1807,7 @@ contract("Gas compensation tests", async (accounts) => {
           try {
             assert.isTrue(ICR.gte(prevICR));
           } catch (error) {
-            console.log(`ETH price at which trove ordering breaks: ${price}`);
+            console.log(`NEON price at which trove ordering breaks: ${price}`);
             logICRs(ICRList);
           }
         }
@@ -1853,7 +1853,7 @@ contract("Gas compensation tests", async (accounts) => {
           try {
             assert.isTrue(ICR.gte(prevICR));
           } catch (error) {
-            console.log(`ETH price at which trove ordering breaks: ${price}`);
+            console.log(`NEON price at which trove ordering breaks: ${price}`);
             logICRs(ICRList);
           }
         }
@@ -1906,7 +1906,7 @@ contract("Gas compensation tests", async (accounts) => {
             assert.isTrue(ICR.gte(prevICR));
           } catch (error) {
             console.log(error);
-            console.log(`ETH price at which trove ordering breaks: ${price}`);
+            console.log(`NEON price at which trove ordering breaks: ${price}`);
             logICRs(ICRList);
           }
         }

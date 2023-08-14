@@ -33,8 +33,8 @@ interface ITroveManager {
     event Redemption(
         uint256 _attemptedZKUSDAmount,
         uint256 _actualZKUSDAmount,
-        uint256 _ETHSent,
-        uint256 _ETHFee
+        uint256 _NEONSent,
+        uint256 _NEONFee
     );
     event TroveUpdated(
         address indexed _borrower,
@@ -136,7 +136,7 @@ interface ITroveManager {
 
     function applyPendingRewards(address _borrower) external;
 
-    function getPendingETHReward(
+    function getPendingNEONReward(
         address _borrower
     ) external view returns (uint256);
 
@@ -155,7 +155,7 @@ interface ITroveManager {
             uint256 debt,
             uint256 coll,
             uint256 pendingZKUSDDebtReward,
-            uint256 pendingETHReward
+            uint256 pendingNEONReward
         );
 
     function closeTrove(address _borrower) external;
@@ -167,7 +167,7 @@ interface ITroveManager {
     function getRedemptionRateWithDecay() external view returns (uint256);
 
     function getRedemptionFeeWithDecay(
-        uint256 _ETHDrawn
+        uint256 _NEONDrawn
     ) external view returns (uint256);
 
     function getBorrowingRate() external view returns (uint256);

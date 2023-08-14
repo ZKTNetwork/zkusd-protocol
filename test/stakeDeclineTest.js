@@ -10,10 +10,10 @@ const assertRevert = th.assertRevert;
 const mv = testHelpers.MoneyValues;
 const timeValues = testHelpers.TimeValues;
 
-/* NOTE: Some tests involving ETH redemption fees do not test for specific fee values.
+/* NOTE: Some tests involving NEON redemption fees do not test for specific fee values.
  * Some only test that the fees are non-zero when they should occur.
  *
- * Specific ETH gain values will depend on the final fee schedule used, and the final choices for
+ * Specific NEON gain values will depend on the final fee schedule used, and the final choices for
  * the parameter BETA in the TroveManager, which is still TBD based on economic modelling.
  *
  */
@@ -158,7 +158,7 @@ contract("TroveManager", async (accounts) => {
     );
     console.log(`Snapshots ratio after L1: ${await getSnapshotsRatio()}`);
     console.log(
-      `B pending ETH reward after L1: ${await troveManager.getPendingETHReward(
+      `B pending NEON reward after L1: ${await troveManager.getPendingNEONReward(
         B
       )}`
     );

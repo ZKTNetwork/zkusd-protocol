@@ -138,20 +138,20 @@ contract(
 
       // Get entire coll of A and C
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
       const carol_Coll = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       /* Expected collateral:
-    A: Alice receives 0.995 ETH from L1, and ~3/5*0.995 ETH from L2.
-    expect aliceColl = 2 + 0.995 + 2.995/4.995 * 0.995 = 3.5916 ETH
+    A: Alice receives 0.995 NEON from L1, and ~3/5*0.995 NEON from L2.
+    expect aliceColl = 2 + 0.995 + 2.995/4.995 * 0.995 = 3.5916 NEON
 
-    C: Carol receives ~2/5 ETH from L2
-    expect carolColl = 2 + 2/4.995 * 0.995 = 2.398 ETH
+    C: Carol receives ~2/5 NEON from L2
+    expect carolColl = 2 + 2/4.995 * 0.995 = 2.398 NEON
 
-    Total coll = 4 + 2 * 0.995 ETH
+    Total coll = 4 + 2 * 0.995 NEON
     */
       const A_collAfterL1 = A_coll.add(th.applyLiquidationFee(B_coll));
       assert.isAtMost(
@@ -177,8 +177,8 @@ contract(
         1000
       );
 
-      const entireSystemColl = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      const entireSystemColl = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       assert.equal(
         entireSystemColl,
@@ -248,28 +248,28 @@ contract(
 
       // Get entire coll of A, B, D and E
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
       const dennis_Coll = (await troveManager.Troves(dennis))[1]
-        .add(await troveManager.getPendingETHReward(dennis))
+        .add(await troveManager.getPendingNEONReward(dennis))
         .toString();
       const erin_Coll = (await troveManager.Troves(erin))[1]
-        .add(await troveManager.getPendingETHReward(erin))
+        .add(await troveManager.getPendingNEONReward(erin))
         .toString();
 
       /* Expected collateral:
-    A and B receives 1/2 ETH * 0.995 from L1.
+    A and B receives 1/2 NEON * 0.995 from L1.
     total Coll: 3
 
-    A, B, receive (2.4975)/8.995 * 0.995 ETH from L2.
+    A, B, receive (2.4975)/8.995 * 0.995 NEON from L2.
     
-    D, E receive 2/8.995 * 0.995 ETH from L2.
+    D, E receive 2/8.995 * 0.995 NEON from L2.
 
-    expect A, B coll  = 2 +  0.4975 + 0.2763  =  ETH
-    expect D, E coll  = 2 + 0.2212  =  ETH
+    expect A, B coll  = 2 +  0.4975 + 0.2763  =  NEON
+    expect D, E coll  = 2 + 0.2212  =  NEON
 
     Total coll = 8 (non-liquidated) + 2 * 0.995 (liquidated and redistributed)
     */
@@ -299,8 +299,8 @@ contract(
       assert.isAtMost(th.getDifference(dennis_Coll, expected_D), 1000);
       assert.isAtMost(th.getDifference(erin_Coll, expected_E), 1000);
 
-      const entireSystemColl = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      const entireSystemColl = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       assert.equal(
         entireSystemColl,
@@ -318,7 +318,7 @@ contract(
     });
     ////
 
-    it("redistribution: Sequence of alternate opening/liquidation: final surviving trove has ETH from all previously liquidated troves", async () => {
+    it("redistribution: Sequence of alternate opening/liquidation: final surviving trove has NEON from all previously liquidated troves", async () => {
       // A, B  open troves
       const { collateral: A_coll } = await openTrove({
         ICR: toBN(dec(400, 16)),
@@ -403,29 +403,29 @@ contract(
 
       // Get entire coll of A, B, D, E and F
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
       const carol_Coll = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
       const dennis_Coll = (await troveManager.Troves(dennis))[1]
-        .add(await troveManager.getPendingETHReward(dennis))
+        .add(await troveManager.getPendingNEONReward(dennis))
         .toString();
       const erin_Coll = (await troveManager.Troves(erin))[1]
-        .add(await troveManager.getPendingETHReward(erin))
+        .add(await troveManager.getPendingNEONReward(erin))
         .toString();
 
       const freddy_rawColl = (await troveManager.Troves(freddy))[1].toString();
-      const freddy_ETHReward = (
-        await troveManager.getPendingETHReward(freddy)
+      const freddy_NEONReward = (
+        await troveManager.getPendingNEONReward(freddy)
       ).toString();
 
       /* Expected collateral:
      A-E should have been liquidated
-     trove F should have acquired all ETH in the system: 1 ETH initial coll, and 0.995^5+0.995^4+0.995^3+0.995^2+0.995 from rewards = 5.925 ETH
+     trove F should have acquired all NEON in the system: 1 NEON initial coll, and 0.995^5+0.995^4+0.995^3+0.995^2+0.995 from rewards = 5.925 NEON
     */
       assert.isAtMost(th.getDifference(alice_Coll, "0"), 1000);
       assert.isAtMost(th.getDifference(bob_Coll, "0"), 1000);
@@ -434,7 +434,7 @@ contract(
       assert.isAtMost(th.getDifference(erin_Coll, "0"), 1000);
 
       assert.isAtMost(th.getDifference(freddy_rawColl, F_coll), 1000);
-      const gainedETH = th.applyLiquidationFee(
+      const gainedNEON = th.applyLiquidationFee(
         E_coll.add(
           th.applyLiquidationFee(
             D_coll.add(
@@ -449,13 +449,13 @@ contract(
           )
         )
       );
-      assert.isAtMost(th.getDifference(freddy_ETHReward, gainedETH), 1000);
+      assert.isAtMost(th.getDifference(freddy_NEONReward, gainedNEON), 1000);
 
-      const entireSystemColl = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      const entireSystemColl = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       assert.isAtMost(
-        th.getDifference(entireSystemColl, F_coll.add(gainedETH)),
+        th.getDifference(entireSystemColl, F_coll.add(gainedNEON)),
         1000
       );
 
@@ -534,7 +534,7 @@ contract(
       assert.isAtMost(getDifference(D_entireColl_1, D_collAfterL1), 1e8);
       assert.isAtMost(getDifference(E_entireColl_1, E_collAfterL1), 1e8);
 
-      // Bob adds 1 ETH to his trove
+      // Bob adds 1 NEON to his trove
       const addedColl1 = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(B, B, { from: B, value: addedColl1 });
 
@@ -577,7 +577,7 @@ contract(
       assert.isAtMost(getDifference(D_entireColl_2, D_collAfterL2), 1e8);
       assert.isAtMost(getDifference(E_entireColl_2, E_collAfterL2), 1e8);
 
-      // Bob adds 1 ETH to his trove
+      // Bob adds 1 NEON to his trove
       const addedColl2 = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(B, B, { from: B, value: addedColl2 });
 
@@ -672,28 +672,40 @@ contract(
       ); // remove the gas comp
 
       // console.log(`A_collRedistribution: ${A_collRedistribution}`)
-      // Check accumulated ETH gain for each trove
-      const B_ETHGain_1 = await troveManager.getPendingETHReward(B);
-      const C_ETHGain_1 = await troveManager.getPendingETHReward(C);
-      const D_ETHGain_1 = await troveManager.getPendingETHReward(D);
-      const E_ETHGain_1 = await troveManager.getPendingETHReward(E);
+      // Check accumulated NEON gain for each trove
+      const B_NEONGain_1 = await troveManager.getPendingNEONReward(B);
+      const C_NEONGain_1 = await troveManager.getPendingNEONReward(C);
+      const D_NEONGain_1 = await troveManager.getPendingNEONReward(D);
+      const E_NEONGain_1 = await troveManager.getPendingNEONReward(E);
 
       // Check gains are what we'd expect from a distribution proportional to each trove's entire coll
-      const B_expectedPendingETH_1 =
+      const B_expectedPendingNEON_1 =
         A_collRedistribution.mul(B_entireColl_0).div(denominatorColl_1);
-      const C_expectedPendingETH_1 =
+      const C_expectedPendingNEON_1 =
         A_collRedistribution.mul(C_entireColl_0).div(denominatorColl_1);
-      const D_expectedPendingETH_1 =
+      const D_expectedPendingNEON_1 =
         A_collRedistribution.mul(D_entireColl_0).div(denominatorColl_1);
-      const E_expectedPendingETH_1 =
+      const E_expectedPendingNEON_1 =
         A_collRedistribution.mul(E_entireColl_0).div(denominatorColl_1);
 
-      assert.isAtMost(getDifference(B_expectedPendingETH_1, B_ETHGain_1), 1e8);
-      assert.isAtMost(getDifference(C_expectedPendingETH_1, C_ETHGain_1), 1e8);
-      assert.isAtMost(getDifference(D_expectedPendingETH_1, D_ETHGain_1), 1e8);
-      assert.isAtMost(getDifference(E_expectedPendingETH_1, E_ETHGain_1), 1e8);
+      assert.isAtMost(
+        getDifference(B_expectedPendingNEON_1, B_NEONGain_1),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(C_expectedPendingNEON_1, C_NEONGain_1),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(D_expectedPendingNEON_1, D_NEONGain_1),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(E_expectedPendingNEON_1, E_NEONGain_1),
+        1e8
+      );
 
-      // // Bob adds 1 ETH to his trove
+      // // Bob adds 1 NEON to his trove
       await borrowerOperations.addColl(B, B, {
         from: B,
         value: dec(1, "ether"),
@@ -724,28 +736,37 @@ contract(
       ); // remove the gas comp
       // console.log(`C_collRedistribution: ${C_collRedistribution}`)
 
-      const B_ETHGain_2 = await troveManager.getPendingETHReward(B);
-      const D_ETHGain_2 = await troveManager.getPendingETHReward(D);
-      const E_ETHGain_2 = await troveManager.getPendingETHReward(E);
+      const B_NEONGain_2 = await troveManager.getPendingNEONReward(B);
+      const D_NEONGain_2 = await troveManager.getPendingNEONReward(D);
+      const E_NEONGain_2 = await troveManager.getPendingNEONReward(E);
 
-      // Since B topped up, he has no previous pending ETH gain
-      const B_expectedPendingETH_2 =
+      // Since B topped up, he has no previous pending NEON gain
+      const B_expectedPendingNEON_2 =
         C_collRedistribution.mul(B_entireColl_1).div(denominatorColl_2);
 
-      // D & E's accumulated pending ETH gain includes their previous gain
-      const D_expectedPendingETH_2 = C_collRedistribution.mul(D_entireColl_1)
+      // D & E's accumulated pending NEON gain includes their previous gain
+      const D_expectedPendingNEON_2 = C_collRedistribution.mul(D_entireColl_1)
         .div(denominatorColl_2)
-        .add(D_expectedPendingETH_1);
+        .add(D_expectedPendingNEON_1);
 
-      const E_expectedPendingETH_2 = C_collRedistribution.mul(E_entireColl_1)
+      const E_expectedPendingNEON_2 = C_collRedistribution.mul(E_entireColl_1)
         .div(denominatorColl_2)
-        .add(E_expectedPendingETH_1);
+        .add(E_expectedPendingNEON_1);
 
-      assert.isAtMost(getDifference(B_expectedPendingETH_2, B_ETHGain_2), 1e8);
-      assert.isAtMost(getDifference(D_expectedPendingETH_2, D_ETHGain_2), 1e8);
-      assert.isAtMost(getDifference(E_expectedPendingETH_2, E_ETHGain_2), 1e8);
+      assert.isAtMost(
+        getDifference(B_expectedPendingNEON_2, B_NEONGain_2),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(D_expectedPendingNEON_2, D_NEONGain_2),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(E_expectedPendingNEON_2, E_NEONGain_2),
+        1e8
+      );
 
-      // // Bob adds 1 ETH to his trove
+      // // Bob adds 1 NEON to his trove
       await borrowerOperations.addColl(B, B, {
         from: B,
         value: dec(1, "ether"),
@@ -774,20 +795,26 @@ contract(
       ); // remove the gas comp
       // console.log(`E_collRedistribution: ${E_collRedistribution}`)
 
-      const B_ETHGain_3 = await troveManager.getPendingETHReward(B);
-      const D_ETHGain_3 = await troveManager.getPendingETHReward(D);
+      const B_NEONGain_3 = await troveManager.getPendingNEONReward(B);
+      const D_NEONGain_3 = await troveManager.getPendingNEONReward(D);
 
-      // Since B topped up, he has no previous pending ETH gain
-      const B_expectedPendingETH_3 =
+      // Since B topped up, he has no previous pending NEON gain
+      const B_expectedPendingNEON_3 =
         E_collRedistribution.mul(B_entireColl_2).div(denominatorColl_3);
 
-      // D'S accumulated pending ETH gain includes their previous gain
-      const D_expectedPendingETH_3 = E_collRedistribution.mul(D_entireColl_2)
+      // D'S accumulated pending NEON gain includes their previous gain
+      const D_expectedPendingNEON_3 = E_collRedistribution.mul(D_entireColl_2)
         .div(denominatorColl_3)
-        .add(D_expectedPendingETH_2);
+        .add(D_expectedPendingNEON_2);
 
-      assert.isAtMost(getDifference(B_expectedPendingETH_3, B_ETHGain_3), 1e8);
-      assert.isAtMost(getDifference(D_expectedPendingETH_3, D_ETHGain_3), 1e8);
+      assert.isAtMost(
+        getDifference(B_expectedPendingNEON_3, B_NEONGain_3),
+        1e8
+      );
+      assert.isAtMost(
+        getDifference(D_expectedPendingNEON_3, D_NEONGain_3),
+        1e8
+      );
     });
 
     it("redistribution: A,B,C Open. Liq(C). B adds coll. Liq(A). B acquires all coll and debt", async () => {
@@ -818,7 +845,7 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      //Bob adds ETH to his trove
+      //Bob adds NEON to his trove
       const addedColl = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(bob, bob, {
         from: bob,
@@ -844,7 +871,7 @@ contract(
 
       // Expect Bob now holds all Ether and ZKUSDDebt in the system: 2 + 0.4975+0.4975*0.995+0.995 Ether and 110*3 ZKUSD (10 each for gas compensation)
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const bob_ZKUSDDebt = (await troveManager.Troves(bob))[0]
@@ -897,7 +924,7 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      //Bob adds ETH to his trove
+      //Bob adds NEON to his trove
       const addedColl = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(bob, bob, {
         from: bob,
@@ -920,24 +947,24 @@ contract(
       assert.isFalse(await sortedTroves.contains(dennis));
 
       /* Bob rewards:
-     L1: 1/2*0.995 ETH, 55 ZKUSD
-     L2: (2.4975/3.995)*0.995 = 0.622 ETH , 110*(2.4975/3.995)= 68.77 ZKUSDDebt
+     L1: 1/2*0.995 NEON, 55 ZKUSD
+     L2: (2.4975/3.995)*0.995 = 0.622 NEON , 110*(2.4975/3.995)= 68.77 ZKUSDDebt
 
-    coll: 3.1195 ETH
+    coll: 3.1195 NEON
     debt: 233.77 ZKUSDDebt
 
      Alice rewards:
-    L1 1/2*0.995 ETH, 55 ZKUSD
-    L2 (1.4975/3.995)*0.995 = 0.3730 ETH, 110*(1.4975/3.995) = 41.23 ZKUSDDebt
+    L1 1/2*0.995 NEON, 55 ZKUSD
+    L2 (1.4975/3.995)*0.995 = 0.3730 NEON, 110*(1.4975/3.995) = 41.23 ZKUSDDebt
 
-    coll: 1.8705 ETH
+    coll: 1.8705 NEON
     debt: 146.23 ZKUSDDebt
 
-    totalColl: 4.99 ETH
+    totalColl: 4.99 NEON
     totalDebt 380 ZKUSD (includes 50 each for gas compensation)
     */
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const bob_ZKUSDDebt = (await troveManager.Troves(bob))[0]
@@ -945,7 +972,7 @@ contract(
         .toString();
 
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const alice_ZKUSDDebt = (await troveManager.Troves(alice))[0]
@@ -1022,14 +1049,14 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      // Expected rewards:  alice: 1 ETH, bob: 1 ETH, carol: 998 ETH
-      const alice_ETHReward_1 = await troveManager.getPendingETHReward(alice);
-      const bob_ETHReward_1 = await troveManager.getPendingETHReward(bob);
-      const carol_ETHReward_1 = await troveManager.getPendingETHReward(carol);
+      // Expected rewards:  alice: 1 NEON, bob: 1 NEON, carol: 998 NEON
+      const alice_NEONReward_1 = await troveManager.getPendingNEONReward(alice);
+      const bob_NEONReward_1 = await troveManager.getPendingNEONReward(bob);
+      const carol_NEONReward_1 = await troveManager.getPendingNEONReward(carol);
 
-      //Expect 1000 + 1000*0.995 ETH in system now
-      const entireSystemColl_1 = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      //Expect 1000 + 1000*0.995 NEON in system now
+      const entireSystemColl_1 = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       assert.equal(
         entireSystemColl_1,
@@ -1038,35 +1065,35 @@ contract(
 
       const totalColl = A_coll.add(B_coll).add(C_coll);
       th.assertIsApproximatelyEqual(
-        alice_ETHReward_1.toString(),
+        alice_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(A_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        bob_ETHReward_1.toString(),
+        bob_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(B_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        carol_ETHReward_1.toString(),
+        carol_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(C_coll).div(totalColl)
       );
 
-      //Carol adds 1 ETH to her trove, brings it to 1992.01 total coll
+      //Carol adds 1 NEON to her trove, brings it to 1992.01 total coll
       const C_addedColl = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(carol, carol, {
         from: carol,
         value: dec(1, "ether"),
       });
 
-      //Expect 1996 ETH in system now
-      const entireSystemColl_2 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 1996 NEON in system now
+      const entireSystemColl_2 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_2,
         totalColl.add(th.applyLiquidationFee(D_coll)).add(C_addedColl)
       );
 
-      // E opens with another 1996 ETH
+      // E opens with another 1996 NEON
       const { collateral: E_coll } = await openTrove({
         ICR: toBN(dec(200, 16)),
         extraParams: { from: erin, value: entireSystemColl_2 },
@@ -1080,30 +1107,30 @@ contract(
       assert.isTrue(txE.receipt.status);
       assert.isFalse(await sortedTroves.contains(erin));
 
-      /* Expected ETH rewards: 
-     Carol = 1992.01/1996 * 1996*0.995 = 1982.05 ETH
-     Alice = 1.995/1996 * 1996*0.995 = 1.985025 ETH
-     Bob = 1.995/1996 * 1996*0.995 = 1.985025 ETH
+      /* Expected NEON rewards: 
+     Carol = 1992.01/1996 * 1996*0.995 = 1982.05 NEON
+     Alice = 1.995/1996 * 1996*0.995 = 1.985025 NEON
+     Bob = 1.995/1996 * 1996*0.995 = 1.985025 NEON
 
     therefore, expected total collateral:
 
     Carol = 1991.01 + 1991.01 = 3974.06
-    Alice = 1.995 + 1.985025 = 3.980025 ETH
-    Bob = 1.995 + 1.985025 = 3.980025 ETH
+    Alice = 1.995 + 1.985025 = 3.980025 NEON
+    Bob = 1.995 + 1.985025 = 3.980025 NEON
 
-    total = 3982.02 ETH
+    total = 3982.02 NEON
     */
 
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const carol_Coll = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       const totalCollAfterL1 = A_coll.add(B_coll)
@@ -1139,9 +1166,9 @@ contract(
       assert.isAtMost(th.getDifference(bob_Coll, expected_B_coll), 1000);
       assert.isAtMost(th.getDifference(carol_Coll, expected_C_coll), 1000);
 
-      //Expect 3982.02 ETH in system now
-      const entireSystemColl_3 = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      //Expect 3982.02 NEON in system now
+      const entireSystemColl_3 = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       th.assertIsApproximatelyEqual(
         entireSystemColl_3,
@@ -1188,14 +1215,14 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      // Expected rewards:  alice: 1 ETH, bob: 1 ETH, carol: 998 ETH (*0.995)
-      const alice_ETHReward_1 = await troveManager.getPendingETHReward(alice);
-      const bob_ETHReward_1 = await troveManager.getPendingETHReward(bob);
-      const carol_ETHReward_1 = await troveManager.getPendingETHReward(carol);
+      // Expected rewards:  alice: 1 NEON, bob: 1 NEON, carol: 998 NEON (*0.995)
+      const alice_NEONReward_1 = await troveManager.getPendingNEONReward(alice);
+      const bob_NEONReward_1 = await troveManager.getPendingNEONReward(bob);
+      const carol_NEONReward_1 = await troveManager.getPendingNEONReward(carol);
 
-      //Expect 1995 ETH in system now
-      const entireSystemColl_1 = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      //Expect 1995 NEON in system now
+      const entireSystemColl_1 = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       assert.equal(
         entireSystemColl_1,
@@ -1204,19 +1231,19 @@ contract(
 
       const totalColl = A_coll.add(B_coll).add(C_coll);
       th.assertIsApproximatelyEqual(
-        alice_ETHReward_1.toString(),
+        alice_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(A_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        bob_ETHReward_1.toString(),
+        bob_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(B_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        carol_ETHReward_1.toString(),
+        carol_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(C_coll).div(totalColl)
       );
 
-      /* Alice, Bob, Carol each adds 1 ETH to their troves, 
+      /* Alice, Bob, Carol each adds 1 NEON to their troves, 
     bringing them to 2.995, 2.995, 1992.01 total coll each. */
 
       const addedColl = toBN(dec(1, "ether"));
@@ -1233,9 +1260,9 @@ contract(
         value: addedColl,
       });
 
-      //Expect 1998 ETH in system now
-      const entireSystemColl_2 = (await activePool.getETH())
-        .add(await defaultPool.getETH())
+      //Expect 1998 NEON in system now
+      const entireSystemColl_2 = (await activePool.getNEON())
+        .add(await defaultPool.getNEON())
         .toString();
       th.assertIsApproximatelyEqual(
         entireSystemColl_2,
@@ -1244,7 +1271,7 @@ contract(
           .add(addedColl.mul(toBN(3)))
       );
 
-      // E opens with another 1998 ETH
+      // E opens with another 1998 NEON
       const { collateral: E_coll } = await openTrove({
         ICR: toBN(dec(200, 16)),
         extraParams: { from: erin, value: entireSystemColl_2 },
@@ -1258,30 +1285,30 @@ contract(
       assert.isTrue(txE.receipt.status);
       assert.isFalse(await sortedTroves.contains(erin));
 
-      /* Expected ETH rewards: 
-     Carol = 1992.01/1998 * 1998*0.995 = 1982.04995 ETH
-     Alice = 2.995/1998 * 1998*0.995 = 2.980025 ETH
-     Bob = 2.995/1998 * 1998*0.995 = 2.980025 ETH
+      /* Expected NEON rewards: 
+     Carol = 1992.01/1998 * 1998*0.995 = 1982.04995 NEON
+     Alice = 2.995/1998 * 1998*0.995 = 2.980025 NEON
+     Bob = 2.995/1998 * 1998*0.995 = 2.980025 NEON
 
     therefore, expected total collateral:
 
     Carol = 1992.01 + 1982.04995 = 3974.05995
-    Alice = 2.995 + 2.980025 = 5.975025 ETH
-    Bob = 2.995 + 2.980025 = 5.975025 ETH
+    Alice = 2.995 + 2.980025 = 5.975025 NEON
+    Bob = 2.995 + 2.980025 = 5.975025 NEON
 
-    total = 3986.01 ETH
+    total = 3986.01 NEON
     */
 
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const carol_Coll = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       const totalCollAfterL1 = A_coll.add(B_coll)
@@ -1317,9 +1344,9 @@ contract(
       assert.isAtMost(th.getDifference(bob_Coll, expected_B_coll), 1000);
       assert.isAtMost(th.getDifference(carol_Coll, expected_C_coll), 1000);
 
-      //Expect 3986.01 ETH in system now
-      const entireSystemColl_3 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 3986.01 NEON in system now
+      const entireSystemColl_3 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_3,
@@ -1363,7 +1390,7 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      //Bob withdraws 0.5 ETH from his trove
+      //Bob withdraws 0.5 NEON from his trove
       const withdrawnColl = toBN(dec(500, "finney"));
       await borrowerOperations.withdrawColl(withdrawnColl, bob, bob, {
         from: bob,
@@ -1389,7 +1416,7 @@ contract(
       // Expect Bob now holds all Ether and ZKUSDDebt in the system: 2.5 Ether and 300 ZKUSD
       // 1 + 0.995/2 - 0.5 + 1.4975*0.995
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const bob_ZKUSDDebt = (await troveManager.Troves(bob))[0]
@@ -1448,7 +1475,7 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      //Bob  withdraws 0.5 ETH from his trove
+      //Bob  withdraws 0.5 NEON from his trove
       const withdrawnColl = toBN(dec(500, "finney"));
       await borrowerOperations.withdrawColl(withdrawnColl, bob, bob, {
         from: bob,
@@ -1470,24 +1497,24 @@ contract(
       assert.isFalse(await sortedTroves.contains(dennis));
 
       /* Bob rewards:
-     L1: 0.4975 ETH, 55 ZKUSD
-     L2: (0.9975/2.495)*0.995 = 0.3978 ETH , 110*(0.9975/2.495)= 43.98 ZKUSDDebt
+     L1: 0.4975 NEON, 55 ZKUSD
+     L2: (0.9975/2.495)*0.995 = 0.3978 NEON , 110*(0.9975/2.495)= 43.98 ZKUSDDebt
 
-    coll: (1 + 0.4975 - 0.5 + 0.3968) = 1.3953 ETH
+    coll: (1 + 0.4975 - 0.5 + 0.3968) = 1.3953 NEON
     debt: (110 + 55 + 43.98 = 208.98 ZKUSDDebt 
 
      Alice rewards:
     L1 0.4975, 55 ZKUSD
-    L2 (1.4975/2.495)*0.995 = 0.5972 ETH, 110*(1.4975/2.495) = 66.022 ZKUSDDebt
+    L2 (1.4975/2.495)*0.995 = 0.5972 NEON, 110*(1.4975/2.495) = 66.022 ZKUSDDebt
 
-    coll: (1 + 0.4975 + 0.5972) = 2.0947 ETH
+    coll: (1 + 0.4975 + 0.5972) = 2.0947 NEON
     debt: (50 + 55 + 66.022) = 171.022 ZKUSD Debt
 
-    totalColl: 3.49 ETH
+    totalColl: 3.49 NEON
     totalDebt 380 ZKUSD (Includes 50 in each trove for gas compensation)
     */
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const bob_ZKUSDDebt = (await troveManager.Troves(bob))[0]
@@ -1495,7 +1522,7 @@ contract(
         .toString();
 
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const alice_ZKUSDDebt = (await troveManager.Troves(alice))[0]
@@ -1532,8 +1559,8 @@ contract(
         10000
       );
 
-      const entireSystemColl = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      const entireSystemColl = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl,
@@ -1590,14 +1617,14 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      // Expected rewards:  alice: 1 ETH, bob: 1 ETH, carol: 998 ETH (*0.995)
-      const alice_ETHReward_1 = await troveManager.getPendingETHReward(alice);
-      const bob_ETHReward_1 = await troveManager.getPendingETHReward(bob);
-      const carol_ETHReward_1 = await troveManager.getPendingETHReward(carol);
+      // Expected rewards:  alice: 1 NEON, bob: 1 NEON, carol: 998 NEON (*0.995)
+      const alice_NEONReward_1 = await troveManager.getPendingNEONReward(alice);
+      const bob_NEONReward_1 = await troveManager.getPendingNEONReward(bob);
+      const carol_NEONReward_1 = await troveManager.getPendingNEONReward(carol);
 
-      //Expect 1995 ETH in system now
-      const entireSystemColl_1 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 1995 NEON in system now
+      const entireSystemColl_1 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_1,
@@ -1606,34 +1633,34 @@ contract(
 
       const totalColl = A_coll.add(B_coll).add(C_coll);
       th.assertIsApproximatelyEqual(
-        alice_ETHReward_1.toString(),
+        alice_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(A_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        bob_ETHReward_1.toString(),
+        bob_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(B_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        carol_ETHReward_1.toString(),
+        carol_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(C_coll).div(totalColl)
       );
 
-      //Carol wthdraws 1 ETH from her trove, brings it to 1990.01 total coll
+      //Carol wthdraws 1 NEON from her trove, brings it to 1990.01 total coll
       const C_withdrawnColl = toBN(dec(1, "ether"));
       await borrowerOperations.withdrawColl(C_withdrawnColl, carol, carol, {
         from: carol,
       });
 
-      //Expect 1994 ETH in system now
-      const entireSystemColl_2 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 1994 NEON in system now
+      const entireSystemColl_2 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_2,
         totalColl.add(th.applyLiquidationFee(D_coll)).sub(C_withdrawnColl)
       );
 
-      // E opens with another 1994 ETH
+      // E opens with another 1994 NEON
       const { collateral: E_coll } = await openTrove({
         ICR: toBN(dec(200, 16)),
         extraParams: { from: erin, value: entireSystemColl_2 },
@@ -1647,30 +1674,30 @@ contract(
       assert.isTrue(txE.receipt.status);
       assert.isFalse(await sortedTroves.contains(erin));
 
-      /* Expected ETH rewards: 
-     Carol = 1990.01/1994 * 1994*0.995 = 1980.05995 ETH
-     Alice = 1.995/1994 * 1994*0.995 = 1.985025 ETH
-     Bob = 1.995/1994 * 1994*0.995 = 1.985025 ETH
+      /* Expected NEON rewards: 
+     Carol = 1990.01/1994 * 1994*0.995 = 1980.05995 NEON
+     Alice = 1.995/1994 * 1994*0.995 = 1.985025 NEON
+     Bob = 1.995/1994 * 1994*0.995 = 1.985025 NEON
 
     therefore, expected total collateral:
 
     Carol = 1990.01 + 1980.05995 = 3970.06995
-    Alice = 1.995 + 1.985025 = 3.980025 ETH
-    Bob = 1.995 + 1.985025 = 3.980025 ETH
+    Alice = 1.995 + 1.985025 = 3.980025 NEON
+    Bob = 1.995 + 1.985025 = 3.980025 NEON
 
-    total = 3978.03 ETH
+    total = 3978.03 NEON
     */
 
       const alice_Coll = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const bob_Coll = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const carol_Coll = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       const totalCollAfterL1 = A_coll.add(B_coll)
@@ -1706,9 +1733,9 @@ contract(
       assert.isAtMost(th.getDifference(bob_Coll, expected_B_coll), 1000);
       assert.isAtMost(th.getDifference(carol_Coll, expected_C_coll), 1000);
 
-      //Expect 3978.03 ETH in system now
-      const entireSystemColl_3 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 3978.03 NEON in system now
+      const entireSystemColl_3 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_3,
@@ -1755,14 +1782,14 @@ contract(
       // Price bounces back to 200 $/E
       await priceFeed.setPrice(dec(200, 18));
 
-      // Expected rewards:  alice: 1 ETH, bob: 1 ETH, carol: 998 ETH (*0.995)
-      const alice_ETHReward_1 = await troveManager.getPendingETHReward(alice);
-      const bob_ETHReward_1 = await troveManager.getPendingETHReward(bob);
-      const carol_ETHReward_1 = await troveManager.getPendingETHReward(carol);
+      // Expected rewards:  alice: 1 NEON, bob: 1 NEON, carol: 998 NEON (*0.995)
+      const alice_NEONReward_1 = await troveManager.getPendingNEONReward(alice);
+      const bob_NEONReward_1 = await troveManager.getPendingNEONReward(bob);
+      const carol_NEONReward_1 = await troveManager.getPendingNEONReward(carol);
 
-      //Expect 1995 ETH in system now
-      const entireSystemColl_1 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 1995 NEON in system now
+      const entireSystemColl_1 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_1,
@@ -1771,19 +1798,19 @@ contract(
 
       const totalColl = A_coll.add(B_coll).add(C_coll);
       th.assertIsApproximatelyEqual(
-        alice_ETHReward_1.toString(),
+        alice_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(A_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        bob_ETHReward_1.toString(),
+        bob_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(B_coll).div(totalColl)
       );
       th.assertIsApproximatelyEqual(
-        carol_ETHReward_1.toString(),
+        carol_NEONReward_1.toString(),
         th.applyLiquidationFee(D_coll).mul(C_coll).div(totalColl)
       );
 
-      /* Alice, Bob, Carol each withdraw 0.5 ETH to their troves, 
+      /* Alice, Bob, Carol each withdraw 0.5 NEON to their troves, 
     bringing them to 1.495, 1.495, 1990.51 total coll each. */
       const withdrawnColl = toBN(dec(500, "finney"));
       await borrowerOperations.withdrawColl(withdrawnColl, alice, alice, {
@@ -1797,15 +1824,15 @@ contract(
       });
 
       const alice_Coll_1 = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const bob_Coll_1 = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const carol_Coll_1 = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       const totalColl_1 = A_coll.add(B_coll).add(C_coll);
@@ -1837,9 +1864,9 @@ contract(
         1000
       );
 
-      //Expect 1993.5 ETH in system now
-      const entireSystemColl_2 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 1993.5 NEON in system now
+      const entireSystemColl_2 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_2,
@@ -1848,7 +1875,7 @@ contract(
           .sub(withdrawnColl.mul(toBN(3)))
       );
 
-      // E opens with another 1993.5 ETH
+      // E opens with another 1993.5 NEON
       const { collateral: E_coll } = await openTrove({
         ICR: toBN(dec(200, 16)),
         extraParams: { from: erin, value: entireSystemColl_2 },
@@ -1862,30 +1889,30 @@ contract(
       assert.isTrue(txE.receipt.status);
       assert.isFalse(await sortedTroves.contains(erin));
 
-      /* Expected ETH rewards: 
-     Carol = 1990.51/1993.5 * 1993.5*0.995 = 1980.55745 ETH
-     Alice = 1.495/1993.5 * 1993.5*0.995 = 1.487525 ETH
-     Bob = 1.495/1993.5 * 1993.5*0.995 = 1.487525 ETH
+      /* Expected NEON rewards: 
+     Carol = 1990.51/1993.5 * 1993.5*0.995 = 1980.55745 NEON
+     Alice = 1.495/1993.5 * 1993.5*0.995 = 1.487525 NEON
+     Bob = 1.495/1993.5 * 1993.5*0.995 = 1.487525 NEON
 
     therefore, expected total collateral:
 
     Carol = 1990.51 + 1980.55745 = 3971.06745
-    Alice = 1.495 + 1.487525 = 2.982525 ETH
-    Bob = 1.495 + 1.487525 = 2.982525 ETH
+    Alice = 1.495 + 1.487525 = 2.982525 NEON
+    Bob = 1.495 + 1.487525 = 2.982525 NEON
 
-    total = 3977.0325 ETH
+    total = 3977.0325 NEON
     */
 
       const alice_Coll_2 = (await troveManager.Troves(alice))[1]
-        .add(await troveManager.getPendingETHReward(alice))
+        .add(await troveManager.getPendingNEONReward(alice))
         .toString();
 
       const bob_Coll_2 = (await troveManager.Troves(bob))[1]
-        .add(await troveManager.getPendingETHReward(bob))
+        .add(await troveManager.getPendingNEONReward(bob))
         .toString();
 
       const carol_Coll_2 = (await troveManager.Troves(carol))[1]
-        .add(await troveManager.getPendingETHReward(carol))
+        .add(await troveManager.getPendingNEONReward(carol))
         .toString();
 
       const totalCollAfterL1 = A_coll.add(B_coll)
@@ -1921,9 +1948,9 @@ contract(
       assert.isAtMost(th.getDifference(bob_Coll_2, expected_B_coll), 1000);
       assert.isAtMost(th.getDifference(carol_Coll_2, expected_C_coll), 1000);
 
-      //Expect 3977.0325 ETH in system now
-      const entireSystemColl_3 = (await activePool.getETH()).add(
-        await defaultPool.getETH()
+      //Expect 3977.0325 NEON in system now
+      const entireSystemColl_3 = (await activePool.getNEON()).add(
+        await defaultPool.getNEON()
       );
       th.assertIsApproximatelyEqual(
         entireSystemColl_3,
@@ -1976,14 +2003,14 @@ contract(
         .div(B_coll.add(C_coll));
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(bob),
+          await troveManager.getPendingNEONReward(bob),
           B_pendingRewardsAfterL1
         ),
         1000000
       );
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(carol),
+          await troveManager.getPendingNEONReward(carol),
           C_pendingRewardsAfterL1
         ),
         1000000
@@ -2012,14 +2039,14 @@ contract(
         extraParams: { from: dennis },
       });
 
-      //Bob adds 1 ETH to his trove
+      //Bob adds 1 NEON to his trove
       const B_addedColl = toBN(dec(1, "ether"));
       await borrowerOperations.addColl(bob, bob, {
         from: bob,
         value: B_addedColl,
       });
 
-      //Carol  withdraws 1 ETH from her trove
+      //Carol  withdraws 1 NEON from her trove
       const C_withdrawnColl = toBN(dec(1, "ether"));
       await borrowerOperations.withdrawColl(C_withdrawnColl, carol, carol, {
         from: carol,
@@ -2049,14 +2076,14 @@ contract(
       ).div(C_collAfterL1.add(D_coll));
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(carol),
+          await troveManager.getPendingNEONReward(carol),
           C_pendingRewardsAfterL2
         ),
         1000000
       );
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(dennis),
+          await troveManager.getPendingNEONReward(dennis),
           D_pendingRewardsAfterL2
         ),
         1000000
@@ -2123,18 +2150,18 @@ contract(
 
       // Grab remaining troves' collateral
       const carol_rawColl = (await troveManager.Troves(carol))[1].toString();
-      const carol_pendingETHReward = (
-        await troveManager.getPendingETHReward(carol)
+      const carol_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(carol)
       ).toString();
 
       const dennis_rawColl = (await troveManager.Troves(dennis))[1].toString();
-      const dennis_pendingETHReward = (
-        await troveManager.getPendingETHReward(dennis)
+      const dennis_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(dennis)
       ).toString();
 
       const erin_rawColl = (await troveManager.Troves(erin))[1].toString();
-      const erin_pendingETHReward = (
-        await troveManager.getPendingETHReward(erin)
+      const erin_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(erin)
       ).toString();
 
       // Check raw collateral of C, D, E
@@ -2156,29 +2183,29 @@ contract(
       assert.isAtMost(th.getDifference(dennis_rawColl, D_collAfterL2), 1000000);
       assert.isAtMost(th.getDifference(erin_rawColl, E_coll), 1000);
 
-      // Check pending ETH rewards of C, D, E
+      // Check pending NEON rewards of C, D, E
       assert.isAtMost(
         th.getDifference(
-          carol_pendingETHReward,
+          carol_pendingNEONReward,
           C_collAfterL3.sub(C_collAfterL1)
         ),
         1000000
       );
       assert.isAtMost(
         th.getDifference(
-          dennis_pendingETHReward,
+          dennis_pendingNEONReward,
           D_collAfterL3.sub(D_collAfterL2)
         ),
         1000000
       );
       assert.isAtMost(
-        th.getDifference(erin_pendingETHReward, E_collAfterL3.sub(E_coll)),
+        th.getDifference(erin_pendingNEONReward, E_collAfterL3.sub(E_coll)),
         1000000
       );
 
       // Check systemic collateral
-      const activeColl = (await activePool.getETH()).toString();
-      const defaultColl = (await defaultPool.getETH()).toString();
+      const activeColl = (await activePool.getNEON()).toString();
+      const defaultColl = (await defaultPool.getNEON()).toString();
 
       assert.isAtMost(
         th.getDifference(
@@ -2235,9 +2262,9 @@ contract(
     // https://docs.google.com/spreadsheets/d/1F5p3nZy749K5jwO-bwJeTsRoY7ewMfWIQ3QHtokxqzo/edit?usp=sharing
     it("redistribution, all operations: A,B,C open. Liq(A). D opens. B adds, C withdraws. Liq(B). E & F open. D adds. Liq(F). Varying coll. Distributes correct rewards", async () => {
       /* A, B, C open troves.
-    A: 450 ETH
-    B: 8901 ETH
-    C: 23.902 ETH
+    A: 450 NEON
+    B: 8901 NEON
+    C: 23.902 NEON
     */
       const { collateral: A_coll } = await openTrove({
         ICR: toBN(dec(90000, 16)),
@@ -2271,14 +2298,14 @@ contract(
         .div(B_coll.add(C_coll));
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(bob),
+          await troveManager.getPendingNEONReward(bob),
           B_pendingRewardsAfterL1
         ),
         1000000
       );
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(carol),
+          await troveManager.getPendingNEONReward(carol),
           C_pendingRewardsAfterL1
         ),
         1000000
@@ -2300,20 +2327,20 @@ contract(
       // Price rises
       await priceFeed.setPrice(dec(1, 27));
 
-      // D opens trove: 0.035 ETH
+      // D opens trove: 0.035 NEON
       const { collateral: D_coll, totalDebt: D_totalDebt } = await openTrove({
         extraZKUSDAmount: dec(100, 18),
         extraParams: { from: dennis, value: toBN(dec(35, 15)) },
       });
 
-      // Bob adds 11.33909 ETH to his trove
+      // Bob adds 11.33909 NEON to his trove
       const B_addedColl = toBN("11339090000000000000");
       await borrowerOperations.addColl(bob, bob, {
         from: bob,
         value: B_addedColl,
       });
 
-      // Carol withdraws 15 ETH from her trove
+      // Carol withdraws 15 NEON from her trove
       const C_withdrawnColl = toBN(dec(15, "ether"));
       await borrowerOperations.withdrawColl(C_withdrawnColl, carol, carol, {
         from: carol,
@@ -2344,14 +2371,14 @@ contract(
       const C_collAfterL2 = C_collAfterL1.add(C_pendingRewardsAfterL2);
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(carol),
+          await troveManager.getPendingNEONReward(carol),
           C_pendingRewardsAfterL2
         ),
         10000000
       );
       assert.isAtMost(
         th.getDifference(
-          await troveManager.getPendingETHReward(dennis),
+          await troveManager.getPendingNEONReward(dennis),
           D_pendingRewardsAfterL2
         ),
         10000000
@@ -2390,8 +2417,8 @@ contract(
       await priceFeed.setPrice(dec(1, 27));
 
       /* E and F open troves.
-    E: 10000 ETH
-    F: 0.0007 ETH
+    E: 10000 NEON
+    F: 0.0007 NEON
     */
       const { collateral: E_coll, totalDebt: E_totalDebt } = await openTrove({
         extraZKUSDAmount: dec(100, 18),
@@ -2423,20 +2450,20 @@ contract(
 
       // Grab remaining troves' collateral
       const carol_rawColl = (await troveManager.Troves(carol))[1].toString();
-      const carol_pendingETHReward = (
-        await troveManager.getPendingETHReward(carol)
+      const carol_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(carol)
       ).toString();
       const carol_Stake = (await troveManager.Troves(carol))[2].toString();
 
       const dennis_rawColl = (await troveManager.Troves(dennis))[1].toString();
-      const dennis_pendingETHReward = (
-        await troveManager.getPendingETHReward(dennis)
+      const dennis_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(dennis)
       ).toString();
       const dennis_Stake = (await troveManager.Troves(dennis))[2].toString();
 
       const erin_rawColl = (await troveManager.Troves(erin))[1].toString();
-      const erin_pendingETHReward = (
-        await troveManager.getPendingETHReward(erin)
+      const erin_pendingNEONReward = (
+        await troveManager.getPendingNEONReward(erin)
       ).toString();
       const erin_Stake = (await troveManager.Troves(erin))[2].toString();
 
@@ -2455,29 +2482,29 @@ contract(
       assert.isAtMost(th.getDifference(dennis_rawColl, D_collAfterL2), 1000000);
       assert.isAtMost(th.getDifference(erin_rawColl, E_coll), 1000);
 
-      // Check pending ETH rewards of C, D, E
+      // Check pending NEON rewards of C, D, E
       assert.isAtMost(
         th.getDifference(
-          carol_pendingETHReward,
+          carol_pendingNEONReward,
           C_collAfterL3.sub(C_collAfterL1)
         ),
         1000000
       );
       assert.isAtMost(
         th.getDifference(
-          dennis_pendingETHReward,
+          dennis_pendingNEONReward,
           D_collAfterL3.sub(D_collAfterL2)
         ),
         1000000
       );
       assert.isAtMost(
-        th.getDifference(erin_pendingETHReward, E_collAfterL3.sub(E_coll)),
+        th.getDifference(erin_pendingNEONReward, E_collAfterL3.sub(E_coll)),
         1000000
       );
 
       // Check systemic collateral
-      const activeColl = (await activePool.getETH()).toString();
-      const defaultColl = (await defaultPool.getETH()).toString();
+      const activeColl = (await activePool.getNEON()).toString();
+      const defaultColl = (await defaultPool.getNEON()).toString();
 
       assert.isAtMost(
         th.getDifference(

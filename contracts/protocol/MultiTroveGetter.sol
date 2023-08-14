@@ -11,7 +11,7 @@ contract MultiTroveGetter {
         uint256 debt;
         uint256 coll;
         uint256 stake;
-        uint256 snapshotETH;
+        uint256 snapshotNEON;
         uint256 snapshotZKUSDDebt;
     }
 
@@ -81,7 +81,7 @@ contract MultiTroveGetter {
 
             ) = troveManager.Troves(currentTroveowner);
             (
-                _troves[idx].snapshotETH,
+                _troves[idx].snapshotNEON,
                 _troves[idx].snapshotZKUSDDebt
             ) = troveManager.rewardSnapshots(currentTroveowner);
 
@@ -113,7 +113,7 @@ contract MultiTroveGetter {
 
             ) = troveManager.Troves(currentTroveowner);
             (
-                _troves[idx].snapshotETH,
+                _troves[idx].snapshotNEON,
                 _troves[idx].snapshotZKUSDDebt
             ) = troveManager.rewardSnapshots(currentTroveowner);
 

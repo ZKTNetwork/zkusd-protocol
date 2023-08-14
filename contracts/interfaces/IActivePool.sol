@@ -10,8 +10,8 @@ interface IActivePool is IPool {
     );
     event TroveManagerAddressChanged(address _newTroveManagerAddress);
     event ActivePoolZKUSDDebtUpdated(uint256 _ZKUSDDebt);
-    event ActivePoolETHBalanceUpdated(uint256 _ETH);
+    event ActivePoolNEONBalanceUpdated(uint256 _NEON);
 
     // --- Functions ---
-    function sendETH(address _account, uint256 _amount) external;
+    function sendNEON(address _account, uint256 _amount) external;
 }

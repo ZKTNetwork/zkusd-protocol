@@ -12,6 +12,6 @@ contract ActivePoolTester is ActivePool {
     }
 
     function unprotectedPayable() external payable {
-        ETH = ETH.add(msg.value);
+        NEON = NEON.add(msg.value);
     }
 }

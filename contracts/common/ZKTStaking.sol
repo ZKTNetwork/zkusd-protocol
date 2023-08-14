@@ -22,14 +22,14 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
     mapping(address => uint256) public stakes;
     uint256 public totalZKTStaked;
 
-    uint256 public F_ETH; // Running sum of ETH fees per-ZKT-staked
+    uint256 public F_NEON; // Running sum of NEON fees per-ZKT-staked
     uint256 public F_ZKUSD; // Running sum of ZKT fees per-ZKT-staked
 
-    // User snapshots of F_ETH and F_ZKUSD, taken at the point at which their latest deposit was made
+    // User snapshots of F_NEON and F_ZKUSD, taken at the point at which their latest deposit was made
     mapping(address => Snapshot) public snapshots;
 
     struct Snapshot {
-        uint256 F_ETH_Snapshot;
+        uint256 F_NEON_Snapshot;
         uint256 F_ZKUSD_Snapshot;
     }
 
@@ -72,17 +72,17 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         //renounceOwnership();
     }
 
-    // If caller has a pre-existing stake, send any accumulated ETH and ZKUSD gains to them.
+    // If caller has a pre-existing stake, send any accumulated NEON and ZKUSD gains to them.
     function stake(uint _ZKTamount) external override {
         _requireNonZeroAmount(_ZKTamount);
 
         uint currentStake = stakes[msg.sender];
 
-        uint ETHGain;
+        uint NEONGain;
         uint ZKUSDGain;
-        // Grab any accumulated ETH and ZKUSD gains from the current stake
+        // Grab any accumulated NEON and ZKUSD gains from the current stake
         if (currentStake != 0) {
-            ETHGain = _getPendingETHGain(msg.sender);
+            NEONGain = _getPendingNEONGain(msg.sender);
             ZKUSDGain = _getPendingZKUSDGain(msg.sender);
         }
 
@@ -99,23 +99,23 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
         zkToken.sendToZKTStaking(msg.sender, _ZKTamount);
 
         emit StakeChanged(msg.sender, newStake);
-        emit StakingGainsWithdrawn(msg.sender, ZKUSDGain, ETHGain);
+        emit StakingGainsWithdrawn(msg.sender, ZKUSDGain, NEONGain);
 
-        // Send accumulated ZKUSD and ETH gains to the caller
+        // Send accumulated ZKUSD and NEON gains to the caller
         if (currentStake != 0) {
             zkusdToken.transfer(msg.sender, ZKUSDGain);
-            _sendETHGainToUser(ETHGain);
+            _sendNEONGainToUser(NEONGain);
         }
     }
 
-    // Unstake the ZKT and send the it back to the caller, along with their accumulated ZKUSD & ETH gains.
+    // Unstake the ZKT and send the it back to the caller, along with their accumulated ZKUSD & NEON gains.
     // If requested amount > stake, send their entire stake.
     function unstake(uint _ZKTamount) external override {
         uint currentStake = stakes[msg.sender];
         _requireUserHasStake(currentStake);
 
-        // Grab any accumulated ETH and ZKUSD gains from the current stake
-        uint ETHGain = _getPendingETHGain(msg.sender);
+        // Grab any accumulated NEON and ZKUSD gains from the current stake
+        uint NEONGain = _getPendingNEONGain(msg.sender);
         uint ZKUSDGain = _getPendingZKUSDGain(msg.sender);
 
         _updateUserSnapshots(msg.sender);
@@ -136,27 +136,27 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
             emit StakeChanged(msg.sender, newStake);
         }
 
-        emit StakingGainsWithdrawn(msg.sender, ZKUSDGain, ETHGain);
+        emit StakingGainsWithdrawn(msg.sender, ZKUSDGain, NEONGain);
 
-        // Send accumulated ZKUSD and ETH gains to the caller
+        // Send accumulated ZKUSD and NEON gains to the caller
         zkusdToken.transfer(msg.sender, ZKUSDGain);
-        _sendETHGainToUser(ETHGain);
+        _sendNEONGainToUser(NEONGain);
     }
 
     // --- Reward-per-unit-staked increase functions. Called by Liquity core contracts ---
 
-    function increaseF_ETH(uint _ETHFee) external override {
+    function increaseF_NEON(uint _NEONFee) external override {
         _requireCallerIsTroveManager();
-        uint ETHFeePerZKTStaked;
+        uint NEONFeePerZKTStaked;
 
         if (totalZKTStaked > 0) {
-            ETHFeePerZKTStaked = _ETHFee.mul(DECIMAL_PRECISION).div(
+            NEONFeePerZKTStaked = _NEONFee.mul(DECIMAL_PRECISION).div(
                 totalZKTStaked
             );
         }
 
-        F_ETH = F_ETH.add(ETHFeePerZKTStaked);
-        emit F_ETHUpdated(F_ETH);
+        F_NEON = F_NEON.add(NEONFeePerZKTStaked);
+        emit F_NEONUpdated(F_NEON);
     }
 
     function increaseF_ZKUSD(uint _ZKUSDFee) external override {
@@ -175,18 +175,18 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
 
     // --- Pending reward functions ---
 
-    function getPendingETHGain(
+    function getPendingNEONGain(
         address _user
     ) external view override returns (uint) {
-        return _getPendingETHGain(_user);
+        return _getPendingNEONGain(_user);
     }
 
-    function _getPendingETHGain(address _user) internal view returns (uint) {
-        uint F_ETH_Snapshot = snapshots[_user].F_ETH_Snapshot;
-        uint ETHGain = stakes[_user].mul(F_ETH.sub(F_ETH_Snapshot)).div(
+    function _getPendingNEONGain(address _user) internal view returns (uint) {
+        uint F_NEON_Snapshot = snapshots[_user].F_NEON_Snapshot;
+        uint NEONGain = stakes[_user].mul(F_NEON.sub(F_NEON_Snapshot)).div(
             DECIMAL_PRECISION
         );
-        return ETHGain;
+        return NEONGain;
     }
 
     function getPendingZKUSDGain(
@@ -206,15 +206,15 @@ contract ZKTStaking is IZKTStaking, Ownable, CheckContract {
     // --- Internal helper functions ---
 
     function _updateUserSnapshots(address _user) internal {
-        snapshots[_user].F_ETH_Snapshot = F_ETH;
+        snapshots[_user].F_NEON_Snapshot = F_NEON;
         snapshots[_user].F_ZKUSD_Snapshot = F_ZKUSD;
-        emit StakerSnapshotsUpdated(_user, F_ETH, F_ZKUSD);
+        emit StakerSnapshotsUpdated(_user, F_NEON, F_ZKUSD);
     }
 
-    function _sendETHGainToUser(uint ETHGain) internal {
-        emit EtherSent(msg.sender, ETHGain);
-        (bool success, ) = msg.sender.call{value: ETHGain}("");
-        require(success, "ZKTStaking: Failed to send accumulated ETHGain");
+    function _sendNEONGainToUser(uint NEONGain) internal {
+        emit EtherSent(msg.sender, NEONGain);
+        (bool success, ) = msg.sender.call{value: NEONGain}("");
+        require(success, "ZKTStaking: Failed to send accumulated NEONGain");
     }
 
     // --- 'require' functions ---

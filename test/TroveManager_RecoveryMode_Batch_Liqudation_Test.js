@@ -94,7 +94,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
+        await stabilityPool.provideToSP(totalLiquidatedDebt, {
           from: whale,
         });
 
@@ -163,7 +163,7 @@ contract(
           price,
         } = await setup();
 
-        const spEthBefore = await stabilityPool.getETH();
+        const spEthBefore = await stabilityPool.getNEON();
         const spLusdBefore = await stabilityPool.getTotalZKUSDDeposits();
 
         const tx = await troveManager.batchLiquidateTroves([alice, carol]);
@@ -176,7 +176,7 @@ contract(
         assert.equal((await troveManager.Troves(alice))[3], "3");
         assert.equal((await troveManager.Troves(carol))[3], "3");
 
-        const spEthAfter = await stabilityPool.getETH();
+        const spEthAfter = await stabilityPool.getNEON();
         const spLusdAfter = await stabilityPool.getTotalZKUSDDeposits();
 
         // liquidate collaterals with the gas compensation fee subtracted
@@ -198,7 +198,7 @@ contract(
         assert.equal(
           spEthAfter.sub(spEthBefore).toString(),
           expectedCollateralLiquidatedA.toString(),
-          "Stability Pool ETH doesn’t match"
+          "Stability Pool NEON doesn’t match"
         );
         assert.equal(
           spLusdBefore.sub(spLusdAfter).toString(),
@@ -234,7 +234,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
+        await stabilityPool.provideToSP(totalLiquidatedDebt, {
           from: whale,
         });
 
@@ -291,7 +291,7 @@ contract(
           extraZKUSDAmount: totalLiquidatedDebt,
           extraParams: { from: whale },
         });
-        await stabilityPool.provideToSP(totalLiquidatedDebt,  {
+        await stabilityPool.provideToSP(totalLiquidatedDebt, {
           from: whale,
         });
 

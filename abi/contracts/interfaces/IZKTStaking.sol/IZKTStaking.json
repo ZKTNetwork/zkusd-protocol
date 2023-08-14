@@ -50,11 +50,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_F_ETH",
+        "name": "_F_NEON",
         "type": "uint256"
       }
     ],
-    "name": "F_ETHUpdated",
+    "name": "F_NEONUpdated",
     "type": "event"
   },
   {
@@ -101,7 +101,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_F_ETH",
+        "name": "_F_NEON",
         "type": "uint256"
       },
       {
@@ -132,7 +132,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "ETHGain",
+        "name": "NEONGain",
         "type": "uint256"
       }
     ],
@@ -199,7 +199,7 @@
         "type": "address"
       }
     ],
-    "name": "getPendingETHGain",
+    "name": "getPendingNEONGain",
     "outputs": [
       {
         "internalType": "uint256",
@@ -233,11 +233,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_ETHFee",
+        "name": "_NEONFee",
         "type": "uint256"
       }
     ],
-    "name": "increaseF_ETH",
+    "name": "increaseF_NEON",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

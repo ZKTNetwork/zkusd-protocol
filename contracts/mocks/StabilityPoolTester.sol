@@ -5,7 +5,7 @@ import "../protocol/StabilityPool.sol";
 
 contract StabilityPoolTester is StabilityPool {
     function unprotectedPayable() external payable {
-        ETH = ETH + msg.value;
+        NEON = NEON + msg.value;
     }
 
     function setCurrentScale(uint128 _currentScale) external {

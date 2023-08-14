@@ -86,31 +86,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_depositor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_ETH",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_ZKUSDLoss",
-        "type": "uint256"
-      }
-    ],
-    "name": "ETHGainWithdrawn",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "uint256",
         "name": "_currentEpoch",
@@ -258,6 +233,31 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "_depositor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_NEON",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_ZKUSDLoss",
+        "type": "uint256"
+      }
+    ],
+    "name": "NEONGainWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -358,7 +358,7 @@
         "type": "uint256"
       }
     ],
-    "name": "StabilityPoolETHBalanceUpdated",
+    "name": "StabilityPoolNEONBalanceUpdated",
     "type": "event"
   },
   {
@@ -901,7 +901,7 @@
         "type": "address"
       }
     ],
-    "name": "getDepositorETHGain",
+    "name": "getDepositorNEONGain",
     "outputs": [
       {
         "internalType": "uint256",
@@ -921,19 +921,6 @@
       }
     ],
     "name": "getDepositorZKTGain",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getETH",
     "outputs": [
       {
         "internalType": "uint256",
@@ -991,6 +978,19 @@
   },
   {
     "inputs": [],
+    "name": "getNEON",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getTotalZKUSDDeposits",
     "outputs": [
       {
@@ -1004,7 +1004,7 @@
   },
   {
     "inputs": [],
-    "name": "lastETHError_Offset",
+    "name": "lastNEONError_Offset",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1221,6 +1221,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawFromSP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_upperHint",
         "type": "address"
@@ -1231,20 +1244,7 @@
         "type": "address"
       }
     ],
-    "name": "withdrawETHGainToTrove",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawFromSP",
+    "name": "withdrawNEONGainToTrove",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

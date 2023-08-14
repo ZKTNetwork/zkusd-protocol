@@ -49,9 +49,9 @@ contract("CollSurplusPool", async (accounts) => {
     await deploymentHelper.connectZKTContractsToCore(ZKTContracts, contracts);
   });
 
-  it("CollSurplusPool::getETH(): Returns the ETH balance of the CollSurplusPool after redemption", async () => {
-    const ETH_1 = await collSurplusPool.getETH();
-    assert.equal(ETH_1, "0");
+  it("CollSurplusPool::getNEON(): Returns the NEON balance of the CollSurplusPool after redemption", async () => {
+    const NEON_1 = await collSurplusPool.getNEON();
+    assert.equal(NEON_1, "0");
 
     const price = toBN(dec(100, 18));
     await priceFeed.setPrice(price);
@@ -71,12 +71,12 @@ contract("CollSurplusPool", async (accounts) => {
       web3.currentProvider
     );
 
-    // At ETH:USD = 100, this redemption should leave 1 ether of coll surplus
+    // At NEON:USD = 100, this redemption should leave 1 ether of coll surplus
     await th.redeemCollateralAndGetTxObject(A, contracts, B_netDebt);
 
-    const ETH_2 = await collSurplusPool.getETH();
+    const NEON_2 = await collSurplusPool.getNEON();
     th.assertIsApproximatelyEqual(
-      ETH_2,
+      NEON_2,
       B_coll.sub(B_netDebt.mul(mv._1e18BN).div(price))
     );
   });
@@ -95,7 +95,7 @@ contract("CollSurplusPool", async (accounts) => {
     );
   });
 
-  it("CollSurplusPool: claimColl(): Reverts if owner cannot receive ETH surplus", async () => {
+  it("CollSurplusPool: claimColl(): Reverts if owner cannot receive NEON surplus", async () => {
     const nonPayable = await NonPayable.new();
 
     const price = toBN(dec(100, 18));
@@ -126,23 +126,23 @@ contract("CollSurplusPool", async (accounts) => {
       web3.currentProvider
     );
 
-    // At ETH:USD = 100, this redemption should leave 1 ether of coll surplus for B
+    // At NEON:USD = 100, this redemption should leave 1 ether of coll surplus for B
     await th.redeemCollateralAndGetTxObject(A, contracts, B_netDebt);
 
-    const ETH_2 = await collSurplusPool.getETH();
+    const NEON_2 = await collSurplusPool.getNEON();
     th.assertIsApproximatelyEqual(
-      ETH_2,
+      NEON_2,
       B_coll.sub(B_netDebt.mul(mv._1e18BN).div(price))
     );
 
     const claimCollateralData = th.getTransactionData("claimCollateral()", []);
     await th.assertRevert(
       nonPayable.forward(borrowerOperations.address, claimCollateralData),
-      "CollSurplusPool: sending ETH failed"
+      "CollSurplusPool: sending NEON failed"
     );
   });
 
-  it("CollSurplusPool: reverts trying to send ETH to it", async () => {
+  it("CollSurplusPool: reverts trying to send NEON to it", async () => {
     await th.assertRevert(
       web3.eth.sendTransaction({
         from: A,

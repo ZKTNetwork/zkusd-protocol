@@ -65,11 +65,11 @@ contract("Pool Manager: Sum-Product rounding errors", async (accounts) => {
     }
 
     const SP_TotalDeposits = await stabilityPool.getTotalZKUSDDeposits();
-    const SP_ETH = await stabilityPool.getETH();
+    const SP_NEON = await stabilityPool.getNEON();
     const compoundedDeposit = await stabilityPool.getCompoundedZKUSDDeposit(
       depositors[0]
     );
-    const ETH_Gain = await stabilityPool.getCurrentETHGain(depositors[0]);
+    const NEON_Gain = await stabilityPool.getCurrentNEONGain(depositors[0]);
 
     // Check depostiors receive their share without too much error
     assert.isAtMost(
@@ -80,7 +80,7 @@ contract("Pool Manager: Sum-Product rounding errors", async (accounts) => {
       100000
     );
     assert.isAtMost(
-      th.getDifference(SP_ETH.div(th.toBN(depositors.length)), ETH_Gain),
+      th.getDifference(SP_NEON.div(th.toBN(depositors.length)), NEON_Gain),
       100000
     );
   });

@@ -26,10 +26,10 @@ abstract contract ZKTProtocolBase {
     uint256 public constant CCR = 1500000000000000000; // 150%
 
     // Amount of ZKUSD to be locked in gas pool on opening troves
-    uint256 public constant ZKUSD_GAS_COMPENSATION = 200e18;
+    uint256 public constant ZKUSD_GAS_COMPENSATION = 50e18;
 
     // Minimum amount of net ZKUSD debt a trove must have
-    uint256 public constant MIN_NET_DEBT = 1800e18;
+    uint256 public constant MIN_NET_DEBT = 450e18;
 
     uint256 public constant PERCENT_DIVISOR = 200; // dividing by 200 yields 0.5%
 
@@ -53,7 +53,7 @@ abstract contract ZKTProtocolBase {
         return _debt.sub(ZKUSD_GAS_COMPENSATION);
     }
 
-    // Return the amount of ETH to be drawn from a trove's collateral and sent as gas compensation.
+    // Return the amount of NEON to be drawn from a trove's collateral and sent as gas compensation.
     function _getCollGasCompensation(
         uint256 _entireColl
     ) internal pure returns (uint256) {
@@ -65,8 +65,8 @@ abstract contract ZKTProtocolBase {
         view
         returns (uint256 entireSystemColl)
     {
-        uint256 activeColl = activePool.getETH();
-        uint256 liquidatedColl = defaultPool.getETH();
+        uint256 activeColl = activePool.getNEON();
+        uint256 liquidatedColl = defaultPool.getNEON();
 
         return activeColl.add(liquidatedColl);
     }

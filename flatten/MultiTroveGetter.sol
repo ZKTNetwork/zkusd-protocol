@@ -832,12 +832,12 @@ abstract contract ZKTProtocolBase {
     uint256 public constant ZKUSD_GAS_COMPENSATION = 50e18;
 
     // Minimum amount of net ZKUSD debt a trove must have
-    uint256 public constant MIN_NET_DEBT = 500e18;
+    uint256 public constant MIN_NET_DEBT = 450e18;
 
-    uint256 public constant PERCENT_DIVISOR = ZKUSD_GAS_COMPENSATION / 1e18; // dividing by 200 yields 0.5%
+    uint256 public constant PERCENT_DIVISOR = 200; // dividing by 200 yields 0.5%
 
     uint256 public constant BORROWING_FEE_FLOOR =
-        (DECIMAL_PRECISION / 100000) * 5; // 0.005%
+        (DECIMAL_PRECISION / 1000) * 5; // 0.005%
 
     IActivePool public activePool;
 
@@ -2694,7 +2694,7 @@ contract TroveManager is
     uint256 public constant MAX_BORROWING_FEE = (DECIMAL_PRECISION / 100) * 5; // 5%
 
     // During bootsrap period redemptions are not allowed
-    uint256 public constant BOOTSTRAP_PERIOD = 14 days;
+    uint256 public constant BOOTSTRAP_PERIOD = 10 minutes;
 
     /*
      * BETA: 18 digit decimal. Parameter by which to divide the redeemed fraction, in order to calc the new base rate from a redemption.

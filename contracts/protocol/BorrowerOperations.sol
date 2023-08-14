@@ -203,7 +203,7 @@ contract BorrowerOperations is
         emit ZKUSDBorrowingFeePaid(msg.sender, vars.ZKUSDFee);
     }
 
-    // Send ETH as collateral to a trove
+    // Send NEON as collateral to a trove
     function addColl(
         address _upperHint,
         address _lowerHint
@@ -211,8 +211,8 @@ contract BorrowerOperations is
         _adjustTrove(msg.sender, 0, 0, false, _upperHint, _lowerHint, 0);
     }
 
-    // Send ETH as collateral to a trove. Called by only the Stability Pool.
-    function moveETHGainToTrove(
+    // Send NEON as collateral to a trove. Called by only the Stability Pool.
+    function moveNEONGainToTrove(
         address _borrower,
         address _upperHint,
         address _lowerHint
@@ -221,7 +221,7 @@ contract BorrowerOperations is
         _adjustTrove(_borrower, 0, 0, false, _upperHint, _lowerHint, 0);
     }
 
-    // Withdraw ETH collateral from a trove
+    // Withdraw NEON collateral from a trove
     function withdrawColl(
         uint _collWithdrawal,
         address _upperHint,
@@ -326,7 +326,7 @@ contract BorrowerOperations is
         _requireNonZeroAdjustment(_collWithdrawal, _ZKUSDChange);
         _requireTroveisActive(contractsCache.troveManager, _borrower);
 
-        // Confirm the operation is either a borrower adjusting their own trove, or a pure ETH transfer from the Stability Pool to a trove
+        // Confirm the operation is either a borrower adjusting their own trove, or a pure NEON transfer from the Stability Pool to a trove
         assert(
             msg.sender == _borrower ||
                 (msg.sender == stabilityPoolAddress &&
@@ -336,7 +336,7 @@ contract BorrowerOperations is
 
         contractsCache.troveManager.applyPendingRewards(_borrower);
 
-        // Get the collChange based on whether or not ETH was sent in the transaction
+        // Get the collChange based on whether or not NEON was sent in the transaction
         (vars.collChange, vars.isCollIncrease) = _getCollChange(
             msg.value,
             _collWithdrawal
@@ -425,7 +425,7 @@ contract BorrowerOperations is
         emit ZKUSDBorrowingFeePaid(msg.sender, vars.ZKUSDFee);
 
         // Use the unmodified _ZKUSDChange here, as we don't send the fee to the user
-        _moveTokensAndETHfromAdjustment(
+        _moveTokensAndNEONfromAdjustment(
             contractsCache.activePool,
             contractsCache.zkusdToken,
             msg.sender,
@@ -486,14 +486,14 @@ contract BorrowerOperations is
         );
 
         // Send the collateral back to the user
-        activePoolCached.sendETH(msg.sender, coll);
+        activePoolCached.sendNEON(msg.sender, coll);
     }
 
     /**
      * Claim remaining collateral from a redemption or from a liquidation with ICR > MCR in Recovery Mode
      */
     function claimCollateral() external override {
-        // send ETH from CollSurplus Pool to owner
+        // send NEON from CollSurplus Pool to owner
         collSurplusPool.claimColl(msg.sender);
     }
 
@@ -557,7 +557,7 @@ contract BorrowerOperations is
         return (newColl, newDebt);
     }
 
-    function _moveTokensAndETHfromAdjustment(
+    function _moveTokensAndNEONfromAdjustment(
         IActivePool _activePool,
         IZKUSDToken _zkusdToken,
         address _borrower,
@@ -582,17 +582,17 @@ contract BorrowerOperations is
         if (_isCollIncrease) {
             _activePoolAddColl(_activePool, _collChange);
         } else {
-            _activePool.sendETH(_borrower, _collChange);
+            _activePool.sendNEON(_borrower, _collChange);
         }
     }
 
-    // Send ETH to Active Pool and increase its recorded ETH balance
+    // Send NEON to Active Pool and increase its recorded NEON balance
     function _activePoolAddColl(
         IActivePool _activePool,
         uint _amount
     ) internal {
         (bool success, ) = address(_activePool).call{value: _amount}("");
-        require(success, "Operation: Sending ETH to ActivePool failed");
+        require(success, "Operation: Sending NEON to ActivePool failed");
     }
 
     // Issue the specified amount of ZKUSD to _account and increases the total active debt (_netDebtIncrease potentially includes a ZKUSDFee)

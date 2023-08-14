@@ -94,8 +94,8 @@ contract(
       // --- withdrawFromSP()
 
       // --- Identical deposits, identical liquidation amounts---
-      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -108,7 +108,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -128,7 +128,7 @@ contract(
         // Defaulter liquidated
         await troveManager.liquidate(defaulter_1, { from: owner });
 
-        // Check depositors' compounded deposit is 6666.66 ZKUSD and ETH Gain is 33.16 ETH
+        // Check depositors' compounded deposit is 6666.66 ZKUSD and NEON Gain is 33.16 NEON
         const txA = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: alice,
         });
@@ -139,15 +139,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -173,21 +173,21 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "33166666666666666667"),
+          th.getDifference(alice_NEONWithdrawn, "33166666666666666667"),
           10000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "33166666666666666667"),
+          th.getDifference(bob_NEONWithdrawn, "33166666666666666667"),
           10000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "33166666666666666667"),
+          th.getDifference(carol_NEONWithdrawn, "33166666666666666667"),
           10000
         );
       });
 
-      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and ETH Gain after two identical liquidations", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and NEON Gain after two identical liquidations", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -200,7 +200,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -228,7 +228,7 @@ contract(
         await troveManager.liquidate(defaulter_1, { from: owner });
         await troveManager.liquidate(defaulter_2, { from: owner });
 
-        // Check depositors' compounded deposit is 3333.33 ZKUSD and ETH Gain is 66.33 ETH
+        // Check depositors' compounded deposit is 3333.33 ZKUSD and NEON Gain is 66.33 NEON
         const txA = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: alice,
         });
@@ -238,15 +238,15 @@ contract(
         const txC = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: carol,
         });
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -272,21 +272,21 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "66333333333333333333"),
+          th.getDifference(alice_NEONWithdrawn, "66333333333333333333"),
           10000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "66333333333333333333"),
+          th.getDifference(bob_NEONWithdrawn, "66333333333333333333"),
           10000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "66333333333333333333"),
+          th.getDifference(carol_NEONWithdrawn, "66333333333333333333"),
           10000
         );
       });
 
-      it("withdrawFromSP():  Depositors with equal initial deposit withdraw correct compounded deposit and ETH Gain after three identical liquidations", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP():  Depositors with equal initial deposit withdraw correct compounded deposit and NEON Gain after three identical liquidations", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -299,7 +299,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -335,7 +335,7 @@ contract(
         await troveManager.liquidate(defaulter_2, { from: owner });
         await troveManager.liquidate(defaulter_3, { from: owner });
 
-        // Check depositors' compounded deposit is 0 ZKUSD and ETH Gain is 99.5 ETH
+        // Check depositors' compounded deposit is 0 ZKUSD and NEON Gain is 99.5 NEON
         const txA = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: alice,
         });
@@ -346,15 +346,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -371,22 +371,22 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(99500, 15)),
+          th.getDifference(alice_NEONWithdrawn, dec(99500, 15)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(99500, 15)),
+          th.getDifference(bob_NEONWithdrawn, dec(99500, 15)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(99500, 15)),
+          th.getDifference(carol_NEONWithdrawn, dec(99500, 15)),
           10000
         );
       });
 
       // --- Identical deposits, increasing liquidation amounts ---
-      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and ETH Gain after two liquidations of increasing ZKUSD", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and NEON Gain after two liquidations of increasing ZKUSD", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -399,7 +399,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -438,15 +438,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -473,21 +473,21 @@ contract(
 
         // (0.5 + 0.7) * 99.5 / 3
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(398, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(398, 17)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(398, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(398, 17)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(398, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(398, 17)),
           10000
         );
       });
 
-      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and ETH Gain after three liquidations of increasing ZKUSD", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with equal initial deposit withdraw correct compounded deposit and NEON Gain after three liquidations of increasing ZKUSD", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -500,7 +500,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -547,15 +547,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -582,22 +582,22 @@ contract(
 
         // (0.5 + 0.6 + 0.7) * 99.5 / 3
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(597, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(597, 17)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(597, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(597, 17)),
           10000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(597, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(597, 17)),
           10000
         );
       });
 
       // --- Increasing deposits, identical liquidation amounts ---
-      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and ETH Gain after two identical liquidations", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and NEON Gain after two identical liquidations", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -608,15 +608,15 @@ contract(
 
         // Whale transfers 10k, 20k, 30k ZKUSD to A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18),  {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: carol,
         });
 
@@ -654,15 +654,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -688,21 +688,21 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "33166666666666666667"),
+          th.getDifference(alice_NEONWithdrawn, "33166666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "66333333333333333333"),
+          th.getDifference(bob_NEONWithdrawn, "66333333333333333333"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(995, 17)),
           100000
         );
       });
 
-      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and ETH Gain after three identical liquidations", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and NEON Gain after three identical liquidations", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -713,15 +713,15 @@ contract(
 
         // Whale transfers 10k, 20k, 30k ZKUSD to A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18),  {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: carol,
         });
 
@@ -767,15 +767,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -801,22 +801,22 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(alice_NEONWithdrawn, "49750000000000000000"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "149250000000000000000"),
+          th.getDifference(carol_NEONWithdrawn, "149250000000000000000"),
           100000
         );
       });
 
       // --- Varied deposits and varied liquidation amount ---
-      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and ETH Gain after three varying liquidations", async () => {
-        // Whale opens Trove with 1m ETH
+      it("withdrawFromSP(): Depositors with varying deposits withdraw correct compounded deposit and NEON Gain after three varying liquidations", async () => {
+        // Whale opens Trove with 1m NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(1000000, 18)),
@@ -831,23 +831,23 @@ contract(
       Carol: 13100 ZKUSD */
         // Whale transfers ZKUSD to  A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(2000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(2000, 18),  {
+        await stabilityPool.provideToSP(dec(2000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(456000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(456000, 18),  {
+        await stabilityPool.provideToSP(dec(456000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(13100, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(13100, 18),  {
+        await stabilityPool.provideToSP(dec(13100, 18), {
           from: carol,
         });
 
         /* Defaulters open troves
      
-      Defaulter 1: 207000 ZKUSD & 2160 ETH
-      Defaulter 2: 5000 ZKUSD & 50 ETH
-      Defaulter 3: 46700 ZKUSD & 500 ETH
+      Defaulter 1: 207000 ZKUSD & 2160 NEON
+      Defaulter 2: 5000 ZKUSD & 50 NEON
+      Defaulter 3: 46700 ZKUSD & 500 NEON
       */
         await borrowerOperations.openTrove(
           th._100pct,
@@ -890,15 +890,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // ()
@@ -926,23 +926,23 @@ contract(
 
         // 2710 * 0.995 * {2000, 456000, 13100}/4711
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "11447463383570366500"),
+          th.getDifference(alice_NEONWithdrawn, "11447463383570366500"),
           10000000000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "2610021651454043834000"),
+          th.getDifference(bob_NEONWithdrawn, "2610021651454043834000"),
           10000000000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "74980885162385912900"),
+          th.getDifference(carol_NEONWithdrawn, "74980885162385912900"),
           10000000000
         );
       });
 
       // --- Deposit enters at t > 0
 
-      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 1 liquidation. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 1 liquidation. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -955,7 +955,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -992,7 +992,7 @@ contract(
 
         // Whale transfers 10k to Dennis who then provides to SP
         await zkusdToken.transfer(dennis, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: dennis,
         });
 
@@ -1012,18 +1012,18 @@ contract(
           from: dennis,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         console.log();
@@ -1058,26 +1058,26 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "82916666666666666667"),
+          th.getDifference(alice_NEONWithdrawn, "82916666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "82916666666666666667"),
+          th.getDifference(bob_NEONWithdrawn, "82916666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "82916666666666666667"),
+          th.getDifference(carol_NEONWithdrawn, "82916666666666666667"),
           100000
         );
 
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(dennis_NEONWithdrawn, "49750000000000000000"),
           100000
         );
       });
 
-      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 2 liquidations. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 2 liquidations. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1090,7 +1090,7 @@ contract(
         const depositors = [alice, bob, carol];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1134,7 +1134,7 @@ contract(
 
         // Dennis opens a trove and provides to SP
         await zkusdToken.transfer(dennis, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: dennis,
         });
 
@@ -1155,18 +1155,18 @@ contract(
           from: dennis,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -1190,25 +1190,25 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(dennis_NEONWithdrawn, dec(995, 17)),
           100000
         );
       });
 
-      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 2 liquidations. Various deposit and liquidation vals.  A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 1m ETH
+      it("withdrawFromSP(): A, B, C Deposit -> 2 liquidations -> D deposits -> 2 liquidations. Various deposit and liquidation vals.  A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 1m NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(1000000, 18)),
@@ -1224,23 +1224,23 @@ contract(
       */
         // Whale transfers ZKUSD to  A, B and C respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(60000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(60000, 18),  {
+        await stabilityPool.provideToSP(dec(60000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(15000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(15000, 18),  {
+        await stabilityPool.provideToSP(dec(15000, 18), {
           from: carol,
         });
 
         /* Defaulters open troves:
-      Defaulter 1:  10000 ZKUSD, 100 ETH
-      Defaulter 2:  25000 ZKUSD, 250 ETH
-      Defaulter 3:  5000 ZKUSD, 50 ETH
-      Defaulter 4:  40000 ZKUSD, 400 ETH
+      Defaulter 1:  10000 ZKUSD, 100 NEON
+      Defaulter 2:  25000 ZKUSD, 250 NEON
+      Defaulter 3:  5000 ZKUSD, 50 NEON
+      Defaulter 4:  40000 ZKUSD, 400 NEON
       */
         await borrowerOperations.openTrove(
           th._100pct,
@@ -1280,7 +1280,7 @@ contract(
 
         // Dennis provides 25000 ZKUSD
         await zkusdToken.transfer(dennis, dec(25000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(25000, 18),  {
+        await stabilityPool.provideToSP(dec(25000, 18), {
           from: dennis,
         });
 
@@ -1302,18 +1302,18 @@ contract(
           from: dennis,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -1347,27 +1347,27 @@ contract(
 
         // 3.5*0.995 * {60000,20000,15000,0} / 95000 + 450*0.995 * {60000/950*{60000,20000,15000},25000} / (120000-35000)
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "419563467492260055900"),
+          th.getDifference(alice_NEONWithdrawn, "419563467492260055900"),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "139854489164086692700"),
+          th.getDifference(bob_NEONWithdrawn, "139854489164086692700"),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "104890866873065014000"),
+          th.getDifference(carol_NEONWithdrawn, "104890866873065014000"),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "131691176470588233700"),
+          th.getDifference(dennis_NEONWithdrawn, "131691176470588233700"),
           100000000000
         );
       });
 
       // --- Depositor leaves ---
 
-      it("withdrawFromSP(): A, B, C, D deposit -> 2 liquidations -> D withdraws -> 2 liquidations. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): A, B, C, D deposit -> 2 liquidations -> D withdraws -> 2 liquidations. All deposits and liquidations = 100 ZKUSD.  A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1380,7 +1380,7 @@ contract(
         const depositors = [alice, bob, carol, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1422,7 +1422,7 @@ contract(
         await troveManager.liquidate(defaulter_1, { from: owner });
         await troveManager.liquidate(defaulter_2, { from: owner });
 
-        // Dennis withdraws his deposit and ETH gain
+        // Dennis withdraws his deposit and NEON gain
         // Increasing the price for a moment to avoid pending liquidations to block withdrawal
         await priceFeed.setPrice(dec(200, 18));
         const txD = await stabilityPool.withdrawFromSP(dec(10000, 18), {
@@ -1430,8 +1430,8 @@ contract(
         });
         await priceFeed.setPrice(dec(100, 18));
 
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
         assert.isAtMost(
           th.getDifference(
@@ -1441,7 +1441,7 @@ contract(
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(dennis_NEONWithdrawn, "49750000000000000000"),
           100000
         );
 
@@ -1459,15 +1459,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -1484,21 +1484,21 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(995, 17)),
           100000
         );
       });
 
-      it("withdrawFromSP(): A, B, C, D deposit -> 2 liquidations -> D withdraws -> 2 liquidations. Various deposit and liquidation vals. A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): A, B, C, D deposit -> 2 liquidations -> D withdraws -> 2 liquidations. Various deposit and liquidation vals. A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1515,19 +1515,19 @@ contract(
       */
         // Whale transfers ZKUSD to  A, B,C and D respectively who then deposit it to the SP
         await zkusdToken.transfer(alice, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: alice,
         });
         await zkusdToken.transfer(bob, dec(25000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(25000, 18),  {
+        await stabilityPool.provideToSP(dec(25000, 18), {
           from: bob,
         });
         await zkusdToken.transfer(carol, dec(12500, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(12500, 18),  {
+        await stabilityPool.provideToSP(dec(12500, 18), {
           from: carol,
         });
         await zkusdToken.transfer(dennis, dec(40000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(40000, 18),  {
+        await stabilityPool.provideToSP(dec(40000, 18), {
           from: dennis,
         });
 
@@ -1573,7 +1573,7 @@ contract(
         await troveManager.liquidate(defaulter_1, { from: owner });
         await troveManager.liquidate(defaulter_2, { from: owner });
 
-        // Dennis withdraws his deposit and ETH gain
+        // Dennis withdraws his deposit and NEON gain
         // Increasing the price for a moment to avoid pending liquidations to block withdrawal
         await priceFeed.setPrice(dec(200, 18));
         const txD = await stabilityPool.withdrawFromSP(dec(40000, 18), {
@@ -1581,8 +1581,8 @@ contract(
         });
         await priceFeed.setPrice(dec(100, 18));
 
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
         assert.isAtMost(
           th.getDifference(
@@ -1593,7 +1593,7 @@ contract(
         );
         // 300*0.995 * 40000/97500
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "122461538461538466100"),
+          th.getDifference(dennis_NEONWithdrawn, "122461538461538466100"),
           100000000000
         );
 
@@ -1611,15 +1611,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -1646,22 +1646,22 @@ contract(
 
         // 300*0.995 * {20000,25000,12500}/97500 + 350*0.995 * {20000,25000,12500}/57500
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "182361204013377919900"),
+          th.getDifference(alice_NEONWithdrawn, "182361204013377919900"),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "227951505016722411000"),
+          th.getDifference(bob_NEONWithdrawn, "227951505016722411000"),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "113975752508361205500"),
+          th.getDifference(carol_NEONWithdrawn, "113975752508361205500"),
           100000000000
         );
       });
 
       // --- One deposit enters at t > 0, and another leaves later ---
-      it("withdrawFromSP(): A, B, D deposit -> 2 liquidations -> C makes deposit -> 1 liquidation -> D withdraws -> 1 liquidation. All deposits: 100 ZKUSD. Liquidations: 100,100,100,50.  A, B, C, D withdraw correct ZKUSD deposit and ETH Gain", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): A, B, D deposit -> 2 liquidations -> C makes deposit -> 1 liquidation -> D withdraws -> 1 liquidation. All deposits: 100 ZKUSD. Liquidations: 100,100,100,50.  A, B, C, D withdraw correct ZKUSD deposit and NEON Gain", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1674,7 +1674,7 @@ contract(
         const depositors = [alice, bob, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1718,13 +1718,13 @@ contract(
 
         // Carol makes deposit
         await zkusdToken.transfer(carol, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: carol,
         });
 
         await troveManager.liquidate(defaulter_3, { from: owner });
 
-        // Dennis withdraws his deposit and ETH gain
+        // Dennis withdraws his deposit and NEON gain
         // Increasing the price for a moment to avoid pending liquidations to block withdrawal
         await priceFeed.setPrice(dec(200, 18));
         const txD = await stabilityPool.withdrawFromSP(dec(10000, 18), {
@@ -1732,8 +1732,8 @@ contract(
         });
         await priceFeed.setPrice(dec(100, 18));
 
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
         assert.isAtMost(
           th.getDifference(
@@ -1743,7 +1743,7 @@ contract(
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "82916666666666666667"),
+          th.getDifference(dennis_NEONWithdrawn, "82916666666666666667"),
           100000
         );
 
@@ -1759,15 +1759,15 @@ contract(
           from: carol,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -1793,15 +1793,15 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, "92866666666666666667"),
+          th.getDifference(alice_NEONWithdrawn, "92866666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "92866666666666666667"),
+          th.getDifference(bob_NEONWithdrawn, "92866666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "79600000000000000000"),
+          th.getDifference(carol_NEONWithdrawn, "79600000000000000000"),
           100000
         );
       });
@@ -1816,7 +1816,7 @@ contract(
       // A, B withdraw 0ZKUSD & 100e
       // C, D withdraw 5000ZKUSD  & 500e
       it("withdrawFromSP(): Depositor withdraws correct compounded deposit after liquidation empties the pool", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1829,7 +1829,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1860,7 +1860,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors_2) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -1884,17 +1884,17 @@ contract(
           from: dennis,
         });
 
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // Expect Alice And Bob's compounded deposit to be 0 ZKUSD
@@ -1907,13 +1907,13 @@ contract(
           10000
         );
 
-        // Expect Alice and Bob's ETH Gain to be 100 ETH
+        // Expect Alice and Bob's NEON Gain to be 100 NEON
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
 
@@ -1933,13 +1933,13 @@ contract(
           100000
         );
 
-        // Expect Carol and and Dennis ETH Gain to be 50 ETH
+        // Expect Carol and and Dennis NEON Gain to be 50 NEON
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(carol_NEONWithdrawn, "49750000000000000000"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(dennis_NEONWithdrawn, "49750000000000000000"),
           100000
         );
       });
@@ -1951,7 +1951,7 @@ contract(
       // L3 cancels 10000, 1
       // L2 20000, 200 empties Pool
       it("withdrawFromSP(): Pool-emptying liquidation increases epoch by one, resets scaleFactor to 0, and resets P to 1e18", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -1964,7 +1964,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2038,7 +2038,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2076,7 +2076,7 @@ contract(
       // A, B withdraw 0 ZKUSD & 100e
       // C, D withdraw 5000 ZKUSD  & 50e
       it("withdrawFromSP(): Depositors withdraw correct compounded deposit after liquidation empties the pool", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2089,7 +2089,7 @@ contract(
         const depositors = [alice, bob];
         for (account of depositors) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2118,17 +2118,17 @@ contract(
 
         // Carol, Dennis, Erin each deposit 10000, 20000, 30000 ZKUSD respectively
         await zkusdToken.transfer(carol, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: dennis,
         });
 
         await zkusdToken.transfer(erin, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18),  {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: erin,
         });
 
@@ -2151,20 +2151,20 @@ contract(
           from: erin,
         });
 
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const erin_ETHWithdrawn = th
-          .getEventArgByName(txE, "ETHGainWithdrawn", "_ETH")
+        const erin_NEONWithdrawn = th
+          .getEventArgByName(txE, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // Expect Alice And Bob's compounded deposit to be 0 ZKUSD
@@ -2199,26 +2199,26 @@ contract(
           100000
         );
 
-        //Expect Alice and Bob's ETH Gain to be 1 ETH
+        //Expect Alice and Bob's NEON Gain to be 1 NEON
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
 
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "16583333333333333333"),
+          th.getDifference(carol_NEONWithdrawn, "16583333333333333333"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "33166666666666666667"),
+          th.getDifference(dennis_NEONWithdrawn, "33166666666666666667"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(erin_ETHWithdrawn, "49750000000000000000"),
+          th.getDifference(erin_NEONWithdrawn, "49750000000000000000"),
           100000
         );
       });
@@ -2227,8 +2227,8 @@ contract(
       // L1, L2, L3 liquidated with 10000 ZKUSD each
       // A withdraws all
       // Expect A to withdraw 0 deposit and ether only from reward L1
-      it("withdrawFromSP(): single deposit fully offset. After subsequent liquidations, depositor withdraws 0 deposit and *only* the ETH Gain from one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): single deposit fully offset. After subsequent liquidations, depositor withdraws 0 deposit and *only* the NEON Gain from one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2238,7 +2238,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -2277,9 +2277,9 @@ contract(
           from: alice,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
@@ -2287,7 +2287,7 @@ contract(
           100000
         );
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
       });
@@ -2303,10 +2303,10 @@ contract(
       // G,H deposits 10000
       // L4 cancels 20000, 200E
 
-      // Expect all depositors withdraw 0 ZKUSD and 100 ETH
+      // Expect all depositors withdraw 0 ZKUSD and 100 NEON
 
       it("withdrawFromSP(): Depositor withdraws correct compounded deposit after liquidation empties the pool", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2352,7 +2352,7 @@ contract(
         const depositors_1 = [alice, bob];
         for (account of depositors_1) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2364,7 +2364,7 @@ contract(
         const depositors_2 = [carol, dennis];
         for (account of depositors_2) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2376,7 +2376,7 @@ contract(
         const depositors_3 = [erin, flyn];
         for (account of depositors_3) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2388,7 +2388,7 @@ contract(
         const depositors_4 = [graham, harriet];
         for (account of depositors_4) {
           await zkusdToken.transfer(account, dec(10000, 18), { from: whale });
-          await stabilityPool.provideToSP(dec(10000, 18),  {
+          await stabilityPool.provideToSP(dec(10000, 18), {
             from: account,
           });
         }
@@ -2421,29 +2421,29 @@ contract(
           from: harriet,
         });
 
-        const alice_ETHWithdrawn = th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        const alice_NEONWithdrawn = th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const erin_ETHWithdrawn = th
-          .getEventArgByName(txE, "ETHGainWithdrawn", "_ETH")
+        const erin_NEONWithdrawn = th
+          .getEventArgByName(txE, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const flyn_ETHWithdrawn = th
-          .getEventArgByName(txF, "ETHGainWithdrawn", "_ETH")
+        const flyn_NEONWithdrawn = th
+          .getEventArgByName(txF, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const graham_ETHWithdrawn = th
-          .getEventArgByName(txG, "ETHGainWithdrawn", "_ETH")
+        const graham_NEONWithdrawn = th
+          .getEventArgByName(txG, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const harriet_ETHWithdrawn = th
-          .getEventArgByName(txH, "ETHGainWithdrawn", "_ETH")
+        const harriet_NEONWithdrawn = th
+          .getEventArgByName(txH, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // Expect all deposits to be 0 ZKUSD
@@ -2489,38 +2489,38 @@ contract(
           100000
         );
 
-        /* Expect all ETH gains to be 100 ETH:  Since each liquidation of empties the pool, depositors
-      should only earn ETH from the single liquidation that cancelled with their deposit */
+        /* Expect all NEON gains to be 100 NEON:  Since each liquidation of empties the pool, depositors
+      should only earn NEON from the single liquidation that cancelled with their deposit */
         assert.isAtMost(
-          th.getDifference(alice_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(alice_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(dennis_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(erin_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(erin_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(flyn_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(flyn_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(graham_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(graham_NEONWithdrawn, dec(995, 17)),
           100000
         );
         assert.isAtMost(
-          th.getDifference(harriet_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(harriet_NEONWithdrawn, dec(995, 17)),
           100000
         );
 
@@ -2537,9 +2537,9 @@ contract(
       // L2 of 9900 ZKUSD, should bring P slightly past boundary i.e. 1e-9 -> 1e-10
 
       // expect d(B) = d0(B)/100
-      // expect correct ETH gain, i.e. all of the reward
-      it("withdrawFromSP(): deposit spans one scale factor change: Single depositor withdraws correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      // expect correct NEON gain, i.e. all of the reward
+      it("withdrawFromSP(): deposit spans one scale factor change: Single depositor withdraws correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2549,7 +2549,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -2587,13 +2587,13 @@ contract(
         });
         await priceFeed.setPrice(dec(100, 18));
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = await th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = await th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
@@ -2605,11 +2605,11 @@ contract(
         const txB = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: bob,
         });
-        const bob_ETHWithdrawn = await th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = await th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
 
-        // Expect Bob to withdraw 1% of initial deposit (100 ZKUSD) and all the liquidated ETH (60 ether)
+        // Expect Bob to withdraw 1% of initial deposit (100 ZKUSD) and all the liquidated NEON (60 ether)
         assert.isAtMost(
           th.getDifference(
             (await zkusdToken.balanceOf(bob)).toString(),
@@ -2618,7 +2618,7 @@ contract(
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "59700000000000000000"),
+          th.getDifference(bob_NEONWithdrawn, "59700000000000000000"),
           100000
         );
       });
@@ -2630,9 +2630,9 @@ contract(
       // L2 of 59400, should bring P slightly past boundary i.e. 1e-9 -> 1e-10
 
       // expect d(B) = d0(B)/100
-      // expect correct ETH gain, i.e. all of the reward
-      it("withdrawFromSP(): Several deposits of varying amounts span one scale factor change. Depositors withdraw correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      // expect correct NEON gain, i.e. all of the reward
+      it("withdrawFromSP(): Several deposits of varying amounts span one scale factor change. Depositors withdraw correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2642,7 +2642,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -2682,17 +2682,17 @@ contract(
 
         //B, C, D deposit to Stability Pool
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
         await zkusdToken.transfer(carol, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18),  {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: dennis,
         });
 
@@ -2712,7 +2712,7 @@ contract(
           from: dennis,
         });
 
-        /* Expect depositors to withdraw 1% of their initial deposit, and an ETH gain 
+        /* Expect depositors to withdraw 1% of their initial deposit, and an NEON gain 
       in proportion to their initial deposit:
      
       Bob:  1000 ZKUSD, 55 Ether
@@ -2743,31 +2743,31 @@ contract(
           100000
         );
 
-        const bob_ETHWithdrawn = await th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = await th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = await th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = await th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = await th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = await th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, "54725000000000000000"),
+          th.getDifference(bob_NEONWithdrawn, "54725000000000000000"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, "109450000000000000000"),
+          th.getDifference(carol_NEONWithdrawn, "109450000000000000000"),
           100000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, "164175000000000000000"),
+          th.getDifference(dennis_NEONWithdrawn, "164175000000000000000"),
           100000
         );
       });
 
-      // Deposit's ETH reward spans one scale change - deposit reduced by correct amount
+      // Deposit's NEON reward spans one scale change - deposit reduced by correct amount
 
       // A make deposit 10000 ZKUSD
       // L1 brings P to 1e-5*P. L1:  9999.9000000000000000 ZKUSD
@@ -2776,9 +2776,9 @@ contract(
       // L2 decreases P again by 1e-5, over the scale boundary: 9999.9000000000000000 (near to the 10000 ZKUSD total deposits)
       // B withdraws
       // expect d(B) = d0(B) * 1e-5
-      // expect B gets entire ETH gain from L2
-      it("withdrawFromSP(): deposit spans one scale factor change: Single depositor withdraws correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      // expect B gets entire NEON gain from L2
+      it("withdrawFromSP(): deposit spans one scale factor change: Single depositor withdraws correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2788,7 +2788,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -2827,7 +2827,7 @@ contract(
 
         // Bob deposits 10k ZKUSD
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
@@ -2840,11 +2840,11 @@ contract(
         const txB = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: bob,
         });
-        const bob_ETHWithdrawn = await th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = await th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
 
-        // Bob should withdraw 1e-5 of initial deposit: 0.1 ZKUSD and the full ETH gain of 100 ether
+        // Bob should withdraw 1e-5 of initial deposit: 0.1 ZKUSD and the full NEON gain of 100 ether
         assert.isAtMost(
           th.getDifference(
             (await zkusdToken.balanceOf(bob)).toString(),
@@ -2853,7 +2853,7 @@ contract(
           100000
         );
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           100000000000
         );
       });
@@ -2865,9 +2865,9 @@ contract(
       // L2 decreases P again by 1e-5, over boundary. L2: 59999.4000000000000000  (near to the 60000 ZKUSD total deposits)
       // B withdraws
       // expect d(B) = d0(B) * 1e-5
-      // expect B gets entire ETH gain from L2
-      it("withdrawFromSP(): Several deposits of varying amounts span one scale factor change. Depositors withdraws correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      // expect B gets entire NEON gain from L2
+      it("withdrawFromSP(): Several deposits of varying amounts span one scale factor change. Depositors withdraws correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -2877,7 +2877,7 @@ contract(
         );
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -2915,17 +2915,17 @@ contract(
 
         // B, C, D deposit 10000, 20000, 30000 ZKUSD
         await zkusdToken.transfer(bob, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: bob,
         });
 
         await zkusdToken.transfer(carol, dec(20000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(20000, 18),  {
+        await stabilityPool.provideToSP(dec(20000, 18), {
           from: carol,
         });
 
         await zkusdToken.transfer(dennis, dec(30000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(30000, 18),  {
+        await stabilityPool.provideToSP(dec(30000, 18), {
           from: dennis,
         });
 
@@ -2938,22 +2938,22 @@ contract(
         const txB = await stabilityPool.withdrawFromSP(dec(10000, 18), {
           from: bob,
         });
-        const bob_ETHWithdrawn = await th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = await th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         const txC = await stabilityPool.withdrawFromSP(dec(20000, 18), {
           from: carol,
         });
-        const carol_ETHWithdrawn = await th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = await th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         const txD = await stabilityPool.withdrawFromSP(dec(30000, 18), {
           from: dennis,
         });
-        const dennis_ETHWithdrawn = await th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = await th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // {B, C, D} should have a compounded deposit of {0.1, 0.2, 0.3} ZKUSD
@@ -2980,15 +2980,15 @@ contract(
         );
 
         assert.isAtMost(
-          th.getDifference(bob_ETHWithdrawn, dec(995, 17)),
+          th.getDifference(bob_NEONWithdrawn, dec(995, 17)),
           10000000000
         );
         assert.isAtMost(
-          th.getDifference(carol_ETHWithdrawn, dec(1990, 17)),
+          th.getDifference(carol_NEONWithdrawn, dec(1990, 17)),
           100000000000
         );
         assert.isAtMost(
-          th.getDifference(dennis_ETHWithdrawn, dec(2985, 17)),
+          th.getDifference(dennis_NEONWithdrawn, dec(2985, 17)),
           100000000000
         );
       });
@@ -2997,7 +2997,7 @@ contract(
       // L1 brings P to (~1e-10)*P. L1: 9999.9999999000000000 ZKUSD
       // Expect A to withdraw 0 deposit
       it("withdrawFromSP(): Deposit that decreases to less than 1e-9 of it's original value is reduced to 0", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3019,7 +3019,7 @@ contract(
         await priceFeed.setPrice(dec(100, 18));
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3037,17 +3037,17 @@ contract(
       // --- Serial scale changes ---
 
       /* A make deposit 10000 ZKUSD
-    L1 brings P to 0.0001P. L1:  9999.900000000000000000 ZKUSD, 1 ETH
+    L1 brings P to 0.0001P. L1:  9999.900000000000000000 ZKUSD, 1 NEON
     B makes deposit 9999.9, brings SP to 10k
-    L2 decreases P by(~1e-5)P. L2:  9999.900000000000000000 ZKUSD, 1 ETH
+    L2 decreases P by(~1e-5)P. L2:  9999.900000000000000000 ZKUSD, 1 NEON
     C makes deposit 9999.9, brings SP to 10k
-    L3 decreases P by(~1e-5)P. L3:  9999.900000000000000000 ZKUSD, 1 ETH
+    L3 decreases P by(~1e-5)P. L3:  9999.900000000000000000 ZKUSD, 1 NEON
     D makes deposit 9999.9, brings SP to 10k
-    L4 decreases P by(~1e-5)P. L4:  9999.900000000000000000 ZKUSD, 1 ETH
+    L4 decreases P by(~1e-5)P. L4:  9999.900000000000000000 ZKUSD, 1 NEON
     expect A, B, C, D each withdraw ~100 Ether
     */
-      it("withdrawFromSP(): Several deposits of 10000 ZKUSD span one scale factor change. Depositors withdraws correct compounded deposit and ETH Gain after one liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Several deposits of 10000 ZKUSD span one scale factor change. Depositors withdraws correct compounded deposit and NEON Gain after one liquidation", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3090,7 +3090,7 @@ contract(
         await priceFeed.setPrice(dec(100, 18));
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3102,7 +3102,7 @@ contract(
 
         // B deposits 9999.9 ZKUSD
         await zkusdToken.transfer(bob, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: bob,
         });
 
@@ -3114,7 +3114,7 @@ contract(
 
         // C deposits 9999.9 ZKUSD
         await zkusdToken.transfer(carol, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: carol,
         });
 
@@ -3126,7 +3126,7 @@ contract(
 
         // D deposits 9999.9 ZKUSD
         await zkusdToken.transfer(dennis, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: dennis,
         });
 
@@ -3149,17 +3149,17 @@ contract(
           from: dennis,
         });
 
-        const alice_ETHWithdrawn = await th
-          .getEventArgByName(txA, "ETHGainWithdrawn", "_ETH")
+        const alice_NEONWithdrawn = await th
+          .getEventArgByName(txA, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const bob_ETHWithdrawn = await th
-          .getEventArgByName(txB, "ETHGainWithdrawn", "_ETH")
+        const bob_NEONWithdrawn = await th
+          .getEventArgByName(txB, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const carol_ETHWithdrawn = await th
-          .getEventArgByName(txC, "ETHGainWithdrawn", "_ETH")
+        const carol_NEONWithdrawn = await th
+          .getEventArgByName(txC, "NEONGainWithdrawn", "_NEON")
           .toString();
-        const dennis_ETHWithdrawn = await th
-          .getEventArgByName(txD, "ETHGainWithdrawn", "_ETH")
+        const dennis_NEONWithdrawn = await th
+          .getEventArgByName(txD, "NEONGainWithdrawn", "_NEON")
           .toString();
 
         // A, B, C should withdraw 0 - their deposits have been completely used up
@@ -3175,28 +3175,28 @@ contract(
           100000
         );
 
-        // 99.5 ETH is offset at each L, 0.5 goes to gas comp
-        // Each depositor gets ETH rewards of around 99.5 ETH - 1e17 error tolerance
+        // 99.5 NEON is offset at each L, 0.5 goes to gas comp
+        // Each depositor gets NEON rewards of around 99.5 NEON - 1e17 error tolerance
         assert.isTrue(
-          toBN(alice_ETHWithdrawn)
+          toBN(alice_NEONWithdrawn)
             .sub(toBN(dec(995, 17)))
             .abs()
             .lte(toBN(dec(1, 17)))
         );
         assert.isTrue(
-          toBN(bob_ETHWithdrawn)
+          toBN(bob_NEONWithdrawn)
             .sub(toBN(dec(995, 17)))
             .abs()
             .lte(toBN(dec(1, 17)))
         );
         assert.isTrue(
-          toBN(carol_ETHWithdrawn)
+          toBN(carol_NEONWithdrawn)
             .sub(toBN(dec(995, 17)))
             .abs()
             .lte(toBN(dec(1, 17)))
         );
         assert.isTrue(
-          toBN(dennis_ETHWithdrawn)
+          toBN(dennis_NEONWithdrawn)
             .sub(toBN(dec(995, 17)))
             .abs()
             .lte(toBN(dec(1, 17)))
@@ -3204,7 +3204,7 @@ contract(
       });
 
       it("withdrawFromSP(): 2 depositors can withdraw after each receiving half of a pool-emptying liquidation", async () => {
-        // Whale opens Trove with 100k ETH
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3242,10 +3242,10 @@ contract(
         // A, B provide 10k ZKUSD
         await zkusdToken.transfer(A, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(B, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: A,
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: B,
         });
 
@@ -3292,10 +3292,10 @@ contract(
         // C, D provide 10k ZKUSD
         await zkusdToken.transfer(C, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(D, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: C,
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: D,
         });
 
@@ -3342,10 +3342,10 @@ contract(
         // E, F provide 10k ZKUSD
         await zkusdToken.transfer(E, dec(10000, 18), { from: whale });
         await zkusdToken.transfer(F, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: E,
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: F,
         });
 
@@ -3383,8 +3383,8 @@ contract(
         assert.isTrue(txF.receipt.status);
       });
 
-      it("withdrawFromSP(): Depositor's ETH gain stops increasing after two scale changes", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Depositor's NEON gain stops increasing after two scale changes", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3434,7 +3434,7 @@ contract(
         await priceFeed.setPrice(dec(100, 18));
 
         await zkusdToken.transfer(alice, dec(10000, 18), { from: whale });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
         });
 
@@ -3446,7 +3446,7 @@ contract(
 
         // B deposits 9999.9 ZKUSD
         await zkusdToken.transfer(bob, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: bob,
         });
 
@@ -3458,7 +3458,7 @@ contract(
 
         // C deposits 9999.9 ZKUSD
         await zkusdToken.transfer(carol, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: carol,
         });
 
@@ -3470,7 +3470,7 @@ contract(
 
         // D deposits 9999.9 ZKUSD
         await zkusdToken.transfer(dennis, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: dennis,
         });
 
@@ -3480,13 +3480,13 @@ contract(
         assert.equal(await stabilityPool.P(), dec(1, 16)); // Scale changes and P changes to 1e(12-5+9) = 1e16
         assert.equal(await stabilityPool.currentScale(), "2");
 
-        const alice_ETHGainAt2ndScaleChange = (
-          await stabilityPool.getDepositorETHGain(alice)
+        const alice_NEONGainAt2ndScaleChange = (
+          await stabilityPool.getDepositorNEONGain(alice)
         ).toString();
 
         // E deposits 9999.9 ZKUSD
         await zkusdToken.transfer(erin, dec(99999, 17), { from: whale });
-        await stabilityPool.provideToSP(dec(99999, 17),  {
+        await stabilityPool.provideToSP(dec(99999, 17), {
           from: erin,
         });
 
@@ -3496,8 +3496,8 @@ contract(
         assert.equal(await stabilityPool.P(), dec(1, 11)); // P decreases to 1e(16-5) = 1e11
         assert.equal(await stabilityPool.currentScale(), "2");
 
-        const alice_ETHGainAfterFurtherLiquidation = (
-          await stabilityPool.getDepositorETHGain(alice)
+        const alice_NEONGainAfterFurtherLiquidation = (
+          await stabilityPool.getDepositorNEONGain(alice)
         ).toString();
 
         const alice_scaleSnapshot = (
@@ -3506,15 +3506,15 @@ contract(
 
         assert.equal(alice_scaleSnapshot, "0");
         assert.equal(
-          alice_ETHGainAt2ndScaleChange,
-          alice_ETHGainAfterFurtherLiquidation
+          alice_NEONGainAt2ndScaleChange,
+          alice_NEONGainAfterFurtherLiquidation
         );
       });
 
       // --- Extreme values, confirm no overflows ---
 
-      it("withdrawFromSP(): Large liquidated coll/debt, deposits and ETH price", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Large liquidated coll/debt, deposits and NEON price", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3523,7 +3523,7 @@ contract(
           { from: whale, value: dec(100000, "ether") }
         );
 
-        // ETH:USD price is $2 billion per ETH
+        // NEON:USD price is $2 billion per NEON
         await priceFeed.setPrice(dec(2, 27));
 
         const depositors = [alice, bob];
@@ -3535,7 +3535,7 @@ contract(
             account,
             { from: account, value: dec(2, 27) }
           );
-          await stabilityPool.provideToSP(dec(1, 36),  {
+          await stabilityPool.provideToSP(dec(1, 36), {
             from: account,
           });
         }
@@ -3549,7 +3549,7 @@ contract(
           { from: defaulter_1, value: dec(1, 27) }
         );
 
-        // ETH:USD price drops to $1 billion per ETH
+        // NEON:USD price drops to $1 billion per NEON
         await priceFeed.setPrice(dec(1, 27));
 
         // Defaulter liquidated
@@ -3562,16 +3562,16 @@ contract(
           from: bob,
         });
 
-        // Grab the ETH gain from the emitted event in the tx log
-        const alice_ETHWithdrawn = th.getEventArgByName(
+        // Grab the NEON gain from the emitted event in the tx log
+        const alice_NEONWithdrawn = th.getEventArgByName(
           txA,
-          "ETHGainWithdrawn",
-          "_ETH"
+          "NEONGainWithdrawn",
+          "_NEON"
         );
-        const bob_ETHWithdrawn = th.getEventArgByName(
+        const bob_NEONWithdrawn = th.getEventArgByName(
           txB,
-          "ETHGainWithdrawn",
-          "_ETH"
+          "NEONGainWithdrawn",
+          "_NEON"
         );
 
         // Check ZKUSD balances
@@ -3591,20 +3591,22 @@ contract(
 
         assert.isTrue(bobZKUSDBalDiff.lte(toBN(dec(1, 18))));
 
-        // Check ETH gains
-        const aliceExpectedETHGain = toBN(dec(4975, 23));
-        const aliceETHDiff = aliceExpectedETHGain.sub(toBN(alice_ETHWithdrawn));
+        // Check NEON gains
+        const aliceExpectedNEONGain = toBN(dec(4975, 23));
+        const aliceNEONDiff = aliceExpectedNEONGain.sub(
+          toBN(alice_NEONWithdrawn)
+        );
 
-        assert.isTrue(aliceETHDiff.lte(toBN(dec(1, 18))));
+        assert.isTrue(aliceNEONDiff.lte(toBN(dec(1, 18))));
 
-        const bobExpectedETHGain = toBN(dec(4975, 23));
-        const bobETHDiff = bobExpectedETHGain.sub(toBN(bob_ETHWithdrawn));
+        const bobExpectedNEONGain = toBN(dec(4975, 23));
+        const bobNEONDiff = bobExpectedNEONGain.sub(toBN(bob_NEONWithdrawn));
 
-        assert.isTrue(bobETHDiff.lte(toBN(dec(1, 18))));
+        assert.isTrue(bobNEONDiff.lte(toBN(dec(1, 18))));
       });
 
-      it("withdrawFromSP(): Small liquidated coll/debt, large deposits and ETH price", async () => {
-        // Whale opens Trove with 100k ETH
+      it("withdrawFromSP(): Small liquidated coll/debt, large deposits and NEON price", async () => {
+        // Whale opens Trove with 100k NEON
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(100000, 18)),
@@ -3613,7 +3615,7 @@ contract(
           { from: whale, value: dec(100000, "ether") }
         );
 
-        // ETH:USD price is $2 billion per ETH
+        // NEON:USD price is $2 billion per NEON
         await priceFeed.setPrice(dec(2, 27));
         const price = await priceFeed.getPrice();
 
@@ -3626,12 +3628,12 @@ contract(
             account,
             { from: account, value: dec(2, 29) }
           );
-          await stabilityPool.provideToSP(dec(1, 38),  {
+          await stabilityPool.provideToSP(dec(1, 38), {
             from: account,
           });
         }
 
-        // Defaulter opens trove with 50e-7 ETH and  5000 ZKUSD. 200% ICR
+        // Defaulter opens trove with 50e-7 NEON and  5000 ZKUSD. 200% ICR
         await borrowerOperations.openTrove(
           th._100pct,
           await getOpenTroveZKUSDAmount(dec(5000, 18)),
@@ -3640,7 +3642,7 @@ contract(
           { from: defaulter_1, value: "5000000000000" }
         );
 
-        // ETH:USD price drops to $1 billion per ETH
+        // NEON:USD price drops to $1 billion per NEON
         await priceFeed.setPrice(dec(1, 27));
 
         // Defaulter liquidated
@@ -3653,15 +3655,15 @@ contract(
           from: bob,
         });
 
-        const alice_ETHWithdrawn = th.getEventArgByName(
+        const alice_NEONWithdrawn = th.getEventArgByName(
           txA,
-          "ETHGainWithdrawn",
-          "_ETH"
+          "NEONGainWithdrawn",
+          "_NEON"
         );
-        const bob_ETHWithdrawn = th.getEventArgByName(
+        const bob_NEONWithdrawn = th.getEventArgByName(
           txB,
-          "ETHGainWithdrawn",
-          "_ETH"
+          "NEONGainWithdrawn",
+          "_NEON"
         );
 
         const aliceZKUSDBalance = await zkusdToken.balanceOf(alice);
@@ -3684,9 +3686,9 @@ contract(
 
         assert.isTrue(bobZKUSDBalDiff.lte(toBN("100000000000000000000")));
 
-        // Expect ETH gain per depositor of ~1e11 wei to be rounded to 0 by the ETHGainedPerUnitStaked calculation (e / D), where D is ~1e36.
-        assert.equal(alice_ETHWithdrawn.toString(), "0");
-        assert.equal(bob_ETHWithdrawn.toString(), "0");
+        // Expect NEON gain per depositor of ~1e11 wei to be rounded to 0 by the NEONGainedPerUnitStaked calculation (e / D), where D is ~1e36.
+        assert.equal(alice_NEONWithdrawn.toString(), "0");
+        assert.equal(bob_NEONWithdrawn.toString(), "0");
       });
     });
   }

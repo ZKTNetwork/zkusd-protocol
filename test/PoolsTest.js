@@ -34,14 +34,14 @@ contract("StabilityPool", async (accounts) => {
     );
   });
 
-  it("getETH(): gets the recorded ETH balance", async () => {
-    const recordedETHBalance = await stabilityPool.getETH();
-    assert.equal(recordedETHBalance, 0);
+  it("getNEON(): gets the recorded NEON balance", async () => {
+    const recordedNEONBalance = await stabilityPool.getNEON();
+    assert.equal(recordedNEONBalance, 0);
   });
 
   it("getTotalZKUSDDeposits(): gets the recorded ZKUSD balance", async () => {
-    const recordedETHBalance = await stabilityPool.getTotalZKUSDDeposits();
-    assert.equal(recordedETHBalance, 0);
+    const recordedNEONBalance = await stabilityPool.getTotalZKUSDDeposits();
+    assert.equal(recordedNEONBalance, 0);
   });
 });
 
@@ -61,14 +61,14 @@ contract("ActivePool", async (accounts) => {
     );
   });
 
-  it("getETH(): gets the recorded ETH balance", async () => {
-    const recordedETHBalance = await activePool.getETH();
-    assert.equal(recordedETHBalance, 0);
+  it("getNEON(): gets the recorded NEON balance", async () => {
+    const recordedNEONBalance = await activePool.getNEON();
+    assert.equal(recordedNEONBalance, 0);
   });
 
   it("getZKUSDDebt(): gets the recorded ZKUSD balance", async () => {
-    const recordedETHBalance = await activePool.getZKUSDDebt();
-    assert.equal(recordedETHBalance, 0);
+    const recordedNEONBalance = await activePool.getZKUSDDebt();
+    assert.equal(recordedNEONBalance, 0);
   });
 
   it("increaseZKUSD(): increases the recorded ZKUSD balance by the correct amount", async () => {
@@ -120,7 +120,7 @@ contract("ActivePool", async (accounts) => {
   });
 
   // send raw ether
-  it("sendETH(): decreases the recorded ETH balance by the correct amount", async () => {
+  it("sendNEON(): decreases the recorded NEON balance by the correct amount", async () => {
     // setup: give pool 2 ether
     const activePool_initialBalance = web3.utils.toBN(
       await web3.eth.getBalance(activePool.address)
@@ -144,14 +144,14 @@ contract("ActivePool", async (accounts) => {
     assert.equal(activePool_BalanceBeforeTx, dec(2, "ether"));
 
     // send ether from pool to alice
-    //await activePool.sendETH(alice, dec(1, 'ether'), { from: mockBorrowerOperationsAddress })
-    const sendETHData = th.getTransactionData("sendETH(address,uint256)", [
+    //await activePool.sendNEON(alice, dec(1, 'ether'), { from: mockBorrowerOperationsAddress })
+    const sendNEONData = th.getTransactionData("sendNEON(address,uint256)", [
       alice,
       web3.utils.toHex(dec(1, "ether")),
     ]);
     const tx2 = await mockBorrowerOperations.forward(
       activePool.address,
-      sendETHData,
+      sendNEONData,
       { from: owner }
     );
     assert.isTrue(tx2.receipt.status);
@@ -188,14 +188,14 @@ contract("DefaultPool", async (accounts) => {
     );
   });
 
-  it("getETH(): gets the recorded ZKUSD balance", async () => {
-    const recordedETHBalance = await defaultPool.getETH();
-    assert.equal(recordedETHBalance, 0);
+  it("getNEON(): gets the recorded ZKUSD balance", async () => {
+    const recordedNEONBalance = await defaultPool.getNEON();
+    assert.equal(recordedNEONBalance, 0);
   });
 
   it("getZKUSDDebt(): gets the recorded ZKUSD balance", async () => {
-    const recordedETHBalance = await defaultPool.getZKUSDDebt();
-    assert.equal(recordedETHBalance, 0);
+    const recordedNEONBalance = await defaultPool.getZKUSDDebt();
+    assert.equal(recordedNEONBalance, 0);
   });
 
   it("increaseZKUSD(): increases the recorded ZKUSD balance by the correct amount", async () => {
@@ -249,7 +249,7 @@ contract("DefaultPool", async (accounts) => {
   });
 
   // send raw ether
-  it("sendETHToActivePool(): decreases the recorded ETH balance by the correct amount", async () => {
+  it("sendNEONToActivePool(): decreases the recorded NEON balance by the correct amount", async () => {
     // setup: give pool 2 ether
     const defaultPool_initialBalance = web3.utils.toBN(
       await web3.eth.getBalance(defaultPool.address)
@@ -274,14 +274,15 @@ contract("DefaultPool", async (accounts) => {
     assert.equal(defaultPool_BalanceBeforeTx, dec(2, "ether"));
 
     // send ether from pool to alice
-    //await defaultPool.sendETHToActivePool(dec(1, 'ether'), { from: mockTroveManagerAddress })
-    const sendETHData = th.getTransactionData("sendETHToActivePool(uint256)", [
-      web3.utils.toHex(dec(1, "ether")),
-    ]);
+    //await defaultPool.sendNEONToActivePool(dec(1, 'ether'), { from: mockTroveManagerAddress })
+    const sendNEONData = th.getTransactionData(
+      "sendNEONToActivePool(uint256)",
+      [web3.utils.toHex(dec(1, "ether"))]
+    );
     await mockActivePool.setPayable(true);
     const tx2 = await mockTroveManager.forward(
       defaultPool.address,
-      sendETHData,
+      sendNEONData,
       { from: owner }
     );
     assert.isTrue(tx2.receipt.status);

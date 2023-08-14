@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./BorrowerOperationsScript.sol";
-import "./ETHTransferScript.sol";
+import "./NEONTransferScript.sol";
 import "./ZKTStakingScript.sol";
 import "../dependencies/FullMath.sol";
 import "../interfaces/ITroveManager.sol";
@@ -15,7 +15,7 @@ import "../interfaces/IZKTStaking.sol";
 
 contract BorrowerWrappersScript is
     BorrowerOperationsScript,
-    ETHTransferScript,
+    NEONTransferScript,
     ZKTStakingScript
 {
     using SafeMath for uint;
@@ -109,7 +109,7 @@ contract BorrowerWrappersScript is
         uint zktBalanceAfter = zkToken.balanceOf(address(this));
         uint claimedCollateral = collBalanceAfter.sub(collBalanceBefore);
 
-        // Add claimed ETH to trove, get more ZKUSD and stake it into the Stability Pool
+        // Add claimed NEON to trove, get more ZKUSD and stake it into the Stability Pool
         if (claimedCollateral > 0) {
             _requireUserHasTrove(address(this));
             uint ZKUSDAmount = _getNetZKUSDAmount(claimedCollateral);

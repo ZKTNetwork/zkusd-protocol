@@ -128,11 +128,11 @@ contract("BorrowerWrappers", async (accounts) => {
     ZKUSD_GAS_COMPENSATION = await borrowerOperations.ZKUSD_GAS_COMPENSATION();
   });
 
-  it("proxy owner can recover ETH", async () => {
+  it("proxy owner can recover NEON", async () => {
     const amount = toBN(dec(1, 18));
     const proxyAddress = borrowerWrappers.getProxyAddressFromUser(alice);
 
-    // send some ETH to proxy
+    // send some NEON to proxy
     await web3.eth.sendTransaction({
       from: owner,
       to: proxyAddress,
@@ -143,9 +143,9 @@ contract("BorrowerWrappers", async (accounts) => {
 
     const balanceBefore = toBN(await web3.eth.getBalance(alice));
 
-    // recover ETH
+    // recover NEON
     const gas_Used = th.gasUsed(
-      await borrowerWrappers.transferETH(alice, amount, {
+      await borrowerWrappers.transferNEON(alice, amount, {
         from: alice,
         gasPrice: GAS_PRICE,
       })
@@ -156,11 +156,11 @@ contract("BorrowerWrappers", async (accounts) => {
     assert.equal(balanceAfter.sub(expectedBalance), amount.toString());
   });
 
-  it("non proxy owner cannot recover ETH", async () => {
+  it("non proxy owner cannot recover NEON", async () => {
     const amount = toBN(dec(1, 18));
     const proxyAddress = borrowerWrappers.getProxyAddressFromUser(alice);
 
-    // send some ETH to proxy
+    // send some NEON to proxy
     await web3.eth.sendTransaction({
       from: owner,
       to: proxyAddress,
@@ -170,9 +170,9 @@ contract("BorrowerWrappers", async (accounts) => {
 
     const balanceBefore = toBN(await web3.eth.getBalance(alice));
 
-    // try to recover ETH
+    // try to recover NEON
     const proxy = borrowerWrappers.getProxyFromUser(alice);
-    const signature = "transferETH(address,uint256)";
+    const signature = "transferNEON(address,uint256)";
     const calldata = th.getTransactionData(signature, [alice, amount]);
     await assertRevert(
       proxy.methods["execute(address,bytes)"](
@@ -482,7 +482,7 @@ contract("BorrowerWrappers", async (accounts) => {
     const compoundedZKUSDDeposit_A =
       await stabilityPool.getCompoundedZKUSDDeposit(alice);
     // collateral * 150 / 2500 * 0.995
-    const expectedETHGain_A = collateral
+    const expectedNEONGain_A = collateral
       .mul(aliceDeposit)
       .div(totalDeposits)
       .mul(toBN(dec(995, 15)))
@@ -507,7 +507,7 @@ contract("BorrowerWrappers", async (accounts) => {
     const depositBefore = (await stabilityPool.deposits(alice))[0];
     const stakeBefore = await zktStaking.stakes(alice);
 
-    const proportionalZKUSD = expectedETHGain_A.mul(price).div(ICRBefore);
+    const proportionalZKUSD = expectedNEONGain_A.mul(price).div(ICRBefore);
     const borrowingRate =
       await troveManagerOriginal.getBorrowingRateWithDecay();
     const netDebtChange = proportionalZKUSD
@@ -545,15 +545,15 @@ contract("BorrowerWrappers", async (accounts) => {
     assert.equal(ethBalanceAfter.toString(), ethBalanceBefore.toString());
     assert.equal(zkusdBalanceAfter.toString(), zkusdBalanceBefore.toString());
     assert.equal(zktBalanceAfter.toString(), zktBalanceBefore.toString());
-    // check trove has increased debt by the ICR proportional amount to ETH gain
+    // check trove has increased debt by the ICR proportional amount to NEON gain
     th.assertIsApproximatelyEqual(
       troveDebtAfter,
       troveDebtBefore.add(proportionalZKUSD)
     );
-    // check trove has increased collateral by the ETH gain
+    // check trove has increased collateral by the NEON gain
     th.assertIsApproximatelyEqual(
       troveCollAfter,
-      troveCollBefore.add(expectedETHGain_A)
+      troveCollBefore.add(expectedNEONGain_A)
     );
     // check that ICR remains constant
     th.assertIsApproximatelyEqual(ICRAfter, ICRBefore);
@@ -571,9 +571,11 @@ contract("BorrowerWrappers", async (accounts) => {
       stakeBefore.add(expectedZKTGain_A)
     );
 
-    // Expect Alice has withdrawn all ETH gain
-    const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(alice);
-    assert.equal(alice_pendingETHGain, 0);
+    // Expect Alice has withdrawn all NEON gain
+    const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
+      alice
+    );
+    assert.equal(alice_pendingNEONGain, 0);
   });
 
   // --- claimStakingGainsAndRecycle ---
@@ -736,12 +738,14 @@ contract("BorrowerWrappers", async (accounts) => {
     // ZKT staking
     th.assertIsApproximatelyEqual(stakeAfter, stakeBefore);
 
-    // Expect Alice has withdrawn all ETH gain
-    const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(alice);
-    assert.equal(alice_pendingETHGain, 0);
+    // Expect Alice has withdrawn all NEON gain
+    const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
+      alice
+    );
+    assert.equal(alice_pendingNEONGain, 0);
   });
 
-  it("claimStakingGainsAndRecycle(): with only ETH gain", async () => {
+  it("claimStakingGainsAndRecycle(): with only NEON gain", async () => {
     const price = toBN(dec(200, 18));
 
     // Whale opens Trove
@@ -791,11 +795,11 @@ contract("BorrowerWrappers", async (accounts) => {
     const redeemedAmount = toBN(dec(100, 18));
     await th.redeemCollateral(whale, contracts, redeemedAmount, GAS_PRICE);
 
-    // Alice ETH gain is ((150/2000) * (redemption fee over redeemedAmount) / price)
+    // Alice NEON gain is ((150/2000) * (redemption fee over redeemedAmount) / price)
     const redemptionFee = await troveManager.getRedemptionFeeWithDecay(
       redeemedAmount
     );
-    const expectedETHGain_A = redemptionFee
+    const expectedNEONGain_A = redemptionFee
       .mul(toBN(dec(150, 18)))
       .div(toBN(dec(2000, 18)))
       .mul(mv._1e18BN)
@@ -812,7 +816,7 @@ contract("BorrowerWrappers", async (accounts) => {
     const depositBefore = (await stabilityPool.deposits(alice))[0];
     const stakeBefore = await zktStaking.stakes(alice);
 
-    const proportionalZKUSD = expectedETHGain_A.mul(price).div(ICRBefore);
+    const proportionalZKUSD = expectedNEONGain_A.mul(price).div(ICRBefore);
     const borrowingRate =
       await troveManagerOriginal.getBorrowingRateWithDecay();
     const netDebtChange = proportionalZKUSD
@@ -857,16 +861,16 @@ contract("BorrowerWrappers", async (accounts) => {
       zkusdBalanceAfter,
       zkusdBalanceBefore.add(expectedNewZKUSDGain_A)
     );
-    // check trove has increased debt by the ICR proportional amount to ETH gain
+    // check trove has increased debt by the ICR proportional amount to NEON gain
     th.assertIsApproximatelyEqual(
       troveDebtAfter,
       troveDebtBefore.add(proportionalZKUSD),
       10000
     );
-    // check trove has increased collateral by the ETH gain
+    // check trove has increased collateral by the NEON gain
     th.assertIsApproximatelyEqual(
       troveCollAfter,
-      troveCollBefore.add(expectedETHGain_A)
+      troveCollBefore.add(expectedNEONGain_A)
     );
     // check that ICR remains constant
     th.assertIsApproximatelyEqual(ICRAfter, ICRBefore);
@@ -885,9 +889,11 @@ contract("BorrowerWrappers", async (accounts) => {
       stakeBefore.add(expectedZKTGain_A)
     );
 
-    // Expect Alice has withdrawn all ETH gain
-    const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(alice);
-    assert.equal(alice_pendingETHGain, 0);
+    // Expect Alice has withdrawn all NEON gain
+    const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
+      alice
+    );
+    assert.equal(alice_pendingNEONGain, 0);
   });
 
   it("claimStakingGainsAndRecycle(): with only ZKUSD gain", async () => {
@@ -973,9 +979,9 @@ contract("BorrowerWrappers", async (accounts) => {
     assert.equal(zktBalanceAfter.toString(), zktBalanceBefore.toString());
     // check proxy zkusd balance has increased by own adjust trove reward
     th.assertIsApproximatelyEqual(zkusdBalanceAfter, zkusdBalanceBefore);
-    // check trove has increased debt by the ICR proportional amount to ETH gain
+    // check trove has increased debt by the ICR proportional amount to NEON gain
     th.assertIsApproximatelyEqual(troveDebtAfter, troveDebtBefore, 10000);
-    // check trove has increased collateral by the ETH gain
+    // check trove has increased collateral by the NEON gain
     th.assertIsApproximatelyEqual(troveCollAfter, troveCollBefore);
     // check that ICR remains constant
     th.assertIsApproximatelyEqual(ICRAfter, ICRBefore);
@@ -988,12 +994,14 @@ contract("BorrowerWrappers", async (accounts) => {
     // check zkt balance remains the same
     th.assertIsApproximatelyEqual(zktBalanceBefore, zktBalanceAfter);
 
-    // Expect Alice has withdrawn all ETH gain
-    const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(alice);
-    assert.equal(alice_pendingETHGain, 0);
+    // Expect Alice has withdrawn all NEON gain
+    const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
+      alice
+    );
+    assert.equal(alice_pendingNEONGain, 0);
   });
 
-  it("claimStakingGainsAndRecycle(): with both ETH and ZKUSD gains", async () => {
+  it("claimStakingGainsAndRecycle(): with both NEON and ZKUSD gains", async () => {
     const price = toBN(dec(200, 18));
 
     // Whale opens Trove
@@ -1048,11 +1056,11 @@ contract("BorrowerWrappers", async (accounts) => {
     const redeemedAmount = toBN(dec(100, 18));
     await th.redeemCollateral(whale, contracts, redeemedAmount, GAS_PRICE);
 
-    // Alice ETH gain is ((150/2000) * (redemption fee over redeemedAmount) / price)
+    // Alice NEON gain is ((150/2000) * (redemption fee over redeemedAmount) / price)
     const redemptionFee = await troveManager.getRedemptionFeeWithDecay(
       redeemedAmount
     );
-    const expectedETHGain_A = redemptionFee
+    const expectedNEONGain_A = redemptionFee
       .mul(toBN(dec(150, 18)))
       .div(toBN(dec(2000, 18)))
       .mul(mv._1e18BN)
@@ -1069,7 +1077,7 @@ contract("BorrowerWrappers", async (accounts) => {
     const depositBefore = (await stabilityPool.deposits(alice))[0];
     const stakeBefore = await zktStaking.stakes(alice);
 
-    const proportionalZKUSD = expectedETHGain_A.mul(price).div(ICRBefore);
+    const proportionalZKUSD = expectedNEONGain_A.mul(price).div(ICRBefore);
     const borrowingRate =
       await troveManagerOriginal.getBorrowingRateWithDecay();
     const netDebtChange = proportionalZKUSD
@@ -1114,16 +1122,16 @@ contract("BorrowerWrappers", async (accounts) => {
       zkusdBalanceAfter,
       zkusdBalanceBefore.add(expectedNewZKUSDGain_A)
     );
-    // check trove has increased debt by the ICR proportional amount to ETH gain
+    // check trove has increased debt by the ICR proportional amount to NEON gain
     th.assertIsApproximatelyEqual(
       troveDebtAfter,
       troveDebtBefore.add(proportionalZKUSD),
       10000
     );
-    // check trove has increased collateral by the ETH gain
+    // check trove has increased collateral by the NEON gain
     th.assertIsApproximatelyEqual(
       troveCollAfter,
-      troveCollBefore.add(expectedETHGain_A)
+      troveCollBefore.add(expectedNEONGain_A)
     );
     // check that ICR remains constant
     th.assertIsApproximatelyEqual(ICRAfter, ICRBefore);
@@ -1142,8 +1150,10 @@ contract("BorrowerWrappers", async (accounts) => {
       stakeBefore.add(expectedZKTGain_A)
     );
 
-    // Expect Alice has withdrawn all ETH gain
-    const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(alice);
-    assert.equal(alice_pendingETHGain, 0);
+    // Expect Alice has withdrawn all NEON gain
+    const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
+      alice
+    );
+    assert.equal(alice_pendingNEONGain, 0);
   });
 });

@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
  * ZKUSD in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of ZKUSD tokens in the Stability Pool is burned.
  *
  * Thus, a liquidation causes each depositor to receive a ZKUSD loss, in proportion to their deposit as a share of total deposits.
- * They also receive an ETH gain, as the ETH collateral of the liquidated trove is distributed among Stability depositors,
+ * They also receive an NEON gain, as the NEON collateral of the liquidated trove is distributed among Stability depositors,
  * in the same proportion.
  *
  * When a liquidation occurs, it depletes every deposit by the same fraction: for example, a liquidation that depletes 40%
@@ -30,7 +30,7 @@ pragma solidity ^0.8.0;
 interface IStabilityPool {
     // --- Events ---
 
-    event StabilityPoolETHBalanceUpdated(uint256 _newBalance);
+    event StabilityPoolNEONBalanceUpdated(uint256 _newBalance);
     event StabilityPoolZKUSDBalanceUpdated(uint256 _newBalance);
 
     event BorrowerOperationsAddressChanged(
@@ -71,9 +71,9 @@ interface IStabilityPool {
         address _depositor
     );
 
-    event ETHGainWithdrawn(
+    event NEONGainWithdrawn(
         address indexed _depositor,
-        uint256 _ETH,
+        uint256 _NEON,
         uint256 _ZKUSDLoss
     );
     event ZKTPaidToDepositor(address indexed _depositor, uint256 _ZKT);
@@ -103,7 +103,7 @@ interface IStabilityPool {
      * ---
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors and front ends
      * - Tags the deposit with the provided front end tag param, if it's a new deposit
-     * - Sends depositor's accumulated gains (ZKT, ETH) to depositor
+     * - Sends depositor's accumulated gains (ZKT, NEON) to depositor
      * - Increases deposit and tagged front end's stake, and takes new snapshots for each.
      */
     function provideToSP(uint256 _amount) external;
@@ -114,7 +114,7 @@ interface IStabilityPool {
      * - User has a non zero deposit
      * ---
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors and front ends
-     * - Sends all depositor's accumulated gains (ZKT, ETH) to depositor
+     * - Sends all depositor's accumulated gains (ZKT, NEON) to depositor
      * - Decreases deposit and tagged front end's stake, and takes new snapshots for each.
      *
      * If _amount > userDeposit, the user withdraws all of their compounded deposit.
@@ -125,15 +125,15 @@ interface IStabilityPool {
      * Initial checks:
      * - User has a non zero deposit
      * - User has an open trove
-     * - User has some ETH gain
+     * - User has some NEON gain
      * ---
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors
      * - Sends all depositor's ZKT gain to  depositor
-     * - Transfers the depositor's entire ETH gain from the Stability Pool to the caller's trove
+     * - Transfers the depositor's entire NEON gain from the Stability Pool to the caller's trove
      * - Leaves their compounded deposit in the Stability Pool
      * - Updates snapshots for deposit and tagged
      */
-    function withdrawETHGainToTrove(
+    function withdrawNEONGainToTrove(
         address _upperHint,
         address _lowerHint
     ) external;
@@ -143,16 +143,16 @@ interface IStabilityPool {
      * - Caller is TroveManager
      * ---
      * Cancels out the specified debt against the ZKUSD contained in the Stability Pool (as far as possible)
-     * and transfers the Trove's ETH collateral from ActivePool to StabilityPool.
+     * and transfers the Trove's NEON collateral from ActivePool to StabilityPool.
      * Only called by liquidation functions in the TroveManager.
      */
     function offset(uint256 _debt, uint256 _coll) external;
 
     /*
-     * Returns the total amount of ETH held by the pool, accounted in an internal variable instead of `balance`,
-     * to exclude edge cases like ETH received from a self-destruct.
+     * Returns the total amount of NEON held by the pool, accounted in an internal variable instead of `balance`,
+     * to exclude edge cases like NEON received from a self-destruct.
      */
-    function getETH() external view returns (uint256);
+    function getNEON() external view returns (uint256);
 
     /*
      * Returns ZKUSD held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
@@ -160,9 +160,9 @@ interface IStabilityPool {
     function getTotalZKUSDDeposits() external view returns (uint256);
 
     /*
-     * Calculates the ETH gain earned by the deposit since its last snapshots were taken.
+     * Calculates the NEON gain earned by the deposit since its last snapshots were taken.
      */
-    function getDepositorETHGain(
+    function getDepositorNEONGain(
         address _depositor
     ) external view returns (uint256);
 
@@ -201,7 +201,7 @@ interface IStabilityPool {
 
     /*
      * Fallback function
-     * Only callable by Active Pool, it just accounts for ETH received
+     * Only callable by Active Pool, it just accounts for NEON received
      * receive() external payable;
      */
 }

@@ -30,19 +30,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "_newBalance",
-        "type": "uint256"
-      }
-    ],
-    "name": "ETHBalanceUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "_to",
         "type": "address"
@@ -55,6 +42,19 @@
       }
     ],
     "name": "EtherSent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newBalance",
+        "type": "uint256"
+      }
+    ],
+    "name": "NEONBalanceUpdated",
     "type": "event"
   },
   {
@@ -98,7 +98,7 @@
   },
   {
     "inputs": [],
-    "name": "getETH",
+    "name": "getNEON",
     "outputs": [
       {
         "internalType": "uint256",

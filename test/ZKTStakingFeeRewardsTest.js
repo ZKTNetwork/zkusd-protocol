@@ -17,10 +17,10 @@ const ZERO = th.toBN("0");
 
 const GAS_PRICE = 10000000;
 
-/* NOTE: These tests do not test for specific ETH and ZKUSD gain values. They only test that the
+/* NOTE: These tests do not test for specific NEON and ZKUSD gain values. They only test that the
  * gains are non-zero, occur when they should, and are in correct proportion to the user's stake.
  *
- * Specific ETH/ZKUSD gain values will depend on the final fee schedule used, and the final choices for
+ * Specific NEON/ZKUSD gain values will depend on the final fee schedule used, and the final choices for
  * parameters BETA and MINUTE_DECAY_FACTOR in the TroveManager, which are still TBD based on economic
  * modelling.
  *
@@ -95,7 +95,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     );
   });
 
-  it("ETH fee per ZKT staked increases when a redemption fee is triggered and totalStakes > 0", async () => {
+  it("NEON fee per ZKT staked increases when a redemption fee is triggered and totalStakes > 0", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -135,9 +135,9 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     await zkToken.approve(zktStaking.address, dec(100, 18), { from: A });
     await zktStaking.stake(dec(100, 18), { from: A });
 
-    // Check ETH fee per unit staked is zero
-    const F_ETH_Before = await zktStaking.F_ETH();
-    assert.equal(F_ETH_Before, "0");
+    // Check NEON fee per unit staked is zero
+    const F_NEON_Before = await zktStaking.F_NEON();
+    assert.equal(F_NEON_Before, "0");
 
     const B_BalBeforeREdemption = await zkusdToken.balanceOf(B);
     // B redeems
@@ -151,22 +151,22 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee emitted in event is non-zero
-    const emittedETHFee = toBN(
+    // check NEON fee emitted in event is non-zero
+    const emittedNEONFee = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx))[3]
     );
-    assert.isTrue(emittedETHFee.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee.gt(toBN("0")));
 
-    // Check ETH fee per unit staked has increased by correct amount
-    const F_ETH_After = await zktStaking.F_ETH();
+    // Check NEON fee per unit staked has increased by correct amount
+    const F_NEON_After = await zktStaking.F_NEON();
 
     // Expect fee per unit staked = fee/100, since there is 100 ZKUSD totalStaked
-    const expected_F_ETH_After = emittedETHFee.div(toBN("100"));
+    const expected_F_NEON_After = emittedNEONFee.div(toBN("100"));
 
-    assert.isTrue(expected_F_ETH_After.eq(F_ETH_After));
+    assert.isTrue(expected_F_NEON_After.eq(F_NEON_After));
   });
 
-  it("ETH fee per ZKT staked doesn't change when a redemption fee is triggered and totalStakes == 0", async () => {
+  it("NEON fee per ZKT staked doesn't change when a redemption fee is triggered and totalStakes == 0", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -205,9 +205,9 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       gasPrice: GAS_PRICE,
     });
 
-    // Check ETH fee per unit staked is zero
-    const F_ETH_Before = await zktStaking.F_ETH();
-    assert.equal(F_ETH_Before, "0");
+    // Check NEON fee per unit staked is zero
+    const F_NEON_Before = await zktStaking.F_NEON();
+    assert.equal(F_NEON_Before, "0");
 
     const B_BalBeforeREdemption = await zkusdToken.balanceOf(B);
     // B redeems
@@ -221,15 +221,15 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee emitted in event is non-zero
-    const emittedETHFee = toBN(
+    // check NEON fee emitted in event is non-zero
+    const emittedNEONFee = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx))[3]
     );
-    assert.isTrue(emittedETHFee.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee.gt(toBN("0")));
 
-    // Check ETH fee per unit staked has not increased
-    const F_ETH_After = await zktStaking.F_ETH();
-    assert.equal(F_ETH_After, "0");
+    // Check NEON fee per unit staked has not increased
+    const F_NEON_After = await zktStaking.F_NEON();
+    assert.equal(F_NEON_After, "0");
   });
 
   it("ZKUSD fee per ZKT staked increases when a redemption fee is triggered and totalStakes > 0", async () => {
@@ -273,7 +273,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     await zktStaking.stake(dec(100, 18), { from: A });
 
     // Check ZKUSD fee per unit staked is zero
-    const F_ZKUSD_Before = await zktStaking.F_ETH();
+    const F_ZKUSD_Before = await zktStaking.F_NEON();
     assert.equal(F_ZKUSD_Before, "0");
 
     const B_BalBeforeREdemption = await zkusdToken.balanceOf(B);
@@ -351,7 +351,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     await zkToken.transfer(A, dec(100, 18), { from: multisig });
 
     // Check ZKUSD fee per unit staked is zero
-    const F_ZKUSD_Before = await zktStaking.F_ETH();
+    const F_ZKUSD_Before = await zktStaking.F_NEON();
     assert.equal(F_ZKUSD_Before, "0");
 
     const B_BalBeforeREdemption = await zkusdToken.balanceOf(B);
@@ -388,7 +388,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     assert.equal(F_ZKUSD_After, "0");
   });
 
-  it("ZKT Staking: A single staker earns all ETH and ZKT fees that occur", async () => {
+  it("ZKT Staking: A single staker earns all NEON and ZKT fees that occur", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -440,11 +440,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee 1 emitted in event is non-zero
-    const emittedETHFee_1 = toBN(
+    // check NEON fee 1 emitted in event is non-zero
+    const emittedNEONFee_1 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_1))[3]
     );
-    assert.isTrue(emittedETHFee_1.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_1.gt(toBN("0")));
 
     const C_BalBeforeREdemption = await zkusdToken.balanceOf(C);
     // C redeems
@@ -458,11 +458,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const C_BalAfterRedemption = await zkusdToken.balanceOf(C);
     assert.isTrue(C_BalAfterRedemption.lt(C_BalBeforeREdemption));
 
-    // check ETH fee 2 emitted in event is non-zero
-    const emittedETHFee_2 = toBN(
+    // check NEON fee 2 emitted in event is non-zero
+    const emittedNEONFee_2 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_2))[3]
     );
-    assert.isTrue(emittedETHFee_2.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_2.gt(toBN("0")));
 
     // D draws debt
     const borrowingTx_1 = await borrowerOperations.withdrawZKUSD(
@@ -494,10 +494,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     );
     assert.isTrue(emittedZKUSDFee_2.gt(toBN("0")));
 
-    const expectedTotalETHGain = emittedETHFee_1.add(emittedETHFee_2);
+    const expectedTotalNEONGain = emittedNEONFee_1.add(emittedNEONFee_2);
     const expectedTotalZKUSDGain = emittedZKUSDFee_1.add(emittedZKUSDFee_2);
 
-    const A_ETHBalance_Before = toBN(await web3.eth.getBalance(A));
+    const A_NEONBalance_Before = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(A));
 
     // A un-stakes
@@ -505,22 +505,22 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       await zktStaking.unstake(dec(100, 18), { from: A, gasPrice: GAS_PRICE })
     );
 
-    const A_ETHBalance_After = toBN(await web3.eth.getBalance(A));
+    const A_NEONBalance_After = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(A));
 
-    const A_ETHGain = A_ETHBalance_After.sub(A_ETHBalance_Before).add(
+    const A_NEONGain = A_NEONBalance_After.sub(A_NEONBalance_Before).add(
       toBN(GAS_Used * GAS_PRICE)
     );
     const A_ZKUSDGain = A_ZKUSDBalance_After.sub(A_ZKUSDBalance_Before);
 
-    assert.isAtMost(th.getDifference(expectedTotalETHGain, A_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedTotalNEONGain, A_NEONGain), 1000);
     assert.isAtMost(
       th.getDifference(expectedTotalZKUSDGain, A_ZKUSDGain),
       1000
     );
   });
 
-  it("stake(): Top-up sends out all accumulated ETH and ZKUSD gains to the staker", async () => {
+  it("stake(): Top-up sends out all accumulated NEON and ZKUSD gains to the staker", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -572,11 +572,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee 1 emitted in event is non-zero
-    const emittedETHFee_1 = toBN(
+    // check NEON fee 1 emitted in event is non-zero
+    const emittedNEONFee_1 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_1))[3]
     );
-    assert.isTrue(emittedETHFee_1.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_1.gt(toBN("0")));
 
     const C_BalBeforeREdemption = await zkusdToken.balanceOf(C);
     // C redeems
@@ -590,11 +590,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const C_BalAfterRedemption = await zkusdToken.balanceOf(C);
     assert.isTrue(C_BalAfterRedemption.lt(C_BalBeforeREdemption));
 
-    // check ETH fee 2 emitted in event is non-zero
-    const emittedETHFee_2 = toBN(
+    // check NEON fee 2 emitted in event is non-zero
+    const emittedNEONFee_2 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_2))[3]
     );
-    assert.isTrue(emittedETHFee_2.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_2.gt(toBN("0")));
 
     // D draws debt
     const borrowingTx_1 = await borrowerOperations.withdrawZKUSD(
@@ -626,10 +626,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     );
     assert.isTrue(emittedZKUSDFee_2.gt(toBN("0")));
 
-    const expectedTotalETHGain = emittedETHFee_1.add(emittedETHFee_2);
+    const expectedTotalNEONGain = emittedNEONFee_1.add(emittedNEONFee_2);
     const expectedTotalZKUSDGain = emittedZKUSDFee_1.add(emittedZKUSDFee_2);
 
-    const A_ETHBalance_Before = toBN(await web3.eth.getBalance(A));
+    const A_NEONBalance_Before = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(A));
 
     // A tops up
@@ -637,22 +637,22 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       await zktStaking.stake(dec(50, 18), { from: A, gasPrice: GAS_PRICE })
     );
 
-    const A_ETHBalance_After = toBN(await web3.eth.getBalance(A));
+    const A_NEONBalance_After = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(A));
 
-    const A_ETHGain = A_ETHBalance_After.sub(A_ETHBalance_Before).add(
+    const A_NEONGain = A_NEONBalance_After.sub(A_NEONBalance_Before).add(
       toBN(GAS_Used * GAS_PRICE)
     );
     const A_ZKUSDGain = A_ZKUSDBalance_After.sub(A_ZKUSDBalance_Before);
 
-    assert.isAtMost(th.getDifference(expectedTotalETHGain, A_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedTotalNEONGain, A_NEONGain), 1000);
     assert.isAtMost(
       th.getDifference(expectedTotalZKUSDGain, A_ZKUSDGain),
       1000
     );
   });
 
-  it("getPendingETHGain(): Returns the staker's correct pending ETH gain", async () => {
+  it("getPendingNEONGain(): Returns the staker's correct pending NEON gain", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -704,11 +704,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee 1 emitted in event is non-zero
-    const emittedETHFee_1 = toBN(
+    // check NEON fee 1 emitted in event is non-zero
+    const emittedNEONFee_1 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_1))[3]
     );
-    assert.isTrue(emittedETHFee_1.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_1.gt(toBN("0")));
 
     const C_BalBeforeREdemption = await zkusdToken.balanceOf(C);
     // C redeems
@@ -722,17 +722,17 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const C_BalAfterRedemption = await zkusdToken.balanceOf(C);
     assert.isTrue(C_BalAfterRedemption.lt(C_BalBeforeREdemption));
 
-    // check ETH fee 2 emitted in event is non-zero
-    const emittedETHFee_2 = toBN(
+    // check NEON fee 2 emitted in event is non-zero
+    const emittedNEONFee_2 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_2))[3]
     );
-    assert.isTrue(emittedETHFee_2.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_2.gt(toBN("0")));
 
-    const expectedTotalETHGain = emittedETHFee_1.add(emittedETHFee_2);
+    const expectedTotalNEONGain = emittedNEONFee_1.add(emittedNEONFee_2);
 
-    const A_ETHGain = await zktStaking.getPendingETHGain(A);
+    const A_NEONGain = await zktStaking.getPendingNEONGain(A);
 
-    assert.isAtMost(th.getDifference(expectedTotalETHGain, A_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedTotalNEONGain, A_NEONGain), 1000);
   });
 
   it("getPendingZKUSDGain(): Returns the staker's correct pending ZKUSD gain", async () => {
@@ -787,11 +787,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const B_BalAfterRedemption = await zkusdToken.balanceOf(B);
     assert.isTrue(B_BalAfterRedemption.lt(B_BalBeforeREdemption));
 
-    // check ETH fee 1 emitted in event is non-zero
-    const emittedETHFee_1 = toBN(
+    // check NEON fee 1 emitted in event is non-zero
+    const emittedNEONFee_1 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_1))[3]
     );
-    assert.isTrue(emittedETHFee_1.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_1.gt(toBN("0")));
 
     const C_BalBeforeREdemption = await zkusdToken.balanceOf(C);
     // C redeems
@@ -805,11 +805,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     const C_BalAfterRedemption = await zkusdToken.balanceOf(C);
     assert.isTrue(C_BalAfterRedemption.lt(C_BalBeforeREdemption));
 
-    // check ETH fee 2 emitted in event is non-zero
-    const emittedETHFee_2 = toBN(
+    // check NEON fee 2 emitted in event is non-zero
+    const emittedNEONFee_2 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_2))[3]
     );
-    assert.isTrue(emittedETHFee_2.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_2.gt(toBN("0")));
 
     // D draws debt
     const borrowingTx_1 = await borrowerOperations.withdrawZKUSD(
@@ -851,7 +851,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
   });
 
   // - multi depositors, several rewards
-  it("ZKT Staking: Multiple stakers earn the correct share of all ETH and ZKT fees, based on their stake size", async () => {
+  it("ZKT Staking: Multiple stakers earn the correct share of all NEON and ZKT fees, based on their stake size", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(10000, 18)),
       ICR: toBN(dec(10, 18)),
@@ -924,10 +924,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       dec(45, 18),
       (gasPrice = GAS_PRICE)
     );
-    const emittedETHFee_1 = toBN(
+    const emittedNEONFee_1 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_1))[3]
     );
-    assert.isTrue(emittedETHFee_1.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_1.gt(toBN("0")));
 
     // G redeems
     const redemptionTx_2 = await th.redeemCollateralAndGetTxObject(
@@ -936,10 +936,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       dec(197, 18),
       (gasPrice = GAS_PRICE)
     );
-    const emittedETHFee_2 = toBN(
+    const emittedNEONFee_2 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_2))[3]
     );
-    assert.isTrue(emittedETHFee_2.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_2.gt(toBN("0")));
 
     // F draws debt
     const borrowingTx_1 = await borrowerOperations.withdrawZKUSD(
@@ -983,10 +983,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       dec(197, 18),
       (gasPrice = GAS_PRICE)
     );
-    const emittedETHFee_3 = toBN(
+    const emittedNEONFee_3 = toBN(
       (await th.getEmittedRedemptionValues(redemptionTx_3))[3]
     );
-    assert.isTrue(emittedETHFee_3.gt(toBN("0")));
+    assert.isTrue(emittedNEONFee_3.gt(toBN("0")));
 
     // G draws debt
     const borrowingTx_3 = await borrowerOperations.withdrawZKUSD(
@@ -1004,10 +1004,10 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     /*  
     Expected rewards:
 
-    A_ETH: (100* ETHFee_1)/600 + (100* ETHFee_2)/600 + (100*ETH_Fee_3)/650
-    B_ETH: (200* ETHFee_1)/600 + (200* ETHFee_2)/600 + (200*ETH_Fee_3)/650
-    C_ETH: (300* ETHFee_1)/600 + (300* ETHFee_2)/600 + (300*ETH_Fee_3)/650
-    D_ETH:                                             (100*ETH_Fee_3)/650
+    A_NEON: (100* NEONFee_1)/600 + (100* NEONFee_2)/600 + (100*NEON_Fee_3)/650
+    B_NEON: (200* NEONFee_1)/600 + (200* NEONFee_2)/600 + (200*NEON_Fee_3)/650
+    C_NEON: (300* NEONFee_1)/600 + (300* NEONFee_2)/600 + (300*NEON_Fee_3)/650
+    D_NEON:                                             (100*NEON_Fee_3)/650
 
     A_ZKUSD: (100*ZKUSDFee_1 )/600 + (100* ZKUSDFee_2)/600 + (100*ZKUSDFee_3)/650
     B_ZKUSD: (200* ZKUSDFee_1)/600 + (200* ZKUSDFee_2)/600 + (200*ZKUSDFee_3)/650
@@ -1015,26 +1015,28 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     D_ZKUSD:                                               (100*ZKUSDFee_3)/650
     */
 
-    // Expected ETH gains
-    const expectedETHGain_A = toBN("100")
-      .mul(emittedETHFee_1)
+    // Expected NEON gains
+    const expectedNEONGain_A = toBN("100")
+      .mul(emittedNEONFee_1)
       .div(toBN("600"))
-      .add(toBN("100").mul(emittedETHFee_2).div(toBN("600")))
-      .add(toBN("100").mul(emittedETHFee_3).div(toBN("650")));
+      .add(toBN("100").mul(emittedNEONFee_2).div(toBN("600")))
+      .add(toBN("100").mul(emittedNEONFee_3).div(toBN("650")));
 
-    const expectedETHGain_B = toBN("200")
-      .mul(emittedETHFee_1)
+    const expectedNEONGain_B = toBN("200")
+      .mul(emittedNEONFee_1)
       .div(toBN("600"))
-      .add(toBN("200").mul(emittedETHFee_2).div(toBN("600")))
-      .add(toBN("200").mul(emittedETHFee_3).div(toBN("650")));
+      .add(toBN("200").mul(emittedNEONFee_2).div(toBN("600")))
+      .add(toBN("200").mul(emittedNEONFee_3).div(toBN("650")));
 
-    const expectedETHGain_C = toBN("300")
-      .mul(emittedETHFee_1)
+    const expectedNEONGain_C = toBN("300")
+      .mul(emittedNEONFee_1)
       .div(toBN("600"))
-      .add(toBN("300").mul(emittedETHFee_2).div(toBN("600")))
-      .add(toBN("300").mul(emittedETHFee_3).div(toBN("650")));
+      .add(toBN("300").mul(emittedNEONFee_2).div(toBN("600")))
+      .add(toBN("300").mul(emittedNEONFee_3).div(toBN("650")));
 
-    const expectedETHGain_D = toBN("50").mul(emittedETHFee_3).div(toBN("650"));
+    const expectedNEONGain_D = toBN("50")
+      .mul(emittedNEONFee_3)
+      .div(toBN("650"));
 
     // Expected ZKUSD gains:
     const expectedZKUSDGain_A = toBN("100")
@@ -1059,13 +1061,13 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       .mul(emittedZKUSDFee_3)
       .div(toBN("650"));
 
-    const A_ETHBalance_Before = toBN(await web3.eth.getBalance(A));
+    const A_NEONBalance_Before = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(A));
-    const B_ETHBalance_Before = toBN(await web3.eth.getBalance(B));
+    const B_NEONBalance_Before = toBN(await web3.eth.getBalance(B));
     const B_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(B));
-    const C_ETHBalance_Before = toBN(await web3.eth.getBalance(C));
+    const C_NEONBalance_Before = toBN(await web3.eth.getBalance(C));
     const C_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(C));
-    const D_ETHBalance_Before = toBN(await web3.eth.getBalance(D));
+    const D_NEONBalance_Before = toBN(await web3.eth.getBalance(D));
     const D_ZKUSDBalance_Before = toBN(await zkusdToken.balanceOf(D));
 
     // A-D un-stake
@@ -1088,46 +1090,46 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     assert.equal(await zkToken.balanceOf(zktStaking.address), "0");
     assert.equal(await zktStaking.totalZKTStaked(), "0");
 
-    // Get A-D ETH and ZKUSD balances
-    const A_ETHBalance_After = toBN(await web3.eth.getBalance(A));
+    // Get A-D NEON and ZKUSD balances
+    const A_NEONBalance_After = toBN(await web3.eth.getBalance(A));
     const A_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(A));
-    const B_ETHBalance_After = toBN(await web3.eth.getBalance(B));
+    const B_NEONBalance_After = toBN(await web3.eth.getBalance(B));
     const B_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(B));
-    const C_ETHBalance_After = toBN(await web3.eth.getBalance(C));
+    const C_NEONBalance_After = toBN(await web3.eth.getBalance(C));
     const C_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(C));
-    const D_ETHBalance_After = toBN(await web3.eth.getBalance(D));
+    const D_NEONBalance_After = toBN(await web3.eth.getBalance(D));
     const D_ZKUSDBalance_After = toBN(await zkusdToken.balanceOf(D));
 
-    // Get ETH and ZKUSD gains
-    const A_ETHGain = A_ETHBalance_After.sub(A_ETHBalance_Before).add(
+    // Get NEON and ZKUSD gains
+    const A_NEONGain = A_NEONBalance_After.sub(A_NEONBalance_Before).add(
       toBN(A_GAS_Used * GAS_PRICE)
     );
     const A_ZKUSDGain = A_ZKUSDBalance_After.sub(A_ZKUSDBalance_Before);
-    const B_ETHGain = B_ETHBalance_After.sub(B_ETHBalance_Before).add(
+    const B_NEONGain = B_NEONBalance_After.sub(B_NEONBalance_Before).add(
       toBN(B_GAS_Used * GAS_PRICE)
     );
     const B_ZKUSDGain = B_ZKUSDBalance_After.sub(B_ZKUSDBalance_Before);
-    const C_ETHGain = C_ETHBalance_After.sub(C_ETHBalance_Before).add(
+    const C_NEONGain = C_NEONBalance_After.sub(C_NEONBalance_Before).add(
       toBN(C_GAS_Used * GAS_PRICE)
     );
     const C_ZKUSDGain = C_ZKUSDBalance_After.sub(C_ZKUSDBalance_Before);
-    const D_ETHGain = D_ETHBalance_After.sub(D_ETHBalance_Before).add(
+    const D_NEONGain = D_NEONBalance_After.sub(D_NEONBalance_Before).add(
       toBN(D_GAS_Used * GAS_PRICE)
     );
     const D_ZKUSDGain = D_ZKUSDBalance_After.sub(D_ZKUSDBalance_Before);
 
     // Check gains match expected amounts
-    assert.isAtMost(th.getDifference(expectedETHGain_A, A_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedNEONGain_A, A_NEONGain), 1000);
     assert.isAtMost(th.getDifference(expectedZKUSDGain_A, A_ZKUSDGain), 1000);
-    assert.isAtMost(th.getDifference(expectedETHGain_B, B_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedNEONGain_B, B_NEONGain), 1000);
     assert.isAtMost(th.getDifference(expectedZKUSDGain_B, B_ZKUSDGain), 1000);
-    assert.isAtMost(th.getDifference(expectedETHGain_C, C_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedNEONGain_C, C_NEONGain), 1000);
     assert.isAtMost(th.getDifference(expectedZKUSDGain_C, C_ZKUSDGain), 1000);
-    assert.isAtMost(th.getDifference(expectedETHGain_D, D_ETHGain), 1000);
+    assert.isAtMost(th.getDifference(expectedNEONGain_D, D_NEONGain), 1000);
     assert.isAtMost(th.getDifference(expectedZKUSDGain_D, D_ZKUSDGain), 1000);
   });
 
-  it("unstake(): reverts if caller has ETH gains and can't receive ETH", async () => {
+  it("unstake(): reverts if caller has NEON gains and can't receive NEON", async () => {
     await openTrove({
       extraZKUSDAmount: toBN(dec(20000, 18)),
       ICR: toBN(dec(2, 18)),
@@ -1175,7 +1177,7 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
     ]); // proxy stakes 100 ZKT
     await nonPayable.forward(zktStaking.address, proxystakeTxData, { from: A });
 
-    // B makes a redemption, creating ETH gain for proxy
+    // B makes a redemption, creating NEON gain for proxy
     const redemptionTx_1 = await th.redeemCollateralAndGetTxObject(
       B,
       contracts,
@@ -1183,12 +1185,12 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       (gasPrice = GAS_PRICE)
     );
 
-    const proxy_ETHGain = await zktStaking.getPendingETHGain(
+    const proxy_NEONGain = await zktStaking.getPendingNEONGain(
       nonPayable.address
     );
-    assert.isTrue(proxy_ETHGain.gt(toBN("0")));
+    assert.isTrue(proxy_NEONGain.gt(toBN("0")));
 
-    // Expect this tx to revert: stake() tries to send nonPayable proxy's accumulated ETH gain (albeit 0),
+    // Expect this tx to revert: stake() tries to send nonPayable proxy's accumulated NEON gain (albeit 0),
     //  A tells proxy to unstake
     const proxyUnStakeTxData = await th.getTransactionData("unstake(uint256)", [
       "0x56bc75e2d63100000",
@@ -1199,11 +1201,11 @@ contract("ZKTStaking revenue share tests", async (accounts) => {
       { from: A }
     );
 
-    // but nonPayable proxy can not accept ETH - therefore stake() reverts.
+    // but nonPayable proxy can not accept NEON - therefore stake() reverts.
     await assertRevert(proxyUnstakeTxPromise);
   });
 
-  it("receive(): reverts when it receives ETH from an address that is not the Active Pool", async () => {
+  it("receive(): reverts when it receives NEON from an address that is not the Active Pool", async () => {
     const ethSendTxPromise1 = web3.eth.sendTransaction({
       to: zktStaking.address,
       from: A,

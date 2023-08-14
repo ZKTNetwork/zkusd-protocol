@@ -128,7 +128,7 @@
   },
   {
     "inputs": [],
-    "name": "getETH",
+    "name": "getNEON",
     "outputs": [
       {
         "internalType": "uint256",

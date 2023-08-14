@@ -1,0 +1,39 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/interfaces/IPriceFeed.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ninterface IPriceFeed {\n    // --- Events ---\n    event LastGoodPriceUpdated(uint256 _lastGoodPrice);\n\n    // --- Function ---\n    function fetchPrice() external returns (uint256);\n}\n"
+    },
+    "contracts/mocks/PriceFeedTestnet.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"../interfaces/IPriceFeed.sol\";\n\ncontract PriceFeedTestnet is IPriceFeed {\n    uint256 private _price = 200 * 1e18;\n\n    uint256 public lastGoodPrice;\n\n    // --- Dependency setters ---\n    function setAddresses(bytes4, address) external {}\n\n    // View price getter for simplicity in tests\n    function getPrice() external view returns (uint256) {\n        return _price;\n    }\n\n    function fetchPrice() external override returns (uint256) {\n        emit LastGoodPriceUpdated(_price);\n        lastGoodPrice = _price;\n        return lastGoodPrice;\n    }\n\n    function setPrice(uint256 price) external returns (bool) {\n        _price = price;\n        lastGoodPrice = _price;\n\n        return true;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 500
+    },
+    "metadata": {
+      "bytecodeHash": "none",
+      "useLiteralContent": true
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    }
+  }
+}

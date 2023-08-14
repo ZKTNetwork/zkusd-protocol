@@ -23,7 +23,7 @@ import "../dependencies/ZKTProtocolBase.sol";
  * ZKUSD in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of ZKUSD tokens in the Stability Pool is burned.
  *
  * Thus, a liquidation causes each depositor to receive a ZKUSD loss, in proportion to their deposit as a share of total deposits.
- * They also receive an ETH gain, as the ETH collateral of the liquidated trove is distributed among Stability depositors,
+ * They also receive an NEON gain, as the NEON collateral of the liquidated trove is distributed among Stability depositors,
  * in the same proportion.
  *
  * When a liquidation occurs, it depletes every deposit by the same fraction: for example, a liquidation that depletes 40%
@@ -35,24 +35,24 @@ import "../dependencies/ZKTProtocolBase.sol";
  *
  * --- IMPLEMENTATION ---
  *
- * We use a highly scalable method of tracking deposits and ETH gains that has O(1) complexity.
+ * We use a highly scalable method of tracking deposits and NEON gains that has O(1) complexity.
  *
- * When a liquidation occurs, rather than updating each depositor's deposit and ETH gain, we simply update two state variables:
+ * When a liquidation occurs, rather than updating each depositor's deposit and NEON gain, we simply update two state variables:
  * a product P, and a sum S.
  *
  * A mathematical manipulation allows us to factor out the initial deposit, and accurately track all depositors' compounded deposits
- * and accumulated ETH gains over time, as liquidations occur, using just these two variables P and S. When depositors join the
+ * and accumulated NEON gains over time, as liquidations occur, using just these two variables P and S. When depositors join the
  * Stability Pool, they get a snapshot of the latest P and S: P_t and S_t, respectively.
  *
- * The formula for a depositor's accumulated ETH gain is derived here:
+ * The formula for a depositor's accumulated NEON gain is derived here:
  *
  * For a given deposit d_t, the ratio P/P_t tells us the factor by which a deposit has decreased since it joined the Stability Pool,
- * and the term d_t * (S - S_t)/P_t gives us the deposit's total accumulated ETH gain.
+ * and the term d_t * (S - S_t)/P_t gives us the deposit's total accumulated NEON gain.
  *
- * Each liquidation updates the product P and sum S. After a series of liquidations, a compounded deposit and corresponding ETH gain
+ * Each liquidation updates the product P and sum S. After a series of liquidations, a compounded deposit and corresponding NEON gain
  * can be calculated using the initial deposit, the depositor’s snapshots of P and S, and the latest values of P and S.
  *
- * Any time a depositor updates their deposit (withdrawal, top-up) their accumulated ETH gain is paid out, their new deposit is recorded
+ * Any time a depositor updates their deposit (withdrawal, top-up) their accumulated NEON gain is paid out, their new deposit is recorded
  * (based on their latest compounded deposit and modified by the withdrawal/top-up), and they receive new snapshots of the latest P and S.
  * Essentially, they make a fresh deposit that overwrites the old one.
  *
@@ -91,13 +91,13 @@ import "../dependencies/ZKTProtocolBase.sol";
  * as 0, since it is now less than 1e-9'th of its initial value (e.g. a deposit of 1 billion ZKUSD has depleted to < 1 ZKUSD).
  *
  *
- *  --- TRACKING DEPOSITOR'S ETH GAIN OVER SCALE CHANGES AND EPOCHS ---
+ *  --- TRACKING DEPOSITOR'S NEON GAIN OVER SCALE CHANGES AND EPOCHS ---
  *
  * In the current epoch, the latest value of S is stored upon each scale change, and the mapping (scale -> S) is stored for each epoch.
  *
- * This allows us to calculate a deposit's accumulated ETH gain, during the epoch in which the deposit was non-zero and earned ETH.
+ * This allows us to calculate a deposit's accumulated NEON gain, during the epoch in which the deposit was non-zero and earned NEON.
  *
- * We calculate the depositor's accumulated ETH gain for the scale at which they made the deposit, using the ETH gain formula:
+ * We calculate the depositor's accumulated NEON gain for the scale at which they made the deposit, using the NEON gain formula:
  * e_1 = d_t * (S - S_t) / P_t
  *
  * and also for scale after, taking care to divide the latter by a factor of 1e9:
@@ -117,14 +117,14 @@ import "../dependencies/ZKTProtocolBase.sol";
  *  |---+---------|-------------|-----...
  *         i            i+1
  *
- * The sum of (e_1 + e_2) captures the depositor's total accumulated ETH gain, handling the case where their
+ * The sum of (e_1 + e_2) captures the depositor's total accumulated NEON gain, handling the case where their
  * deposit spanned one scale change. We only care about gains across one scale change, since the compounded
  * deposit is defined as being 0 once it has spanned more than one scale change.
  *
  *
  * --- UPDATING P WHEN A LIQUIDATION OCCURS ---
  *
- * Please see the implementation spec in the proof document, which closely follows on from the compounded deposit / ETH gain derivations:
+ * Please see the implementation spec in the proof document, which closely follows on from the compounded deposit / NEON gain derivations:
  *
  *
  * --- ZKT ISSUANCE TO STABILITY POOL DEPOSITORS ---
@@ -161,7 +161,7 @@ contract StabilityPool is
 
     ICommunityIssuance public communityIssuance;
 
-    uint256 internal ETH; // deposited conflux tracker
+    uint256 internal NEON; // deposited conflux tracker
 
     // Tracker for ZKUSD held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
     uint256 internal totalZKUSDDeposits;
@@ -203,7 +203,7 @@ contract StabilityPool is
     // With each offset that fully empties the Pool, the epoch is incremented by 1
     uint256 public currentEpoch;
 
-    /* ETH Gain sum 'S': During its lifetime, each deposit d_t earns an ETH gain of ( d_t * [S - S_t] )/P_t, where S_t
+    /* NEON Gain sum 'S': During its lifetime, each deposit d_t earns an NEON gain of ( d_t * [S - S_t] )/P_t, where S_t
      * is the depositor's snapshot of S taken at the time t when the deposit was made.
      *
      * The 'S' sums are stored in a nested mapping (epoch => scale => sum):
@@ -225,7 +225,7 @@ contract StabilityPool is
     // Error tracker for the error correction in the ZKT issuance calculation
     uint256 public lastZKTError;
     // Error trackers for the error correction in the offset calculation
-    uint256 public lastETHError_Offset;
+    uint256 public lastNEONError_Offset;
     uint256 public lastZKUSDLossError_Offset;
 
     // --- Contract setters ---
@@ -270,15 +270,17 @@ contract StabilityPool is
 
     // --- Getters for public variables. Required by IPool interface ---
 
-    function getETH() external view override returns (uint256) {
-        return ETH;
+    function getNEON() external view override returns (uint256) {
+        return NEON;
     }
 
     function getTotalZKUSDDeposits() external view override returns (uint256) {
         return totalZKUSDDeposits;
     }
 
-    function setDefaultKickbackRate(uint256 _defaultKickBackRate) external onlyOwner {
+    function setDefaultKickbackRate(
+        uint256 _defaultKickBackRate
+    ) external onlyOwner {
         require(_defaultKickBackRate <= DECIMAL_PRECISION, "DECIMAL_PRECISION");
         DefaultKickbackRate = _defaultKickBackRate;
     }
@@ -289,7 +291,7 @@ contract StabilityPool is
      *
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors and front ends
      * - Tags the deposit with the provided front end tag param, if it's a new deposit
-     * - Sends depositor's accumulated gains (ZKT, ETH) to depositor
+     * - Sends depositor's accumulated gains (ZKT, NEON) to depositor
      * - Sends the tagged front end's accumulated ZKT gains to the tagged front end
      * - Increases deposit and tagged front end's stake, and takes new snapshots for each.
      */
@@ -302,7 +304,7 @@ contract StabilityPool is
 
         _triggerZKTIssuance(communityIssuanceCached);
 
-        uint256 depositorETHGain = getDepositorETHGain(msg.sender);
+        uint256 depositorNEONGain = getDepositorNEONGain(msg.sender);
         uint256 compoundedZKUSDDeposit = getCompoundedZKUSDDeposit(msg.sender);
         uint256 ZKUSDLoss = initialDeposit.sub(compoundedZKUSDDeposit); // Needed only for event log
 
@@ -323,16 +325,16 @@ contract StabilityPool is
         _updateDepositAndSnapshots(msg.sender, newDeposit);
         emit UserDepositChanged(msg.sender, newDeposit);
 
-        emit ETHGainWithdrawn(msg.sender, depositorETHGain, ZKUSDLoss); // ZKUSD Loss required for event log
+        emit NEONGainWithdrawn(msg.sender, depositorNEONGain, ZKUSDLoss); // ZKUSD Loss required for event log
 
-        _sendETHGainToDepositor(depositorETHGain);
+        _sendNEONGainToDepositor(depositorNEONGain);
     }
 
     /*  withdrawFromSP():
      *
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors and front ends
      * - Removes the deposit's front end tag if it is a full withdrawal
-     * - Sends all depositor's accumulated gains (ZKT, ETH) to depositor
+     * - Sends all depositor's accumulated gains (ZKT, NEON) to depositor
      * - Sends the tagged front end's accumulated ZKT gains to the tagged front end
      * - Decreases deposit and tagged front end's stake, and takes new snapshots for each.
      *
@@ -349,7 +351,7 @@ contract StabilityPool is
 
         _triggerZKTIssuance(communityIssuanceCached);
 
-        uint256 depositorETHGain = getDepositorETHGain(msg.sender);
+        uint256 depositorNEONGain = getDepositorNEONGain(msg.sender);
 
         uint256 compoundedZKUSDDeposit = getCompoundedZKUSDDeposit(msg.sender);
         uint256 ZKUSDtoWithdraw = Math.min(_amount, compoundedZKUSDDeposit);
@@ -373,32 +375,32 @@ contract StabilityPool is
         _updateDepositAndSnapshots(msg.sender, newDeposit);
         emit UserDepositChanged(msg.sender, newDeposit);
 
-        emit ETHGainWithdrawn(msg.sender, depositorETHGain, ZKUSDLoss); // ZKUSD Loss required for event log
+        emit NEONGainWithdrawn(msg.sender, depositorNEONGain, ZKUSDLoss); // ZKUSD Loss required for event log
 
-        _sendETHGainToDepositor(depositorETHGain);
+        _sendNEONGainToDepositor(depositorNEONGain);
     }
 
-    /* withdrawETHGainToTrove:
+    /* withdrawNEONGainToTrove:
      * - Triggers a ZKT issuance, based on time passed since the last issuance. The ZKT issuance is shared between *all* depositors and front ends
      * - Sends all depositor's ZKT gain to  depositor
      * - Sends all tagged front end's ZKT gain to the tagged front end
-     * - Transfers the depositor's entire ETH gain from the Stability Pool to the caller's trove
+     * - Transfers the depositor's entire NEON gain from the Stability Pool to the caller's trove
      * - Leaves their compounded deposit in the Stability Pool
      * - Updates snapshots for deposit and tagged front end stake */
-    function withdrawETHGainToTrove(
+    function withdrawNEONGainToTrove(
         address _upperHint,
         address _lowerHint
     ) external override {
         uint256 initialDeposit = deposits[msg.sender];
         _requireUserHasDeposit(initialDeposit);
         _requireUserHasTrove(msg.sender);
-        _requireUserHasETHGain(msg.sender);
+        _requireUserHasNEONGain(msg.sender);
 
         ICommunityIssuance communityIssuanceCached = communityIssuance;
 
         _triggerZKTIssuance(communityIssuanceCached);
 
-        uint256 depositorETHGain = getDepositorETHGain(msg.sender);
+        uint256 depositorNEONGain = getDepositorNEONGain(msg.sender);
 
         uint256 compoundedZKUSDDeposit = getCompoundedZKUSDDeposit(msg.sender);
         uint256 ZKUSDLoss = initialDeposit.sub(compoundedZKUSDDeposit); // Needed only for event log
@@ -416,17 +418,17 @@ contract StabilityPool is
 
         _updateDepositAndSnapshots(msg.sender, compoundedZKUSDDeposit);
 
-        /* Emit events before transferring ETH gain to Trove.
-         This lets the event log make more sense (i.e. so it appears that first the ETH gain is withdrawn
+        /* Emit events before transferring NEON gain to Trove.
+         This lets the event log make more sense (i.e. so it appears that first the NEON gain is withdrawn
         and then it is deposited into the Trove, not the other way around). */
-        emit ETHGainWithdrawn(msg.sender, depositorETHGain, ZKUSDLoss);
+        emit NEONGainWithdrawn(msg.sender, depositorNEONGain, ZKUSDLoss);
         emit UserDepositChanged(msg.sender, compoundedZKUSDDeposit);
 
-        ETH = ETH.sub(depositorETHGain);
-        emit StabilityPoolETHBalanceUpdated(ETH);
-        emit EtherSent(msg.sender, depositorETHGain);
+        NEON = NEON.sub(depositorNEONGain);
+        emit StabilityPoolNEONBalanceUpdated(NEON);
+        emit EtherSent(msg.sender, depositorNEONGain);
 
-        borrowerOperations.moveETHGainToTrove{value: depositorETHGain}(
+        borrowerOperations.moveNEONGainToTrove{value: depositorNEONGain}(
             msg.sender,
             _upperHint,
             _lowerHint
@@ -499,7 +501,7 @@ contract StabilityPool is
 
     /*
      * Cancels out the specified debt against the ZKUSD contained in the Stability Pool (as far as possible)
-     * and transfers the Trove's ETH collateral from ActivePool to StabilityPool.
+     * and transfers the Trove's NEON collateral from ActivePool to StabilityPool.
      * Only called by liquidation functions in the TroveManager.
      */
     function offset(
@@ -515,12 +517,12 @@ contract StabilityPool is
         _triggerZKTIssuance(communityIssuance);
 
         (
-            uint256 ETHGainPerUnitStaked,
+            uint256 NEONGainPerUnitStaked,
             uint256 ZKUSDLossPerUnitStaked
         ) = _computeRewardsPerUnitStaked(_collToAdd, _debtToOffset, totalZKUSD);
 
         _updateRewardSumAndProduct(
-            ETHGainPerUnitStaked,
+            NEONGainPerUnitStaked,
             ZKUSDLossPerUnitStaked
         ); // updates S and P
 
@@ -535,10 +537,10 @@ contract StabilityPool is
         uint256 _totalZKUSDDeposits
     )
         internal
-        returns (uint256 ETHGainPerUnitStaked, uint256 ZKUSDLossPerUnitStaked)
+        returns (uint256 NEONGainPerUnitStaked, uint256 ZKUSDLossPerUnitStaked)
     {
         /*
-         * Compute the ZKUSD and ETH rewards. Uses a "feedback" error correction, to keep
+         * Compute the ZKUSD and NEON rewards. Uses a "feedback" error correction, to keep
          * the cumulative error in the P and S state variables low:
          *
          * 1) Form numerators which compensate for the floor division errors that occurred the last time this
@@ -548,8 +550,8 @@ contract StabilityPool is
          * 4) Store these errors for use in the next correction when this function is called.
          * 5) Note: static analysis tools complain about this "division before multiplication", however, it is intended.
          */
-        uint256 ETHNumerator = _collToAdd.mul(DECIMAL_PRECISION).add(
-            lastETHError_Offset
+        uint256 NEONNumerator = _collToAdd.mul(DECIMAL_PRECISION).add(
+            lastNEONError_Offset
         );
 
         assert(_debtToOffset <= _totalZKUSDDeposits);
@@ -572,17 +574,17 @@ contract StabilityPool is
             ).sub(ZKUSDLossNumerator);
         }
 
-        ETHGainPerUnitStaked = ETHNumerator.div(_totalZKUSDDeposits);
-        lastETHError_Offset = ETHNumerator.sub(
-            ETHGainPerUnitStaked.mul(_totalZKUSDDeposits)
+        NEONGainPerUnitStaked = NEONNumerator.div(_totalZKUSDDeposits);
+        lastNEONError_Offset = NEONNumerator.sub(
+            NEONGainPerUnitStaked.mul(_totalZKUSDDeposits)
         );
 
-        return (ETHGainPerUnitStaked, ZKUSDLossPerUnitStaked);
+        return (NEONGainPerUnitStaked, ZKUSDLossPerUnitStaked);
     }
 
     // Update the Stability Pool reward sum S and product P
     function _updateRewardSumAndProduct(
-        uint256 _ETHGainPerUnitStaked,
+        uint256 _NEONGainPerUnitStaked,
         uint256 _ZKUSDLossPerUnitStaked
     ) internal {
         uint256 currentP = P;
@@ -605,13 +607,13 @@ contract StabilityPool is
 
         /*
          * Calculate the new S first, before we update P.
-         * The ETH gain for any given depositor from a liquidation depends on the value of their deposit
+         * The NEON gain for any given depositor from a liquidation depends on the value of their deposit
          * (and the value of totalDeposits) prior to the Stability being depleted by the debt in the liquidation.
          *
-         * Since S corresponds to ETH gain, and P to deposit loss, we update S first.
+         * Since S corresponds to NEON gain, and P to deposit loss, we update S first.
          */
-        uint256 marginalETHGain = _ETHGainPerUnitStaked.mul(currentP);
-        uint256 newS = currentS.add(marginalETHGain);
+        uint256 marginalNEONGain = _NEONGainPerUnitStaked.mul(currentP);
+        uint256 newS = currentS.add(marginalNEONGain);
         epochToScaleToSum[currentEpochCached][currentScaleCached] = newS;
         emit S_Updated(newS, currentEpochCached, currentScaleCached);
 
@@ -655,7 +657,7 @@ contract StabilityPool is
         // Burn the debt that was successfully offset
         zkusdToken.burn(address(this), _debtToOffset);
 
-        activePoolCached.sendETH(address(this), _collToAdd);
+        activePoolCached.sendNEON(address(this), _collToAdd);
     }
 
     function _decreaseZKUSD(uint256 _amount) internal {
@@ -666,12 +668,12 @@ contract StabilityPool is
 
     // --- Reward calculator functions for depositor and front end ---
 
-    /* Calculates the ETH gain earned by the deposit since its last snapshots were taken.
+    /* Calculates the NEON gain earned by the deposit since its last snapshots were taken.
      * Given by the formula:  E = d0 * (S - S(0))/P(0)
      * where S(0) and P(0) are the depositor's snapshots of the sum S and product P, respectively.
      * d0 is the last recorded deposit value.
      */
-    function getDepositorETHGain(
+    function getDepositorNEONGain(
         address _depositor
     ) public view override returns (uint256) {
         uint256 initialDeposit = deposits[_depositor];
@@ -682,17 +684,17 @@ contract StabilityPool is
 
         Snapshots memory snapshots = depositSnapshots[_depositor];
 
-        uint256 ETHGain = _getETHGainFromSnapshots(initialDeposit, snapshots);
-        return ETHGain;
+        uint256 NEONGain = _getNEONGainFromSnapshots(initialDeposit, snapshots);
+        return NEONGain;
     }
 
-    function _getETHGainFromSnapshots(
+    function _getNEONGainFromSnapshots(
         uint256 initialDeposit,
         Snapshots memory snapshots
     ) internal view returns (uint256) {
         /*
-         * Grab the sum 'S' from the epoch at which the stake was made. The ETH gain may span up to one scale change.
-         * If it does, the second portion of the ETH gain is scaled by 1e9.
+         * Grab the sum 'S' from the epoch at which the stake was made. The NEON gain may span up to one scale change.
+         * If it does, the second portion of the NEON gain is scaled by 1e9.
          * If the gain spans no scale change, the second portion will be 0.
          */
         uint256 epochSnapshot = snapshots.epoch;
@@ -706,12 +708,12 @@ contract StabilityPool is
             scaleSnapshot.add(1)
         ].div(SCALE_FACTOR);
 
-        uint256 ETHGain = initialDeposit
+        uint256 NEONGain = initialDeposit
             .mul(firstPortion.add(secondPortion))
             .div(P_Snapshot)
             .div(DECIMAL_PRECISION);
 
-        return ETHGain;
+        return NEONGain;
     }
 
     /*
@@ -886,7 +888,7 @@ contract StabilityPool is
         return compoundedStake;
     }
 
-    // --- Sender functions for ZKUSD deposit, ETH gains and ZKT gains ---
+    // --- Sender functions for ZKUSD deposit, NEON gains and ZKT gains ---
 
     // Transfer the ZKUSD tokens from the user to the Stability Pool's address, and update its recorded ZKUSD
     function _sendZKUSDtoStabilityPool(
@@ -899,17 +901,17 @@ contract StabilityPool is
         emit StabilityPoolZKUSDBalanceUpdated(newTotalZKUSDDeposits);
     }
 
-    function _sendETHGainToDepositor(uint256 _amount) internal {
+    function _sendNEONGainToDepositor(uint256 _amount) internal {
         if (_amount == 0) {
             return;
         }
-        uint256 newETH = ETH.sub(_amount);
-        ETH = newETH;
-        emit StabilityPoolETHBalanceUpdated(newETH);
+        uint256 newNEON = NEON.sub(_amount);
+        NEON = newNEON;
+        emit StabilityPoolNEONBalanceUpdated(newNEON);
         emit EtherSent(msg.sender, _amount);
 
         (bool success, ) = msg.sender.call{value: _amount}("");
-        require(success, "StabilityPool: sending ETH failed");
+        require(success, "StabilityPool: sending NEON failed");
     }
 
     // Send ZKUSD to user and decrease ZKUSD in Pool
@@ -1053,15 +1055,15 @@ contract StabilityPool is
     function _requireUserHasTrove(address _depositor) internal view {
         require(
             troveManager.getTroveStatus(_depositor) == 1,
-            "StabilityPool: caller must have an active trove to withdraw ETHGain to"
+            "StabilityPool: caller must have an active trove to withdraw NEONGain to"
         );
     }
 
-    function _requireUserHasETHGain(address _depositor) internal view {
-        uint256 ETHGain = getDepositorETHGain(_depositor);
+    function _requireUserHasNEONGain(address _depositor) internal view {
+        uint256 NEONGain = getDepositorNEONGain(_depositor);
         require(
-            ETHGain > 0,
-            "StabilityPool: caller must have non-zero ETH Gain"
+            NEONGain > 0,
+            "StabilityPool: caller must have non-zero NEON Gain"
         );
     }
 
@@ -1076,7 +1078,7 @@ contract StabilityPool is
 
     receive() external payable {
         _requireCallerIsActivePool();
-        ETH = ETH.add(msg.value);
-        emit StabilityPoolETHBalanceUpdated(ETH);
+        NEON = NEON.add(msg.value);
+        emit StabilityPoolNEONBalanceUpdated(NEON);
     }
 }

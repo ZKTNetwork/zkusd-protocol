@@ -35,9 +35,6 @@ contract("StabilityPool", async (accounts) => {
     D,
     E,
     F,
-    
-    
-    
   ] = accounts;
 
   const [bountyAddress, lpRewardsAddress, multisig] = accounts.slice(997, 1000);
@@ -133,12 +130,10 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(alice_depositRecord_Before, 0);
 
       // provideToSP()
-      await stabilityPool.provideToSP(200,{ from: alice });
+      await stabilityPool.provideToSP(200, { from: alice });
 
       // check user's deposit record after
-      const alice_depositRecord_After = (
-        await stabilityPool.deposits(alice)
-      );
+      const alice_depositRecord_After = await stabilityPool.deposits(alice);
       assert.equal(alice_depositRecord_After, 200);
     });
 
@@ -168,7 +163,7 @@ contract("StabilityPool", async (accounts) => {
     it("provideToSP(): increases totalZKUSDDeposits by correct amount", async () => {
       // --- SETUP ---
 
-      // Whale opens Trove with 50 ETH, adds 2000 ZKUSD to StabilityPool
+      // Whale opens Trove with 50 NEON, adds 2000 ZKUSD to StabilityPool
       await openTrove({
         extraZKUSDAmount: toBN(dec(2000, 18)),
         ICR: toBN(dec(2, 18)),
@@ -192,7 +187,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: whale, value: dec(50, "ether") },
       });
       const whaleZKUSD = await zkusdToken.balanceOf(whale);
-      await stabilityPool.provideToSP(whaleZKUSD,  { from: whale });
+      await stabilityPool.provideToSP(whaleZKUSD, { from: whale });
 
       // 2 Troves opened, each withdraws minimum debt
       await openTrove({
@@ -245,7 +240,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(alice_snapshot_G_Before, "0");
 
       // Make deposit
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
 
@@ -269,7 +264,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: whale, value: dec(50, "ether") },
       });
       const whaleZKUSD = await zkusdToken.balanceOf(whale);
-      await stabilityPool.provideToSP(whaleZKUSD,  { from: whale });
+      await stabilityPool.provideToSP(whaleZKUSD, { from: whale });
 
       // 3 Troves opened. Two users withdraw 160 ZKUSD each
       await openTrove({
@@ -296,7 +291,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(3, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(150, 18),  {
+      await stabilityPool.provideToSP(dec(150, 18), {
         from: alice,
       });
 
@@ -318,7 +313,7 @@ contract("StabilityPool", async (accounts) => {
 
       // Alice makes deposit #2
       const alice_topUp_1 = toBN(dec(100, 18));
-      await stabilityPool.provideToSP(alice_topUp_1,  {
+      await stabilityPool.provideToSP(alice_topUp_1, {
         from: alice,
       });
 
@@ -349,7 +344,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: bob },
       });
-      await stabilityPool.provideToSP(dec(427, 18),  {
+      await stabilityPool.provideToSP(dec(427, 18), {
         from: alice,
       });
 
@@ -365,7 +360,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(S_2.gt(S_1));
 
       // Alice makes deposit #3:  100ZKUSD
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
 
@@ -401,7 +396,7 @@ contract("StabilityPool", async (accounts) => {
 
       const aliceTxPromise = stabilityPool.provideToSP(
         aliceZKUSDbal.add(toBN(1)),
-        
+
         { from: alice }
       );
       await assertRevert(aliceTxPromise, "revert");
@@ -410,7 +405,7 @@ contract("StabilityPool", async (accounts) => {
 
       const bobTxPromise = stabilityPool.provideToSP(
         bobZKUSDbal.add(toBN(dec(235534, 18))),
-        
+
         { from: bob }
       );
       await assertRevert(bobTxPromise, "revert");
@@ -439,7 +434,7 @@ contract("StabilityPool", async (accounts) => {
 
       // Alice attempts to deposit 2^256-1 ZKUSD
       try {
-        aliceTx = await stabilityPool.provideToSP(maxBytes32,  {
+        aliceTx = await stabilityPool.provideToSP(maxBytes32, {
           from: alice,
         });
         assert.isFalse(tx.receipt.status);
@@ -448,7 +443,7 @@ contract("StabilityPool", async (accounts) => {
       }
     });
 
-    it("provideToSP(): reverts if cannot receive ETH Gain", async () => {
+    it("provideToSP(): reverts if cannot receive NEON Gain", async () => {
       // --- SETUP ---
       // Whale deposits 1850 ZKUSD in StabilityPool
       await openTrove({
@@ -456,7 +451,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: whale, value: dec(50, "ether") },
       });
-      await stabilityPool.provideToSP(dec(1850, 18),  {
+      await stabilityPool.provideToSP(dec(1850, 18), {
         from: whale,
       });
 
@@ -485,7 +480,7 @@ contract("StabilityPool", async (accounts) => {
       ]);
       const tx1 = await nonPayable.forward(stabilityPool.address, txData1);
 
-      const gain_0 = await stabilityPool.getDepositorETHGain(
+      const gain_0 = await stabilityPool.getDepositorNEONGain(
         nonPayable.address
       );
       assert.isTrue(
@@ -500,7 +495,7 @@ contract("StabilityPool", async (accounts) => {
       await troveManager.liquidate(defaulter_1, { from: owner });
       await troveManager.liquidate(defaulter_2, { from: owner });
 
-      const gain_1 = await stabilityPool.getDepositorETHGain(
+      const gain_1 = await stabilityPool.getDepositorNEONGain(
         nonPayable.address
       );
       assert.isTrue(
@@ -508,17 +503,17 @@ contract("StabilityPool", async (accounts) => {
         "NonPayable should have some accumulated gains"
       );
 
-      // NonPayable tries to make deposit #2: 100ZKUSD (which also attempts to withdraw ETH gain)
+      // NonPayable tries to make deposit #2: 100ZKUSD (which also attempts to withdraw NEON gain)
       const txData2 = th.getTransactionData("provideToSP(uint256)", [
         web3.utils.toHex(dec(100, 18)),
       ]);
       await th.assertRevert(
         nonPayable.forward(stabilityPool.address, txData2),
-        "StabilityPool: sending ETH failed"
+        "StabilityPool: sending NEON failed"
       );
     });
 
-    it("provideToSP(): doesn't impact other users' deposits or ETH gains", async () => {
+    it("provideToSP(): doesn't impact other users' deposits or NEON gains", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(2, 18)),
@@ -542,11 +537,11 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18),  {
+      await stabilityPool.provideToSP(dec(2000, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18), {
         from: carol,
       });
 
@@ -588,24 +583,24 @@ contract("StabilityPool", async (accounts) => {
         await stabilityPool.getCompoundedZKUSDDeposit(carol)
       ).toString();
 
-      const alice_ETHGain_Before = (
-        await stabilityPool.getDepositorETHGain(alice)
+      const alice_NEONGain_Before = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_Before = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_Before = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
-      const carol_ETHGain_Before = (
-        await stabilityPool.getDepositorETHGain(carol)
+      const carol_NEONGain_Before = (
+        await stabilityPool.getDepositorNEONGain(carol)
       ).toString();
 
-      //check non-zero ZKUSD and ETHGain in the Stability Pool
+      //check non-zero ZKUSD and NEONGain in the Stability Pool
       const ZKUSDinSP = await stabilityPool.getTotalZKUSDDeposits();
-      const ETHinSP = await stabilityPool.getETH();
+      const NEONinSP = await stabilityPool.getNEON();
       assert.isTrue(ZKUSDinSP.gt(mv._zeroBN));
-      assert.isTrue(ETHinSP.gt(mv._zeroBN));
+      assert.isTrue(NEONinSP.gt(mv._zeroBN));
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: dennis,
       });
       assert.equal(
@@ -623,24 +618,24 @@ contract("StabilityPool", async (accounts) => {
         await stabilityPool.getCompoundedZKUSDDeposit(carol)
       ).toString();
 
-      const alice_ETHGain_After = (
-        await stabilityPool.getDepositorETHGain(alice)
+      const alice_NEONGain_After = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_After = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_After = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
-      const carol_ETHGain_After = (
-        await stabilityPool.getDepositorETHGain(carol)
+      const carol_NEONGain_After = (
+        await stabilityPool.getDepositorNEONGain(carol)
       ).toString();
 
-      // Check compounded deposits and ETH gains for A, B and C have not changed
+      // Check compounded deposits and NEON gains for A, B and C have not changed
       assert.equal(alice_ZKUSDDeposit_Before, alice_ZKUSDDeposit_After);
       assert.equal(bob_ZKUSDDeposit_Before, bob_ZKUSDDeposit_After);
       assert.equal(carol_ZKUSDDeposit_Before, carol_ZKUSDDeposit_After);
 
-      assert.equal(alice_ETHGain_Before, alice_ETHGain_After);
-      assert.equal(bob_ETHGain_Before, bob_ETHGain_After);
-      assert.equal(carol_ETHGain_Before, carol_ETHGain_After);
+      assert.equal(alice_NEONGain_Before, alice_NEONGain_After);
+      assert.equal(bob_NEONGain_Before, bob_NEONGain_After);
+      assert.equal(carol_NEONGain_Before, carol_NEONGain_After);
     });
 
     it("provideToSP(): doesn't impact system debt, collateral or TCR", async () => {
@@ -667,11 +662,11 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18),  {
+      await stabilityPool.provideToSP(dec(2000, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18), {
         from: carol,
       });
 
@@ -707,12 +702,12 @@ contract("StabilityPool", async (accounts) => {
       const defaultedDebt_Before = (
         await defaultPool.getZKUSDDebt()
       ).toString();
-      const activeColl_Before = (await activePool.getETH()).toString();
-      const defaultedColl_Before = (await defaultPool.getETH()).toString();
+      const activeColl_Before = (await activePool.getNEON()).toString();
+      const defaultedColl_Before = (await defaultPool.getNEON()).toString();
       const TCR_Before = (await th.getTCR(contracts)).toString();
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: dennis,
       });
       assert.equal(
@@ -722,8 +717,8 @@ contract("StabilityPool", async (accounts) => {
 
       const activeDebt_After = (await activePool.getZKUSDDebt()).toString();
       const defaultedDebt_After = (await defaultPool.getZKUSDDebt()).toString();
-      const activeColl_After = (await activePool.getETH()).toString();
-      const defaultedColl_After = (await defaultPool.getETH()).toString();
+      const activeColl_After = (await activePool.getNEON()).toString();
+      const defaultedColl_After = (await defaultPool.getNEON()).toString();
       const TCR_After = (await th.getTCR(contracts)).toString();
 
       // Check total system debt, collateral and TCR have not changed after a Stability deposit is made
@@ -759,10 +754,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(2000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(2000, 18), { from: bob });
 
       // D opens a trove
       await openTrove({
@@ -821,7 +816,7 @@ contract("StabilityPool", async (accounts) => {
       ).toString();
 
       // D makes an SP deposit
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: dennis,
       });
       assert.equal(
@@ -905,10 +900,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B provide 100 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  {
+      await stabilityPool.provideToSP(dec(1000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: bob });
 
       // Confirm Bob has an active trove in the system
       assert.isTrue(await sortedTroves.contains(bob));
@@ -958,11 +953,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18), { from: carol });
 
       const bob_Deposit_Before = (
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
@@ -974,7 +969,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(ZKUSDinSP_Before, dec(180, 18));
 
       // Bob provides 0 ZKUSD to the Stability Pool
-      const txPromise_B = stabilityPool.provideToSP(0,  {
+      const txPromise_B = stabilityPool.provideToSP(0, {
         from: bob,
       });
       await th.assertRevert(txPromise_B);
@@ -1006,7 +1001,7 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: A });
 
       let currentEpoch = await stabilityPool.currentEpoch();
       let currentScale = await stabilityPool.currentScale();
@@ -1021,7 +1016,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: B });
 
       currentEpoch = await stabilityPool.currentEpoch();
       currentScale = await stabilityPool.currentScale();
@@ -1059,7 +1054,7 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: A });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1088,7 +1083,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B provides to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: B });
 
       currentEpoch = await stabilityPool.currentEpoch();
       currentScale = await stabilityPool.currentScale();
@@ -1133,8 +1128,8 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // A, B provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(2000, 18), { from: B });
 
       // Get A, B, C ZKT balances after, and confirm they're still zero
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1183,10 +1178,10 @@ contract("StabilityPool", async (accounts) => {
       const initialDeposit_A = await zkusdToken.balanceOf(A);
       const initialDeposit_B = await zkusdToken.balanceOf(B);
       // A, B provide to SP
-      await stabilityPool.provideToSP(initialDeposit_A,  {
+      await stabilityPool.provideToSP(initialDeposit_A, {
         from: A,
       });
-      await stabilityPool.provideToSP(initialDeposit_B,  {
+      await stabilityPool.provideToSP(initialDeposit_B, {
         from: B,
       });
 
@@ -1197,9 +1192,9 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // C deposits. A, and B earn ZKT
-      await stabilityPool.provideToSP(dec(5, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(5, 18), { from: C });
 
-      // Price drops, defaulter is liquidated, A, B and C earn ETH
+      // Price drops, defaulter is liquidated, A, B and C earn NEON
       await priceFeed.setPrice(dec(105, 18));
       assert.isFalse(await th.checkRecoveryMode(contracts));
 
@@ -1226,8 +1221,8 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // A, B provide to SP
-      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(200, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(100, 18), { from: A });
+      await stabilityPool.provideToSP(dec(200, 18), { from: B });
 
       // Get A, B, C ZKT balances after, and confirm they have not changed
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1237,7 +1232,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(B_ZKTBalance_After.eq(B_ZKTBalance_Before));
     });
 
-    it("provideToSP(), new deposit: depositor does not receive ETH gains", async () => {
+    it("provideToSP(), new deposit: depositor does not receive NEON gains", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -1262,58 +1257,58 @@ contract("StabilityPool", async (accounts) => {
 
       // --- TEST ---
 
-      // get current ETH balances
-      const A_ETHBalance_Before = await web3.eth.getBalance(A);
-      const B_ETHBalance_Before = await web3.eth.getBalance(B);
-      const C_ETHBalance_Before = await web3.eth.getBalance(C);
-      const D_ETHBalance_Before = await web3.eth.getBalance(D);
+      // get current NEON balances
+      const A_NEONBalance_Before = await web3.eth.getBalance(A);
+      const B_NEONBalance_Before = await web3.eth.getBalance(B);
+      const C_NEONBalance_Before = await web3.eth.getBalance(C);
+      const D_NEONBalance_Before = await web3.eth.getBalance(D);
 
       // A, B, C, D provide to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(100, 18),  {
+        await stabilityPool.provideToSP(dec(100, 18), {
           from: A,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(200, 18),  {
+        await stabilityPool.provideToSP(dec(200, 18), {
           from: B,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(300, 18),  {
+        await stabilityPool.provideToSP(dec(300, 18), {
           from: C,
           gasPrice: GAS_PRICE,
         })
       );
       const D_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(400, 18),  {
+        await stabilityPool.provideToSP(dec(400, 18), {
           from: D,
           gasPrice: GAS_PRICE,
         })
       );
 
-      // ETH balances before minus gas used
-      const A_expectedBalance = A_ETHBalance_Before - A_GAS_Used;
-      const B_expectedBalance = B_ETHBalance_Before - B_GAS_Used;
-      const C_expectedBalance = C_ETHBalance_Before - C_GAS_Used;
-      const D_expectedBalance = D_ETHBalance_Before - D_GAS_Used;
+      // NEON balances before minus gas used
+      const A_expectedBalance = A_NEONBalance_Before - A_GAS_Used;
+      const B_expectedBalance = B_NEONBalance_Before - B_GAS_Used;
+      const C_expectedBalance = C_NEONBalance_Before - C_GAS_Used;
+      const D_expectedBalance = D_NEONBalance_Before - D_GAS_Used;
 
-      // Get  ETH balances after
-      const A_ETHBalance_After = await web3.eth.getBalance(A);
-      const B_ETHBalance_After = await web3.eth.getBalance(B);
-      const C_ETHBalance_After = await web3.eth.getBalance(C);
-      const D_ETHBalance_After = await web3.eth.getBalance(D);
+      // Get  NEON balances after
+      const A_NEONBalance_After = await web3.eth.getBalance(A);
+      const B_NEONBalance_After = await web3.eth.getBalance(B);
+      const C_NEONBalance_After = await web3.eth.getBalance(C);
+      const D_NEONBalance_After = await web3.eth.getBalance(D);
 
-      // Check ETH balances have not changed
-      assert.equal(A_ETHBalance_After, A_expectedBalance);
-      assert.equal(B_ETHBalance_After, B_expectedBalance);
-      assert.equal(C_ETHBalance_After, C_expectedBalance);
-      assert.equal(D_ETHBalance_After, D_expectedBalance);
+      // Check NEON balances have not changed
+      assert.equal(A_NEONBalance_After, A_expectedBalance);
+      assert.equal(B_NEONBalance_After, B_expectedBalance);
+      assert.equal(C_NEONBalance_After, C_expectedBalance);
+      assert.equal(D_NEONBalance_After, D_expectedBalance);
     });
 
-    it("provideToSP(), new deposit after past full withdrawal: depositor does not receive ETH gains", async () => {
+    it("provideToSP(), new deposit after past full withdrawal: depositor does not receive NEON gains", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -1343,10 +1338,10 @@ contract("StabilityPool", async (accounts) => {
 
       // --- SETUP ---
       // A, B, C, D provide to SP
-      await stabilityPool.provideToSP(dec(105, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(105, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(105, 18),  { from: C });
-      await stabilityPool.provideToSP(dec(105, 18),  { from: D });
+      await stabilityPool.provideToSP(dec(105, 18), { from: A });
+      await stabilityPool.provideToSP(dec(105, 18), { from: B });
+      await stabilityPool.provideToSP(dec(105, 18), { from: C });
+      await stabilityPool.provideToSP(dec(105, 18), { from: D });
 
       // time passes
       await th.fastForwardTime(
@@ -1355,9 +1350,9 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B deposits. A,B,C,D earn ZKT
-      await stabilityPool.provideToSP(dec(5, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(5, 18), { from: B });
 
-      // Price drops, defaulter is liquidated, A, B, C, D earn ETH
+      // Price drops, defaulter is liquidated, A, B, C, D earn NEON
       await priceFeed.setPrice(dec(105, 18));
       assert.isFalse(await th.checkRecoveryMode(contracts));
 
@@ -1374,59 +1369,59 @@ contract("StabilityPool", async (accounts) => {
 
       // --- TEST ---
 
-      // get current ETH balances
-      const A_ETHBalance_Before = await web3.eth.getBalance(A);
-      const B_ETHBalance_Before = await web3.eth.getBalance(B);
-      const C_ETHBalance_Before = await web3.eth.getBalance(C);
-      const D_ETHBalance_Before = await web3.eth.getBalance(D);
+      // get current NEON balances
+      const A_NEONBalance_Before = await web3.eth.getBalance(A);
+      const B_NEONBalance_Before = await web3.eth.getBalance(B);
+      const C_NEONBalance_Before = await web3.eth.getBalance(C);
+      const D_NEONBalance_Before = await web3.eth.getBalance(D);
 
       // A, B, C, D provide to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(100, 18),  {
+        await stabilityPool.provideToSP(dec(100, 18), {
           from: A,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(200, 18),  {
+        await stabilityPool.provideToSP(dec(200, 18), {
           from: B,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(300, 18),  {
+        await stabilityPool.provideToSP(dec(300, 18), {
           from: C,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
       const D_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(400, 18),  {
+        await stabilityPool.provideToSP(dec(400, 18), {
           from: D,
           gasPrice: GAS_PRICE,
           gasPrice: GAS_PRICE,
         })
       );
 
-      // ETH balances before minus gas used
-      const A_expectedBalance = A_ETHBalance_Before - A_GAS_Used;
-      const B_expectedBalance = B_ETHBalance_Before - B_GAS_Used;
-      const C_expectedBalance = C_ETHBalance_Before - C_GAS_Used;
-      const D_expectedBalance = D_ETHBalance_Before - D_GAS_Used;
+      // NEON balances before minus gas used
+      const A_expectedBalance = A_NEONBalance_Before - A_GAS_Used;
+      const B_expectedBalance = B_NEONBalance_Before - B_GAS_Used;
+      const C_expectedBalance = C_NEONBalance_Before - C_GAS_Used;
+      const D_expectedBalance = D_NEONBalance_Before - D_GAS_Used;
 
-      // Get  ETH balances after
-      const A_ETHBalance_After = await web3.eth.getBalance(A);
-      const B_ETHBalance_After = await web3.eth.getBalance(B);
-      const C_ETHBalance_After = await web3.eth.getBalance(C);
-      const D_ETHBalance_After = await web3.eth.getBalance(D);
+      // Get  NEON balances after
+      const A_NEONBalance_After = await web3.eth.getBalance(A);
+      const B_NEONBalance_After = await web3.eth.getBalance(B);
+      const C_NEONBalance_After = await web3.eth.getBalance(C);
+      const D_NEONBalance_After = await web3.eth.getBalance(D);
 
-      // Check ETH balances have not changed
-      assert.equal(A_ETHBalance_After, A_expectedBalance);
-      assert.equal(B_ETHBalance_After, B_expectedBalance);
-      assert.equal(C_ETHBalance_After, C_expectedBalance);
-      assert.equal(D_ETHBalance_After, D_expectedBalance);
+      // Check NEON balances have not changed
+      assert.equal(A_NEONBalance_After, A_expectedBalance);
+      assert.equal(B_NEONBalance_After, B_expectedBalance);
+      assert.equal(C_NEONBalance_After, C_expectedBalance);
+      assert.equal(D_NEONBalance_After, D_expectedBalance);
     });
 
     it("provideToSP(), topup: triggers ZKT reward event - increases the sum G", async () => {
@@ -1454,9 +1449,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provide to SP
-      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(50, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(50, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(100, 18), { from: A });
+      await stabilityPool.provideToSP(dec(50, 18), { from: B });
+      await stabilityPool.provideToSP(dec(50, 18), { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1471,7 +1466,7 @@ contract("StabilityPool", async (accounts) => {
       );
 
       // B tops up
-      await stabilityPool.provideToSP(dec(100, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(100, 18), { from: B });
 
       const G_After = await stabilityPool.epochToScaleToG(0, 0);
 
@@ -1504,9 +1499,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(10, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20, 18), { from: B });
+      await stabilityPool.provideToSP(dec(30, 18), { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -1519,9 +1514,9 @@ contract("StabilityPool", async (accounts) => {
       const C_ZKTBalance_Before = await zkToken.balanceOf(C);
 
       // A, B, C top up
-      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(10, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20, 18), { from: B });
+      await stabilityPool.provideToSP(dec(30, 18), { from: C });
 
       // Get ZKT balance after
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -1577,9 +1572,9 @@ contract("StabilityPool", async (accounts) => {
       const deposit_C = dec(300, 18);
 
       // A, B, C make their initial deposits
-      await stabilityPool.provideToSP(deposit_A,  { from: A });
-      await stabilityPool.provideToSP(deposit_B,  { from: B });
-      await stabilityPool.provideToSP(deposit_C,  { from: C });
+      await stabilityPool.provideToSP(deposit_A, { from: A });
+      await stabilityPool.provideToSP(deposit_B, { from: B });
+      await stabilityPool.provideToSP(deposit_C, { from: C });
 
       // fastforward time then make an SP deposit, to make G > 0
       await th.fastForwardTime(
@@ -1589,7 +1584,7 @@ contract("StabilityPool", async (accounts) => {
 
       await stabilityPool.provideToSP(
         await zkusdToken.balanceOf(D),
-        
+
         { from: D }
       );
 
@@ -1626,19 +1621,19 @@ contract("StabilityPool", async (accounts) => {
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_A,  { from: A });
+      await stabilityPool.provideToSP(deposit_A, { from: A });
 
       const G2 = await stabilityPool.epochToScaleToG(
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_B,  { from: B });
+      await stabilityPool.provideToSP(deposit_B, { from: B });
 
       const G3 = await stabilityPool.epochToScaleToG(
         currentScale,
         currentEpoch
       );
-      await stabilityPool.provideToSP(deposit_C,  { from: C });
+      await stabilityPool.provideToSP(deposit_C, { from: C });
     });
 
     it("provideToSP(): reverts when amount is zero", async () => {
@@ -1663,10 +1658,10 @@ contract("StabilityPool", async (accounts) => {
       await zkusdToken.transfer(C, dec(100, 18), { from: whale });
       await zkusdToken.transfer(D, dec(100, 18), { from: whale });
 
-      txPromise_A = stabilityPool.provideToSP(0,  { from: A });
-      txPromise_B = stabilityPool.provideToSP(0,  { from: B });
-      txPromise_C = stabilityPool.provideToSP(0,  { from: C });
-      txPromise_D = stabilityPool.provideToSP(0,  { from: D });
+      txPromise_A = stabilityPool.provideToSP(0, { from: A });
+      txPromise_B = stabilityPool.provideToSP(0, { from: B });
+      txPromise_C = stabilityPool.provideToSP(0, { from: C });
+      txPromise_D = stabilityPool.provideToSP(0, { from: D });
 
       await th.assertRevert(
         txPromise_A,
@@ -1700,16 +1695,14 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: bob },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
 
       const alice_initialDeposit = (
         await stabilityPool.deposits(alice)
       ).toString();
-      const bob_initialDeposit = (
-        await stabilityPool.deposits(bob)
-      ).toString();
+      const bob_initialDeposit = (await stabilityPool.deposits(bob)).toString();
 
       assert.equal(alice_initialDeposit, dec(100, 18));
       assert.equal(bob_initialDeposit, "0");
@@ -1738,7 +1731,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: alice },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
 
@@ -1753,7 +1746,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: defaulter_1 },
       });
 
-      // ETH drops, defaulter is in liquidation range (but not liquidated yet)
+      // NEON drops, defaulter is in liquidation range (but not liquidated yet)
       await priceFeed.setPrice(dec(100, 18));
 
       await th.assertRevert(
@@ -1761,7 +1754,7 @@ contract("StabilityPool", async (accounts) => {
       );
     });
 
-    it("withdrawFromSP(): partial retrieval - retrieves correct ZKUSD amount and the entire ETH Gain, and updates deposit", async () => {
+    it("withdrawFromSP(): partial retrieval - retrieves correct ZKUSD amount and the entire NEON Gain, and updates deposit", async () => {
       // --- SETUP ---
       // Whale deposits 185000 ZKUSD in StabilityPool
       await openTrove({
@@ -1769,7 +1762,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -1791,7 +1784,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -1849,11 +1842,11 @@ contract("StabilityPool", async (accounts) => {
         100000
       );
 
-      // Expect Alice has withdrawn all ETH gain
-      const alice_pendingETHGain = await stabilityPool.getDepositorETHGain(
+      // Expect Alice has withdrawn all NEON gain
+      const alice_pendingNEONGain = await stabilityPool.getDepositorNEONGain(
         alice
       );
-      assert.equal(alice_pendingETHGain, 0);
+      assert.equal(alice_pendingNEONGain, 0);
     });
 
     it("withdrawFromSP(): partial retrieval - leaves the correct amount of ZKUSD in the Stability Pool", async () => {
@@ -1864,7 +1857,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -1885,7 +1878,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -1935,7 +1928,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -1957,7 +1950,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -2020,7 +2013,7 @@ contract("StabilityPool", async (accounts) => {
       );
     });
 
-    it("withdrawFromSP(): Subsequent deposit and withdrawal attempt from same account, with no intermediate liquidations, withdraws zero ETH", async () => {
+    it("withdrawFromSP(): Subsequent deposit and withdrawal attempt from same account, with no intermediate liquidations, withdraws zero NEON", async () => {
       // --- SETUP ---
       // Whale deposits 1850 ZKUSD in StabilityPool
       await openTrove({
@@ -2028,7 +2021,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(18500, 18),  {
+      await stabilityPool.provideToSP(dec(18500, 18), {
         from: whale,
       });
 
@@ -2050,7 +2043,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -2063,38 +2056,38 @@ contract("StabilityPool", async (accounts) => {
 
       // Alice retrieves all of her entitled ZKUSD:
       await stabilityPool.withdrawFromSP(dec(15000, 18), { from: alice });
-      assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
+      assert.equal(await stabilityPool.getDepositorNEONGain(alice), 0);
 
       // Alice makes second deposit
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
+      assert.equal(await stabilityPool.getDepositorNEONGain(alice), 0);
 
-      const ETHinSP_Before = (await stabilityPool.getETH()).toString();
+      const NEONinSP_Before = (await stabilityPool.getNEON()).toString();
 
       // Alice attempts second withdrawal
       await stabilityPool.withdrawFromSP(dec(10000, 18), { from: alice });
-      assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
+      assert.equal(await stabilityPool.getDepositorNEONGain(alice), 0);
 
-      // Check ETH in pool does not change
-      const ETHinSP_1 = (await stabilityPool.getETH()).toString();
-      assert.equal(ETHinSP_Before, ETHinSP_1);
+      // Check NEON in pool does not change
+      const NEONinSP_1 = (await stabilityPool.getNEON()).toString();
+      assert.equal(NEONinSP_Before, NEONinSP_1);
 
       // Third deposit
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
+      assert.equal(await stabilityPool.getDepositorNEONGain(alice), 0);
 
       // Alice attempts third withdrawal (this time, frm SP to Trove)
-      const txPromise_A = stabilityPool.withdrawETHGainToTrove(alice, alice, {
+      const txPromise_A = stabilityPool.withdrawNEONGainToTrove(alice, alice, {
         from: alice,
       });
       await th.assertRevert(txPromise_A);
     });
 
-    it("withdrawFromSP(): it correctly updates the user's ZKUSD and ETH snapshots of entitled reward per unit staked", async () => {
+    it("withdrawFromSP(): it correctly updates the user's ZKUSD and NEON snapshots of entitled reward per unit staked", async () => {
       // --- SETUP ---
       // Whale deposits 185000 ZKUSD in StabilityPool
       await openTrove({
@@ -2102,7 +2095,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -2124,7 +2117,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -2155,7 +2148,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(alice_snapshot_P_After, P);
     });
 
-    it("withdrawFromSP(): decreases StabilityPool ETH", async () => {
+    it("withdrawFromSP(): decreases StabilityPool NEON", async () => {
       // --- SETUP ---
       // Whale deposits 185000 ZKUSD in StabilityPool
       await openTrove({
@@ -2163,7 +2156,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -2181,7 +2174,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -2196,31 +2189,31 @@ contract("StabilityPool", async (accounts) => {
         th.getEmittedLiquidationValues(liquidationTx_1);
 
       //Get ActivePool and StabilityPool Ether before retrieval:
-      const active_ETH_Before = await activePool.getETH();
-      const stability_ETH_Before = await stabilityPool.getETH();
+      const active_NEON_Before = await activePool.getNEON();
+      const stability_NEON_Before = await stabilityPool.getNEON();
 
       // Expect alice to be entitled to 15000/200000 of the liquidated coll
-      const aliceExpectedETHGain = liquidatedColl
+      const aliceExpectedNEONGain = liquidatedColl
         .mul(toBN(dec(15000, 18)))
         .div(toBN(dec(200000, 18)));
-      const aliceETHGain = await stabilityPool.getDepositorETHGain(alice);
-      assert.isTrue(aliceExpectedETHGain.eq(aliceETHGain));
+      const aliceNEONGain = await stabilityPool.getDepositorNEONGain(alice);
+      assert.isTrue(aliceExpectedNEONGain.eq(aliceNEONGain));
 
       // Alice retrieves all of her deposit
       await stabilityPool.withdrawFromSP(dec(15000, 18), { from: alice });
 
-      const active_ETH_After = await activePool.getETH();
-      const stability_ETH_After = await stabilityPool.getETH();
+      const active_NEON_After = await activePool.getNEON();
+      const stability_NEON_After = await stabilityPool.getNEON();
 
-      const active_ETH_Difference = active_ETH_Before.sub(active_ETH_After);
-      const stability_ETH_Difference =
-        stability_ETH_Before.sub(stability_ETH_After);
+      const active_NEON_Difference = active_NEON_Before.sub(active_NEON_After);
+      const stability_NEON_Difference =
+        stability_NEON_Before.sub(stability_NEON_After);
 
-      assert.equal(active_ETH_Difference, "0");
+      assert.equal(active_NEON_Difference, "0");
 
-      // Expect StabilityPool to have decreased by Alice's ETHGain
+      // Expect StabilityPool to have decreased by Alice's NEONGain
       assert.isAtMost(
-        th.getDifference(stability_ETH_Difference, aliceETHGain),
+        th.getDifference(stability_NEON_Difference, aliceNEONGain),
         10000
       );
     });
@@ -2243,7 +2236,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: account,
         });
       }
@@ -2303,7 +2296,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: account,
         });
       }
@@ -2320,7 +2313,7 @@ contract("StabilityPool", async (accounts) => {
       and thus with a deposit of 10000 ZKUSD, each should withdraw 8333.3333333333333333 ZKUSD (in practice, slightly less due to rounding error)
       */
 
-      // Price bounces back to $200 per ETH
+      // Price bounces back to $200 per NEON
       await priceFeed.setPrice(dec(200, 18));
 
       // Bob issues a further 5000 ZKUSD from his trove
@@ -2356,7 +2349,7 @@ contract("StabilityPool", async (accounts) => {
       );
     });
 
-    it("withdrawFromSP(): doesn't impact other users Stability deposits or ETH gains", async () => {
+    it("withdrawFromSP(): doesn't impact other users Stability deposits or NEON gains", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -2380,13 +2373,13 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18),  {
+      await stabilityPool.provideToSP(dec(20000, 18), {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18),  {
+      await stabilityPool.provideToSP(dec(30000, 18), {
         from: carol,
       });
 
@@ -2416,18 +2409,18 @@ contract("StabilityPool", async (accounts) => {
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
       ).toString();
 
-      const alice_ETHGain_Before = (
-        await stabilityPool.getDepositorETHGain(alice)
+      const alice_NEONGain_Before = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_Before = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_Before = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
 
-      //check non-zero ZKUSD and ETHGain in the Stability Pool
+      //check non-zero ZKUSD and NEONGain in the Stability Pool
       const ZKUSDinSP = await stabilityPool.getTotalZKUSDDeposits();
-      const ETHinSP = await stabilityPool.getETH();
+      const NEONinSP = await stabilityPool.getNEON();
       assert.isTrue(ZKUSDinSP.gt(mv._zeroBN));
-      assert.isTrue(ETHinSP.gt(mv._zeroBN));
+      assert.isTrue(NEONinSP.gt(mv._zeroBN));
 
       // Price rises
       await priceFeed.setPrice(dec(200, 18));
@@ -2447,19 +2440,19 @@ contract("StabilityPool", async (accounts) => {
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
       ).toString();
 
-      const alice_ETHGain_After = (
-        await stabilityPool.getDepositorETHGain(alice)
+      const alice_NEONGain_After = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_After = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_After = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
 
-      // Check compounded deposits and ETH gains for A and B have not changed
+      // Check compounded deposits and NEON gains for A and B have not changed
       assert.equal(alice_ZKUSDDeposit_Before, alice_ZKUSDDeposit_After);
       assert.equal(bob_ZKUSDDeposit_Before, bob_ZKUSDDeposit_After);
 
-      assert.equal(alice_ETHGain_Before, alice_ETHGain_After);
-      assert.equal(bob_ETHGain_Before, bob_ETHGain_After);
+      assert.equal(alice_NEONGain_Before, alice_NEONGain_After);
+      assert.equal(bob_NEONGain_Before, bob_NEONGain_After);
     });
 
     it("withdrawFromSP(): doesn't impact system debt, collateral or TCR ", async () => {
@@ -2486,13 +2479,13 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: carol },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18),  {
+      await stabilityPool.provideToSP(dec(20000, 18), {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18),  {
+      await stabilityPool.provideToSP(dec(30000, 18), {
         from: carol,
       });
 
@@ -2522,8 +2515,8 @@ contract("StabilityPool", async (accounts) => {
       const defaultedDebt_Before = (
         await defaultPool.getZKUSDDebt()
       ).toString();
-      const activeColl_Before = (await activePool.getETH()).toString();
-      const defaultedColl_Before = (await defaultPool.getETH()).toString();
+      const activeColl_Before = (await activePool.getNEON()).toString();
+      const defaultedColl_Before = (await defaultPool.getNEON()).toString();
       const TCR_Before = (await th.getTCR(contracts)).toString();
 
       // Carol withdraws her Stability deposit
@@ -2536,8 +2529,8 @@ contract("StabilityPool", async (accounts) => {
 
       const activeDebt_After = (await activePool.getZKUSDDebt()).toString();
       const defaultedDebt_After = (await defaultPool.getZKUSDDebt()).toString();
-      const activeColl_After = (await activePool.getETH()).toString();
-      const defaultedColl_After = (await defaultPool.getETH()).toString();
+      const activeColl_After = (await activePool.getNEON()).toString();
+      const defaultedColl_After = (await defaultPool.getNEON()).toString();
       const TCR_After = (await th.getTCR(contracts)).toString();
 
       // Check total system debt, collateral and TCR have not changed after a Stability deposit is made
@@ -2573,13 +2566,13 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B and C provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18),  {
+      await stabilityPool.provideToSP(dec(20000, 18), {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18),  {
+      await stabilityPool.provideToSP(dec(30000, 18), {
         from: carol,
       });
 
@@ -2681,7 +2674,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: A },
       });
 
-      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(100, 18), { from: A });
 
       const A_initialDeposit = (await stabilityPool.deposits(A)).toString();
       assert.equal(A_initialDeposit, dec(100, 18));
@@ -2696,7 +2689,7 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: defaulter_2 },
       });
 
-      // ETH drops, defaulters are in liquidation range
+      // NEON drops, defaulters are in liquidation range
       await priceFeed.setPrice(dec(105, 18));
       const price = await priceFeed.getPrice();
       assert.isTrue(
@@ -2718,13 +2711,13 @@ contract("StabilityPool", async (accounts) => {
       );
       assert.isTrue(await sortedTroves.contains(defaulter_2));
 
-      const A_ETHBalBefore = toBN(await web3.eth.getBalance(A));
+      const A_NEONBalBefore = toBN(await web3.eth.getBalance(A));
       const A_ZKTBalBefore = await zkToken.balanceOf(A);
 
       // Check Alice has gains to withdraw
-      const A_pendingETHGain = await stabilityPool.getDepositorETHGain(A);
+      const A_pendingNEONGain = await stabilityPool.getDepositorNEONGain(A);
       const A_pendingZKTGain = await stabilityPool.getDepositorZKTGain(A);
-      assert.isTrue(A_pendingETHGain.gt(toBN("0")));
+      assert.isTrue(A_pendingNEONGain.gt(toBN("0")));
       assert.isTrue(A_pendingZKTGain.gt(toBN("0")));
 
       // Check withdrawal of 0 succeeds
@@ -2734,17 +2727,19 @@ contract("StabilityPool", async (accounts) => {
       });
       assert.isTrue(tx.receipt.status);
 
-      const A_expectedBalance = A_ETHBalBefore.sub(
+      const A_expectedBalance = A_NEONBalBefore.sub(
         toBN(th.gasUsed(tx) * GAS_PRICE)
       );
 
-      const A_ETHBalAfter = toBN(await web3.eth.getBalance(A));
+      const A_NEONBalAfter = toBN(await web3.eth.getBalance(A));
 
       const A_ZKTBalAfter = await zkToken.balanceOf(A);
       const A_ZKTBalDiff = A_ZKTBalAfter.sub(A_ZKTBalBefore);
 
-      // Check A's ETH and ZKT balances have increased correctly
-      assert.isTrue(A_ETHBalAfter.sub(A_expectedBalance).eq(A_pendingETHGain));
+      // Check A's NEON and ZKT balances have increased correctly
+      assert.isTrue(
+        A_NEONBalAfter.sub(A_expectedBalance).eq(A_pendingNEONGain)
+      );
       assert.isAtMost(th.getDifference(A_ZKTBalDiff, A_pendingZKTGain), 1000);
     });
 
@@ -2774,11 +2769,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18), { from: carol });
 
       const bob_Deposit_Before = (
         await stabilityPool.getCompoundedZKUSDDeposit(bob)
@@ -2804,7 +2799,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(ZKUSDinSP_Before, ZKUSDinSP_After);
     });
 
-    it("withdrawFromSP(): withdrawing 0 ETH Gain does not alter the caller's ETH balance, their trove collateral, or the ETH  in the Stability Pool", async () => {
+    it("withdrawFromSP(): withdrawing 0 NEON Gain does not alter the caller's NEON balance, their trove collateral, or the NEON  in the Stability Pool", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -2849,42 +2844,42 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: dennis },
       });
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: dennis,
       });
 
-      // Check Dennis has 0 ETHGain
-      const dennis_ETHGain = (
-        await stabilityPool.getDepositorETHGain(dennis)
+      // Check Dennis has 0 NEONGain
+      const dennis_NEONGain = (
+        await stabilityPool.getDepositorNEONGain(dennis)
       ).toString();
-      assert.equal(dennis_ETHGain, "0");
+      assert.equal(dennis_NEONGain, "0");
 
-      const dennis_ETHBalance_Before = web3.eth.getBalance(dennis).toString();
+      const dennis_NEONBalance_Before = web3.eth.getBalance(dennis).toString();
       const dennis_Collateral_Before = (
         await troveManager.Troves(dennis)
       )[1].toString();
-      const ETHinSP_Before = (await stabilityPool.getETH()).toString();
+      const NEONinSP_Before = (await stabilityPool.getNEON()).toString();
 
       await priceFeed.setPrice(dec(200, 18));
 
-      // Dennis withdraws his full deposit and ETHGain to his account
+      // Dennis withdraws his full deposit and NEONGain to his account
       await stabilityPool.withdrawFromSP(dec(100, 18), {
         from: dennis,
         gasPrice: GAS_PRICE,
       });
 
-      // Check withdrawal does not alter Dennis' ETH balance or his trove's collateral
-      const dennis_ETHBalance_After = web3.eth.getBalance(dennis).toString();
+      // Check withdrawal does not alter Dennis' NEON balance or his trove's collateral
+      const dennis_NEONBalance_After = web3.eth.getBalance(dennis).toString();
       const dennis_Collateral_After = (
         await troveManager.Troves(dennis)
       )[1].toString();
-      const ETHinSP_After = (await stabilityPool.getETH()).toString();
+      const NEONinSP_After = (await stabilityPool.getNEON()).toString();
 
-      assert.equal(dennis_ETHBalance_Before, dennis_ETHBalance_After);
+      assert.equal(dennis_NEONBalance_Before, dennis_NEONBalance_After);
       assert.equal(dennis_Collateral_Before, dennis_Collateral_After);
 
-      // Check withdrawal has not altered the ETH in the Stability Pool
-      assert.equal(ETHinSP_Before, ETHinSP_After);
+      // Check withdrawal has not altered the NEON in the Stability Pool
+      assert.equal(NEONinSP_Before, NEONinSP_After);
     });
 
     it("withdrawFromSP(): Request to withdraw > caller's deposit only withdraws the caller's compounded deposit", async () => {
@@ -2919,13 +2914,13 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provide ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(20000, 18),  {
+      await stabilityPool.provideToSP(dec(20000, 18), {
         from: bob,
       });
-      await stabilityPool.provideToSP(dec(30000, 18),  {
+      await stabilityPool.provideToSP(dec(30000, 18), {
         from: carol,
       });
 
@@ -3023,11 +3018,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 100, 50, 30 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(100, 18),  {
+      await stabilityPool.provideToSP(dec(100, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(50, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: carol });
+      await stabilityPool.provideToSP(dec(50, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(30, 18), { from: carol });
 
       // Price drops
       await priceFeed.setPrice(dec(100, 18));
@@ -3071,7 +3066,7 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(ZKUSDinSP_After, expectedZKUSDinSP);
     });
 
-    it("withdrawFromSP(): caller can withdraw full deposit and ETH gain during Recovery Mode", async () => {
+    it("withdrawFromSP(): caller can withdraw full deposit and NEON gain during Recovery Mode", async () => {
       // --- SETUP ---
 
       // Price doubles
@@ -3111,19 +3106,19 @@ contract("StabilityPool", async (accounts) => {
 
       // A, B, C provides 10000, 5000, 3000 ZKUSD to SP
       const A_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: alice,
           gasPrice: GAS_PRICE,
         })
       );
       const B_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(5000, 18),  {
+        await stabilityPool.provideToSP(dec(5000, 18), {
           from: bob,
           gasPrice: GAS_PRICE,
         })
       );
       const C_GAS_Used = th.gasUsed(
-        await stabilityPool.provideToSP(dec(3000, 18),  {
+        await stabilityPool.provideToSP(dec(3000, 18), {
           from: carol,
           gasPrice: GAS_PRICE,
         })
@@ -3143,13 +3138,13 @@ contract("StabilityPool", async (accounts) => {
       const bob_ZKUSD_Balance_Before = await zkusdToken.balanceOf(bob);
       const carol_ZKUSD_Balance_Before = await zkusdToken.balanceOf(carol);
 
-      const alice_ETH_Balance_Before = web3.utils.toBN(
+      const alice_NEON_Balance_Before = web3.utils.toBN(
         await web3.eth.getBalance(alice)
       );
-      const bob_ETH_Balance_Before = web3.utils.toBN(
+      const bob_NEON_Balance_Before = web3.utils.toBN(
         await web3.eth.getBalance(bob)
       );
-      const carol_ETH_Balance_Before = web3.utils.toBN(
+      const carol_NEON_Balance_Before = web3.utils.toBN(
         await web3.eth.getBalance(carol)
       );
 
@@ -3161,11 +3156,11 @@ contract("StabilityPool", async (accounts) => {
       const carol_Deposit_Before =
         await stabilityPool.getCompoundedZKUSDDeposit(carol);
 
-      const alice_ETHGain_Before = await stabilityPool.getDepositorETHGain(
+      const alice_NEONGain_Before = await stabilityPool.getDepositorNEONGain(
         alice
       );
-      const bob_ETHGain_Before = await stabilityPool.getDepositorETHGain(bob);
-      const carol_ETHGain_Before = await stabilityPool.getDepositorETHGain(
+      const bob_NEONGain_Before = await stabilityPool.getDepositorNEONGain(bob);
+      const carol_NEONGain_Before = await stabilityPool.getDepositorNEONGain(
         carol
       );
 
@@ -3223,33 +3218,33 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(bob_ZKUSD_Balance_After, bob_expectedZKUSDBalance);
       assert.equal(carol_ZKUSD_Balance_After, carol_expectedZKUSDBalance);
 
-      // Check ETH balances of A, B, C have increased by the value of their ETH gain from liquidations, respectively
-      const alice_expectedETHBalance = alice_ETH_Balance_Before
-        .add(alice_ETHGain_Before)
+      // Check NEON balances of A, B, C have increased by the value of their NEON gain from liquidations, respectively
+      const alice_expectedNEONBalance = alice_NEON_Balance_Before
+        .add(alice_NEONGain_Before)
         .toString();
-      const bob_expectedETHBalance = bob_ETH_Balance_Before
-        .add(bob_ETHGain_Before)
+      const bob_expectedNEONBalance = bob_NEON_Balance_Before
+        .add(bob_NEONGain_Before)
         .toString();
-      const carol_expectedETHBalance = carol_ETH_Balance_Before
-        .add(carol_ETHGain_Before)
+      const carol_expectedNEONBalance = carol_NEON_Balance_Before
+        .add(carol_NEONGain_Before)
         .toString();
 
-      const alice_ETHBalance_After = (
+      const alice_NEONBalance_After = (
         await web3.eth.getBalance(alice)
       ).toString();
-      const bob_ETHBalance_After = (await web3.eth.getBalance(bob)).toString();
-      const carol_ETHBalance_After = (
+      const bob_NEONBalance_After = (await web3.eth.getBalance(bob)).toString();
+      const carol_NEONBalance_After = (
         await web3.eth.getBalance(carol)
       ).toString();
 
-      // ETH balances before minus gas used
-      const alice_ETHBalance_After_Gas = alice_ETHBalance_After - A_GAS_Used;
-      const bob_ETHBalance_After_Gas = bob_ETHBalance_After - B_GAS_Used;
-      const carol_ETHBalance_After_Gas = carol_ETHBalance_After - C_GAS_Used;
+      // NEON balances before minus gas used
+      const alice_NEONBalance_After_Gas = alice_NEONBalance_After - A_GAS_Used;
+      const bob_NEONBalance_After_Gas = bob_NEONBalance_After - B_GAS_Used;
+      const carol_NEONBalance_After_Gas = carol_NEONBalance_After - C_GAS_Used;
 
-      assert.equal(alice_expectedETHBalance, alice_ETHBalance_After_Gas);
-      assert.equal(bob_expectedETHBalance, bob_ETHBalance_After_Gas);
-      assert.equal(carol_expectedETHBalance, carol_ETHBalance_After_Gas);
+      assert.equal(alice_expectedNEONBalance, alice_NEONBalance_After_Gas);
+      assert.equal(bob_expectedNEONBalance, bob_NEONBalance_After_Gas);
+      assert.equal(carol_expectedNEONBalance, carol_NEONBalance_After_Gas);
 
       // Check ZKUSD in Stability Pool has been reduced by A, B and C's compounded deposit
       const expectedZKUSDinSP = ZKUSDinSP_Before.sub(alice_Deposit_Before)
@@ -3261,12 +3256,12 @@ contract("StabilityPool", async (accounts) => {
       ).toString();
       assert.equal(ZKUSDinSP_After, expectedZKUSDinSP);
 
-      // Check ETH in SP has reduced to zero
-      const ETHinSP_After = (await stabilityPool.getETH()).toString();
-      assert.isAtMost(th.getDifference(ETHinSP_After, "0"), 100000);
+      // Check NEON in SP has reduced to zero
+      const NEONinSP_After = (await stabilityPool.getNEON()).toString();
+      assert.isAtMost(th.getDifference(NEONinSP_After, "0"), 100000);
     });
 
-    it("getDepositorETHGain(): depositor does not earn further ETH gains from liquidations while their compounded deposit == 0: ", async () => {
+    it("getDepositorNEONGain(): depositor does not earn further NEON gains from liquidations while their compounded deposit == 0: ", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(1, 24)),
         ICR: toBN(dec(10, 18)),
@@ -3306,10 +3301,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, provide 10000, 5000 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(5000, 18),  { from: bob });
+      await stabilityPool.provideToSP(dec(5000, 18), { from: bob });
 
       //price drops
       await priceFeed.setPrice(dec(105, 18));
@@ -3334,46 +3329,46 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(alice_Deposit, "0");
       assert.equal(bob_Deposit, "0");
 
-      // Get ETH gain for A and B
-      const alice_ETHGain_1 = (
-        await stabilityPool.getDepositorETHGain(alice)
+      // Get NEON gain for A and B
+      const alice_NEONGain_1 = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_1 = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_1 = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
 
       // Whale deposits 10000 ZKUSD to Stability Pool
-      await stabilityPool.provideToSP(dec(1, 24),  { from: whale });
+      await stabilityPool.provideToSP(dec(1, 24), { from: whale });
 
       // Liquidation 2
       await troveManager.liquidate(defaulter_2);
       assert.isFalse(await sortedTroves.contains(defaulter_2));
 
-      // Check Alice and Bob have not received ETH gain from liquidation 2 while their deposit was 0
-      const alice_ETHGain_2 = (
-        await stabilityPool.getDepositorETHGain(alice)
+      // Check Alice and Bob have not received NEON gain from liquidation 2 while their deposit was 0
+      const alice_NEONGain_2 = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_2 = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_2 = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
 
-      assert.equal(alice_ETHGain_1, alice_ETHGain_2);
-      assert.equal(bob_ETHGain_1, bob_ETHGain_2);
+      assert.equal(alice_NEONGain_1, alice_NEONGain_2);
+      assert.equal(bob_NEONGain_1, bob_NEONGain_2);
 
       // Liquidation 3
       await troveManager.liquidate(defaulter_3);
       assert.isFalse(await sortedTroves.contains(defaulter_3));
 
-      // Check Alice and Bob have not received ETH gain from liquidation 3 while their deposit was 0
-      const alice_ETHGain_3 = (
-        await stabilityPool.getDepositorETHGain(alice)
+      // Check Alice and Bob have not received NEON gain from liquidation 3 while their deposit was 0
+      const alice_NEONGain_3 = (
+        await stabilityPool.getDepositorNEONGain(alice)
       ).toString();
-      const bob_ETHGain_3 = (
-        await stabilityPool.getDepositorETHGain(bob)
+      const bob_NEONGain_3 = (
+        await stabilityPool.getDepositorNEONGain(bob)
       ).toString();
 
-      assert.equal(alice_ETHGain_1, alice_ETHGain_3);
-      assert.equal(bob_ETHGain_1, bob_ETHGain_3);
+      assert.equal(alice_NEONGain_1, alice_NEONGain_3);
+      assert.equal(bob_NEONGain_1, bob_NEONGain_3);
     });
 
     // --- ZKT functionality ---
@@ -3402,8 +3397,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: B,
       });
 
@@ -3461,9 +3456,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(10, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20, 18), { from: B });
+      await stabilityPool.provideToSP(dec(30, 18), { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -3534,9 +3529,9 @@ contract("StabilityPool", async (accounts) => {
       const deposit_C = dec(30000, 18);
 
       // A, B, C make their initial deposits
-      await stabilityPool.provideToSP(deposit_A,  { from: A });
-      await stabilityPool.provideToSP(deposit_B,  { from: B });
-      await stabilityPool.provideToSP(deposit_C,  { from: C });
+      await stabilityPool.provideToSP(deposit_A, { from: A });
+      await stabilityPool.provideToSP(deposit_B, { from: B });
+      await stabilityPool.provideToSP(deposit_C, { from: C });
 
       // fastforward time then make an SP deposit, to make G > 0
       await th.fastForwardTime(
@@ -3544,7 +3539,7 @@ contract("StabilityPool", async (accounts) => {
         web3.currentProvider
       );
 
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: D });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: D });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -3616,14 +3611,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: E });
 
       // Fast-forward time and make a second deposit, to trigger ZKT reward and make G > 0
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: E });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -3671,12 +3666,12 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, D make their initial deposits
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20000, 18), {
         from: B,
       });
-      await stabilityPool.provideToSP(dec(30000, 18),  { from: C });
-      await stabilityPool.provideToSP(dec(40000, 18),  {
+      await stabilityPool.provideToSP(dec(30000, 18), { from: C });
+      await stabilityPool.provideToSP(dec(40000, 18), {
         from: D,
       });
 
@@ -3733,14 +3728,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: E });
 
       // Fast-forward time and make a second deposit, to trigger ZKT reward and make G > 0
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: E });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: E });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -3782,8 +3777,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, make their initial deposits
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20000, 18),  { from: B });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20000, 18), { from: B });
 
       await priceFeed.setPrice(dec(200, 18));
 
@@ -3805,21 +3800,21 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: A },
       });
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18), { from: A });
 
       await openTrove({
         ICR: toBN(dec(2, 18)),
         extraParams: { from: defaulter_1 },
       });
 
-      //  SETUP: Execute a series of operations to trigger ZKT and ETH rewards for depositor A
+      //  SETUP: Execute a series of operations to trigger ZKT and NEON rewards for depositor A
 
       // Fast-forward time and make a second deposit, to trigger ZKT reward and make G > 0
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
         web3.currentProvider
       );
-      await stabilityPool.provideToSP(dec(100, 18),  { from: A });
+      await stabilityPool.provideToSP(dec(100, 18), { from: A });
 
       // perform a liquidation to make 0 < P < 1, and S > 0
       await priceFeed.setPrice(dec(105, 18));
@@ -3834,7 +3829,7 @@ contract("StabilityPool", async (accounts) => {
       await stabilityPool.withdrawFromSP(dec(10100, 18), { from: A });
 
       // Confirm A's recorded deposit is 0
-      const A_deposit = (await stabilityPool.deposits(A)); // get initialValue property on deposit struct
+      const A_deposit = await stabilityPool.deposits(A); // get initialValue property on deposit struct
       assert.equal(A_deposit, "0");
 
       // --- TEST ---
@@ -3854,9 +3849,9 @@ contract("StabilityPool", async (accounts) => {
       await th.assertRevert(withdrawalPromise_C, expectedRevertMessage);
     });
 
-    // --- withdrawETHGainToTrove ---
+    // --- withdrawNEONGainToTrove ---
 
-    it("withdrawETHGainToTrove(): reverts when user has no active deposit", async () => {
+    it("withdrawNEONGainToTrove(): reverts when user has no active deposit", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -3874,16 +3869,14 @@ contract("StabilityPool", async (accounts) => {
         extraParams: { from: bob },
       });
 
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
 
       const alice_initialDeposit = (
         await stabilityPool.deposits(alice)
       ).toString();
-      const bob_initialDeposit = (
-        await stabilityPool.deposits(bob)
-      ).toString();
+      const bob_initialDeposit = (await stabilityPool.deposits(bob)).toString();
 
       assert.equal(alice_initialDeposit, dec(10000, 18));
       assert.equal(bob_initialDeposit, "0");
@@ -3898,18 +3891,22 @@ contract("StabilityPool", async (accounts) => {
       await troveManager.liquidate(defaulter_1);
       assert.isFalse(await sortedTroves.contains(defaulter_1));
 
-      const txAlice = await stabilityPool.withdrawETHGainToTrove(alice, alice, {
-        from: alice,
-      });
+      const txAlice = await stabilityPool.withdrawNEONGainToTrove(
+        alice,
+        alice,
+        {
+          from: alice,
+        }
+      );
       assert.isTrue(txAlice.receipt.status);
 
-      const txPromise_B = stabilityPool.withdrawETHGainToTrove(bob, bob, {
+      const txPromise_B = stabilityPool.withdrawNEONGainToTrove(bob, bob, {
         from: bob,
       });
       await th.assertRevert(txPromise_B);
     });
 
-    it("withdrawETHGainToTrove(): Applies ZKUSDLoss to user's deposit, and redirects ETH reward to user's Trove", async () => {
+    it("withdrawNEONGainToTrove(): Applies ZKUSDLoss to user's deposit, and redirects NEON reward to user's Trove", async () => {
       // --- SETUP ---
       // Whale deposits 185000 ZKUSD in StabilityPool
       await openTrove({
@@ -3917,7 +3914,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -3935,14 +3932,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
-      // check Alice's Trove recorded ETH Before:
+      // check Alice's Trove recorded NEON Before:
       const aliceTrove_Before = await troveManager.Troves(alice);
-      const aliceTrove_ETH_Before = aliceTrove_Before[1];
-      assert.isTrue(aliceTrove_ETH_Before.gt(toBN("0")));
+      const aliceTrove_NEON_Before = aliceTrove_Before[1];
+      assert.isTrue(aliceTrove_NEON_Before.gt(toBN("0")));
 
       // price drops: defaulter's Trove falls below MCR, alice and whale Trove remain active
       await priceFeed.setPrice(dec(105, 18));
@@ -3954,13 +3951,13 @@ contract("StabilityPool", async (accounts) => {
       const [liquidatedDebt, liquidatedColl, ,] =
         th.getEmittedLiquidationValues(liquidationTx_1);
 
-      const ETHGain_A = await stabilityPool.getDepositorETHGain(alice);
+      const NEONGain_A = await stabilityPool.getDepositorNEONGain(alice);
       const compoundedDeposit_A = await stabilityPool.getCompoundedZKUSDDeposit(
         alice
       );
 
       // Alice should receive rewards proportional to her deposit as share of total deposits
-      const expectedETHGain_A = liquidatedColl
+      const expectedNEONGain_A = liquidatedColl
         .mul(toBN(dec(15000, 18)))
         .div(toBN(dec(200000, 18)));
       const expectedZKUSDLoss_A = liquidatedDebt
@@ -3975,11 +3972,13 @@ contract("StabilityPool", async (accounts) => {
         100000
       );
 
-      // Alice sends her ETH Gains to her Trove
-      await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
+      // Alice sends her NEON Gains to her Trove
+      await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
+        from: alice,
+      });
 
       // check Alice's ZKUSDLoss has been applied to her deposit expectedCompoundedDeposit_A
-      alice_deposit_afterDefault = (await stabilityPool.deposits(alice));
+      alice_deposit_afterDefault = await stabilityPool.deposits(alice);
       assert.isAtMost(
         th.getDifference(
           alice_deposit_afterDefault,
@@ -3988,18 +3987,18 @@ contract("StabilityPool", async (accounts) => {
         100000
       );
 
-      // check alice's Trove recorded ETH has increased by the expected reward amount
+      // check alice's Trove recorded NEON has increased by the expected reward amount
       const aliceTrove_After = await troveManager.Troves(alice);
-      const aliceTrove_ETH_After = aliceTrove_After[1];
+      const aliceTrove_NEON_After = aliceTrove_After[1];
 
-      const Trove_ETH_Increase = aliceTrove_ETH_After
-        .sub(aliceTrove_ETH_Before)
+      const Trove_NEON_Increase = aliceTrove_NEON_After
+        .sub(aliceTrove_NEON_Before)
         .toString();
 
-      assert.equal(Trove_ETH_Increase, ETHGain_A);
+      assert.equal(Trove_NEON_Increase, NEONGain_A);
     });
 
-    it("withdrawETHGainToTrove(): reverts if it would leave trove with ICR < MCR", async () => {
+    it("withdrawNEONGainToTrove(): reverts if it would leave trove with ICR < MCR", async () => {
       // --- SETUP ---
       // Whale deposits 1850 ZKUSD in StabilityPool
       await openTrove({
@@ -4007,7 +4006,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -4025,14 +4024,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
-      // check alice's Trove recorded ETH Before:
+      // check alice's Trove recorded NEON Before:
       const aliceTrove_Before = await troveManager.Troves(alice);
-      const aliceTrove_ETH_Before = aliceTrove_Before[1];
-      assert.isTrue(aliceTrove_ETH_Before.gt(toBN("0")));
+      const aliceTrove_NEON_Before = aliceTrove_Before[1];
+      assert.isTrue(aliceTrove_NEON_Before.gt(toBN("0")));
 
       // price drops: defaulter's Trove falls below MCR
       await priceFeed.setPrice(dec(10, 18));
@@ -4040,14 +4039,14 @@ contract("StabilityPool", async (accounts) => {
       // defaulter's Trove is closed.
       await troveManager.liquidate(defaulter_1, { from: owner });
 
-      // Alice attempts to  her ETH Gains to her Trove
+      // Alice attempts to  her NEON Gains to her Trove
       await assertRevert(
-        stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice }),
+        stabilityPool.withdrawNEONGainToTrove(alice, alice, { from: alice }),
         "BorrowerOps: An operation that would result in ICR < MCR is not permitted"
       );
     });
 
-    it("withdrawETHGainToTrove(): Subsequent deposit and withdrawal attempt from same account, with no intermediate liquidations, withdraws zero ETH", async () => {
+    it("withdrawNEONGainToTrove(): Subsequent deposit and withdrawal attempt from same account, with no intermediate liquidations, withdraws zero NEON", async () => {
       // --- SETUP ---
       // Whale deposits 1850 ZKUSD in StabilityPool
       await openTrove({
@@ -4055,7 +4054,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -4073,14 +4072,14 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
-      // check alice's Trove recorded ETH Before:
+      // check alice's Trove recorded NEON Before:
       const aliceTrove_Before = await troveManager.Troves(alice);
-      const aliceTrove_ETH_Before = aliceTrove_Before[1];
-      assert.isTrue(aliceTrove_ETH_Before.gt(toBN("0")));
+      const aliceTrove_NEON_Before = aliceTrove_Before[1];
+      assert.isTrue(aliceTrove_NEON_Before.gt(toBN("0")));
 
       // price drops: defaulter's Trove falls below MCR
       await priceFeed.setPrice(dec(105, 18));
@@ -4091,34 +4090,36 @@ contract("StabilityPool", async (accounts) => {
       // price bounces back
       await priceFeed.setPrice(dec(200, 18));
 
-      // Alice sends her ETH Gains to her Trove
-      await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
+      // Alice sends her NEON Gains to her Trove
+      await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
+        from: alice,
+      });
 
-      assert.equal(await stabilityPool.getDepositorETHGain(alice), 0);
+      assert.equal(await stabilityPool.getDepositorNEONGain(alice), 0);
 
-      const ETHinSP_Before = (await stabilityPool.getETH()).toString();
+      const NEONinSP_Before = (await stabilityPool.getNEON()).toString();
 
-      // Alice attempts second withdrawal from SP to Trove - reverts, due to 0 ETH Gain
-      const txPromise_A = stabilityPool.withdrawETHGainToTrove(alice, alice, {
+      // Alice attempts second withdrawal from SP to Trove - reverts, due to 0 NEON Gain
+      const txPromise_A = stabilityPool.withdrawNEONGainToTrove(alice, alice, {
         from: alice,
       });
       await th.assertRevert(txPromise_A);
 
-      // Check ETH in pool does not change
-      const ETHinSP_1 = (await stabilityPool.getETH()).toString();
-      assert.equal(ETHinSP_Before, ETHinSP_1);
+      // Check NEON in pool does not change
+      const NEONinSP_1 = (await stabilityPool.getNEON()).toString();
+      assert.equal(NEONinSP_Before, NEONinSP_1);
 
       await priceFeed.setPrice(dec(200, 18));
 
       // Alice attempts third withdrawal (this time, from SP to her own account)
       await stabilityPool.withdrawFromSP(dec(15000, 18), { from: alice });
 
-      // Check ETH in pool does not change
-      const ETHinSP_2 = (await stabilityPool.getETH()).toString();
-      assert.equal(ETHinSP_Before, ETHinSP_2);
+      // Check NEON in pool does not change
+      const NEONinSP_2 = (await stabilityPool.getNEON()).toString();
+      assert.equal(NEONinSP_Before, NEONinSP_2);
     });
 
-    it("withdrawETHGainToTrove(): decreases StabilityPool ETH and increases activePool ETH", async () => {
+    it("withdrawNEONGainToTrove(): decreases StabilityPool NEON and increases activePool NEON", async () => {
       // --- SETUP ---
       // Whale deposits 185000 ZKUSD in StabilityPool
       await openTrove({
@@ -4126,7 +4127,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(10, 18)),
         extraParams: { from: whale },
       });
-      await stabilityPool.provideToSP(dec(185000, 18),  {
+      await stabilityPool.provideToSP(dec(185000, 18), {
         from: whale,
       });
 
@@ -4144,7 +4145,7 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: alice },
       });
-      await stabilityPool.provideToSP(dec(15000, 18),  {
+      await stabilityPool.provideToSP(dec(15000, 18), {
         from: alice,
       });
 
@@ -4157,41 +4158,43 @@ contract("StabilityPool", async (accounts) => {
         th.getEmittedLiquidationValues(liquidationTx);
 
       // Expect alice to be entitled to 15000/200000 of the liquidated coll
-      const aliceExpectedETHGain = liquidatedColl
+      const aliceExpectedNEONGain = liquidatedColl
         .mul(toBN(dec(15000, 18)))
         .div(toBN(dec(200000, 18)));
-      const aliceETHGain = await stabilityPool.getDepositorETHGain(alice);
-      assert.isTrue(aliceExpectedETHGain.eq(aliceETHGain));
+      const aliceNEONGain = await stabilityPool.getDepositorNEONGain(alice);
+      assert.isTrue(aliceExpectedNEONGain.eq(aliceNEONGain));
 
       // price bounces back
       await priceFeed.setPrice(dec(200, 18));
 
       //check activePool and StabilityPool Ether before retrieval:
-      const active_ETH_Before = await activePool.getETH();
-      const stability_ETH_Before = await stabilityPool.getETH();
+      const active_NEON_Before = await activePool.getNEON();
+      const stability_NEON_Before = await stabilityPool.getNEON();
 
-      // Alice retrieves redirects ETH gain to her Trove
-      await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
+      // Alice retrieves redirects NEON gain to her Trove
+      await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
+        from: alice,
+      });
 
-      const active_ETH_After = await activePool.getETH();
-      const stability_ETH_After = await stabilityPool.getETH();
+      const active_NEON_After = await activePool.getNEON();
+      const stability_NEON_After = await stabilityPool.getNEON();
 
-      const active_ETH_Difference = active_ETH_After.sub(active_ETH_Before); // AP ETH should increase
-      const stability_ETH_Difference =
-        stability_ETH_Before.sub(stability_ETH_After); // SP ETH should decrease
+      const active_NEON_Difference = active_NEON_After.sub(active_NEON_Before); // AP NEON should increase
+      const stability_NEON_Difference =
+        stability_NEON_Before.sub(stability_NEON_After); // SP NEON should decrease
 
-      // check Pool ETH values change by Alice's ETHGain, i.e 0.075 ETH
+      // check Pool NEON values change by Alice's NEONGain, i.e 0.075 NEON
       assert.isAtMost(
-        th.getDifference(active_ETH_Difference, aliceETHGain),
+        th.getDifference(active_NEON_Difference, aliceNEONGain),
         10000
       );
       assert.isAtMost(
-        th.getDifference(stability_ETH_Difference, aliceETHGain),
+        th.getDifference(stability_NEON_Difference, aliceNEONGain),
         10000
       );
     });
 
-    it("withdrawETHGainToTrove(): All depositors are able to withdraw their ETH gain from the SP to their Trove", async () => {
+    it("withdrawNEONGainToTrove(): All depositors are able to withdraw their NEON gain from the SP to their Trove", async () => {
       // Whale opens trove
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
@@ -4213,7 +4216,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: account,
         });
       }
@@ -4225,33 +4228,33 @@ contract("StabilityPool", async (accounts) => {
       await priceFeed.setPrice(dec(200, 18));
 
       // All depositors attempt to withdraw
-      const tx1 = await stabilityPool.withdrawETHGainToTrove(alice, alice, {
+      const tx1 = await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
         from: alice,
       });
       assert.isTrue(tx1.receipt.status);
-      const tx2 = await stabilityPool.withdrawETHGainToTrove(bob, bob, {
+      const tx2 = await stabilityPool.withdrawNEONGainToTrove(bob, bob, {
         from: bob,
       });
       assert.isTrue(tx1.receipt.status);
-      const tx3 = await stabilityPool.withdrawETHGainToTrove(carol, carol, {
+      const tx3 = await stabilityPool.withdrawNEONGainToTrove(carol, carol, {
         from: carol,
       });
       assert.isTrue(tx1.receipt.status);
-      const tx4 = await stabilityPool.withdrawETHGainToTrove(dennis, dennis, {
+      const tx4 = await stabilityPool.withdrawNEONGainToTrove(dennis, dennis, {
         from: dennis,
       });
       assert.isTrue(tx1.receipt.status);
-      const tx5 = await stabilityPool.withdrawETHGainToTrove(erin, erin, {
+      const tx5 = await stabilityPool.withdrawNEONGainToTrove(erin, erin, {
         from: erin,
       });
       assert.isTrue(tx1.receipt.status);
-      const tx6 = await stabilityPool.withdrawETHGainToTrove(flyn, flyn, {
+      const tx6 = await stabilityPool.withdrawNEONGainToTrove(flyn, flyn, {
         from: flyn,
       });
       assert.isTrue(tx1.receipt.status);
     });
 
-    it("withdrawETHGainToTrove(): All depositors withdraw, each withdraw their correct ETH gain", async () => {
+    it("withdrawNEONGainToTrove(): All depositors withdraw, each withdraw their correct NEON gain", async () => {
       // Whale opens trove
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
@@ -4273,7 +4276,7 @@ contract("StabilityPool", async (accounts) => {
           ICR: toBN(dec(2, 18)),
           extraParams: { from: account },
         });
-        await stabilityPool.provideToSP(dec(10000, 18),  {
+        await stabilityPool.provideToSP(dec(10000, 18), {
           from: account,
         });
       }
@@ -4284,7 +4287,7 @@ contract("StabilityPool", async (accounts) => {
       const [, liquidatedColl, ,] =
         th.getEmittedLiquidationValues(liquidationTx);
 
-      /* All depositors attempt to withdraw their ETH gain to their Trove. Each depositor 
+      /* All depositors attempt to withdraw their NEON gain to their Trove. Each depositor 
       receives (liquidatedColl/ 6).
 
       Thus, expected new collateral for each depositor with 1 Ether in their trove originally, is 
@@ -4295,28 +4298,32 @@ contract("StabilityPool", async (accounts) => {
 
       await priceFeed.setPrice(dec(200, 18));
 
-      await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
+      await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
+        from: alice,
+      });
       const aliceCollAfter = (await troveManager.Troves(alice))[1];
       assert.isAtMost(
         th.getDifference(aliceCollAfter.sub(collBefore), expectedCollGain),
         10000
       );
 
-      await stabilityPool.withdrawETHGainToTrove(bob, bob, { from: bob });
+      await stabilityPool.withdrawNEONGainToTrove(bob, bob, { from: bob });
       const bobCollAfter = (await troveManager.Troves(bob))[1];
       assert.isAtMost(
         th.getDifference(bobCollAfter.sub(collBefore), expectedCollGain),
         10000
       );
 
-      await stabilityPool.withdrawETHGainToTrove(carol, carol, { from: carol });
+      await stabilityPool.withdrawNEONGainToTrove(carol, carol, {
+        from: carol,
+      });
       const carolCollAfter = (await troveManager.Troves(carol))[1];
       assert.isAtMost(
         th.getDifference(carolCollAfter.sub(collBefore), expectedCollGain),
         10000
       );
 
-      await stabilityPool.withdrawETHGainToTrove(dennis, dennis, {
+      await stabilityPool.withdrawNEONGainToTrove(dennis, dennis, {
         from: dennis,
       });
       const dennisCollAfter = (await troveManager.Troves(dennis))[1];
@@ -4325,14 +4332,14 @@ contract("StabilityPool", async (accounts) => {
         10000
       );
 
-      await stabilityPool.withdrawETHGainToTrove(erin, erin, { from: erin });
+      await stabilityPool.withdrawNEONGainToTrove(erin, erin, { from: erin });
       const erinCollAfter = (await troveManager.Troves(erin))[1];
       assert.isAtMost(
         th.getDifference(erinCollAfter.sub(collBefore), expectedCollGain),
         10000
       );
 
-      await stabilityPool.withdrawETHGainToTrove(flyn, flyn, { from: flyn });
+      await stabilityPool.withdrawNEONGainToTrove(flyn, flyn, { from: flyn });
       const flynCollAfter = (await troveManager.Troves(flyn))[1];
       assert.isAtMost(
         th.getDifference(flynCollAfter.sub(collBefore), expectedCollGain),
@@ -4340,7 +4347,7 @@ contract("StabilityPool", async (accounts) => {
       );
     });
 
-    it("withdrawETHGainToTrove(): caller can withdraw full deposit and ETH gain to their trove during Recovery Mode", async () => {
+    it("withdrawNEONGainToTrove(): caller can withdraw full deposit and NEON gain to their trove during Recovery Mode", async () => {
       // --- SETUP ---
 
       // Defaulter opens
@@ -4367,11 +4374,11 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C provides 10000, 5000, 3000 ZKUSD to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: alice,
       });
-      await stabilityPool.provideToSP(dec(5000, 18),  { from: bob });
-      await stabilityPool.provideToSP(dec(3000, 18),  {
+      await stabilityPool.provideToSP(dec(5000, 18), { from: bob });
+      await stabilityPool.provideToSP(dec(3000, 18), {
         from: carol,
       });
 
@@ -4397,28 +4404,32 @@ contract("StabilityPool", async (accounts) => {
       await troveManager.liquidate(defaulter_1);
       assert.isFalse(await sortedTroves.contains(defaulter_1));
 
-      const alice_ETHGain_Before = await stabilityPool.getDepositorETHGain(
+      const alice_NEONGain_Before = await stabilityPool.getDepositorNEONGain(
         alice
       );
-      const bob_ETHGain_Before = await stabilityPool.getDepositorETHGain(bob);
-      const carol_ETHGain_Before = await stabilityPool.getDepositorETHGain(
+      const bob_NEONGain_Before = await stabilityPool.getDepositorNEONGain(bob);
+      const carol_NEONGain_Before = await stabilityPool.getDepositorNEONGain(
         carol
       );
 
-      // A, B, C withdraw their full ETH gain from the Stability Pool to their trove
-      await stabilityPool.withdrawETHGainToTrove(alice, alice, { from: alice });
-      await stabilityPool.withdrawETHGainToTrove(bob, bob, { from: bob });
-      await stabilityPool.withdrawETHGainToTrove(carol, carol, { from: carol });
+      // A, B, C withdraw their full NEON gain from the Stability Pool to their trove
+      await stabilityPool.withdrawNEONGainToTrove(alice, alice, {
+        from: alice,
+      });
+      await stabilityPool.withdrawNEONGainToTrove(bob, bob, { from: bob });
+      await stabilityPool.withdrawNEONGainToTrove(carol, carol, {
+        from: carol,
+      });
 
-      // Check collateral of troves A, B, C has increased by the value of their ETH gain from liquidations, respectively
+      // Check collateral of troves A, B, C has increased by the value of their NEON gain from liquidations, respectively
       const alice_expectedCollateral = alice_Collateral_Before
-        .add(alice_ETHGain_Before)
+        .add(alice_NEONGain_Before)
         .toString();
       const bob_expectedColalteral = bob_Collateral_Before
-        .add(bob_ETHGain_Before)
+        .add(bob_NEONGain_Before)
         .toString();
       const carol_expectedCollateral = carol_Collateral_Before
-        .add(carol_ETHGain_Before)
+        .add(carol_NEONGain_Before)
         .toString();
 
       const alice_Collateral_After = (await troveManager.Troves(alice))[1];
@@ -4429,12 +4440,12 @@ contract("StabilityPool", async (accounts) => {
       assert.equal(bob_expectedColalteral, bob_Collateral_After);
       assert.equal(carol_expectedCollateral, carol_Collateral_After);
 
-      // Check ETH in SP has reduced to zero
-      const ETHinSP_After = (await stabilityPool.getETH()).toString();
-      assert.isAtMost(th.getDifference(ETHinSP_After, "0"), 100000);
+      // Check NEON in SP has reduced to zero
+      const NEONinSP_After = (await stabilityPool.getNEON()).toString();
+      assert.isAtMost(th.getDifference(NEONinSP_After, "0"), 100000);
     });
 
-    it("withdrawETHGainToTrove(): reverts if user has no trove", async () => {
+    it("withdrawNEONGainToTrove(): reverts if user has no trove", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -4468,7 +4479,7 @@ contract("StabilityPool", async (accounts) => {
       await zkusdToken.transfer(dennis, dec(10000, 18), { from: alice });
 
       // D deposits to Stability Pool
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: dennis,
       });
 
@@ -4481,14 +4492,14 @@ contract("StabilityPool", async (accounts) => {
 
       await priceFeed.setPrice(dec(200, 18));
 
-      // D attempts to withdraw his ETH gain to Trove
+      // D attempts to withdraw his NEON gain to Trove
       await th.assertRevert(
-        stabilityPool.withdrawETHGainToTrove(dennis, dennis, { from: dennis }),
-        "caller must have an active trove to withdraw ETHGain to"
+        stabilityPool.withdrawNEONGainToTrove(dennis, dennis, { from: dennis }),
+        "caller must have an active trove to withdraw NEONGain to"
       );
     });
 
-    it("withdrawETHGainToTrove(): triggers ZKT reward event - increases the sum G", async () => {
+    it("withdrawNEONGainToTrove(): triggers ZKT reward event - increases the sum G", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -4513,8 +4524,8 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A and B provide to SP
-      await stabilityPool.provideToSP(dec(10000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(10000, 18),  {
+      await stabilityPool.provideToSP(dec(10000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(10000, 18), {
         from: B,
       });
 
@@ -4550,11 +4561,11 @@ contract("StabilityPool", async (accounts) => {
         web3.currentProvider
       );
 
-      // Check B has non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
+      // Check B has non-zero NEON gain
+      assert.isTrue((await stabilityPool.getDepositorNEONGain(B)).gt(ZERO));
 
       // B withdraws to trove
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
+      await stabilityPool.withdrawNEONGainToTrove(B, B, { from: B });
 
       const G_2 = await stabilityPool.epochToScaleToG(0, 0);
 
@@ -4562,7 +4573,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(G_2.gt(G_1));
     });
 
-    it("withdrawETHGainToTrove(), eligible deposit: depositor receives ZKT rewards", async () => {
+    it("withdrawNEONGainToTrove(), eligible deposit: depositor receives ZKT rewards", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(10000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -4587,9 +4598,9 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, provide to SP
-      await stabilityPool.provideToSP(dec(1000, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(2000, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(3000, 18),  { from: C });
+      await stabilityPool.provideToSP(dec(1000, 18), { from: A });
+      await stabilityPool.provideToSP(dec(2000, 18), { from: B });
+      await stabilityPool.provideToSP(dec(3000, 18), { from: C });
 
       await th.fastForwardTime(
         timeValues.SECONDS_IN_ONE_HOUR,
@@ -4611,17 +4622,17 @@ contract("StabilityPool", async (accounts) => {
       const B_ZKTBalance_Before = await zkToken.balanceOf(B);
       const C_ZKTBalance_Before = await zkToken.balanceOf(C);
 
-      // Check A, B, C have non-zero ETH gain
-      assert.isTrue((await stabilityPool.getDepositorETHGain(A)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(B)).gt(ZERO));
-      assert.isTrue((await stabilityPool.getDepositorETHGain(C)).gt(ZERO));
+      // Check A, B, C have non-zero NEON gain
+      assert.isTrue((await stabilityPool.getDepositorNEONGain(A)).gt(ZERO));
+      assert.isTrue((await stabilityPool.getDepositorNEONGain(B)).gt(ZERO));
+      assert.isTrue((await stabilityPool.getDepositorNEONGain(C)).gt(ZERO));
 
       await priceFeed.setPrice(dec(200, 18));
 
       // A, B, C withdraw to trove
-      await stabilityPool.withdrawETHGainToTrove(A, A, { from: A });
-      await stabilityPool.withdrawETHGainToTrove(B, B, { from: B });
-      await stabilityPool.withdrawETHGainToTrove(C, C, { from: C });
+      await stabilityPool.withdrawNEONGainToTrove(A, A, { from: A });
+      await stabilityPool.withdrawNEONGainToTrove(B, B, { from: B });
+      await stabilityPool.withdrawNEONGainToTrove(C, C, { from: C });
 
       // Get ZKT balance after
       const A_ZKTBalance_After = await zkToken.balanceOf(A);
@@ -4634,7 +4645,7 @@ contract("StabilityPool", async (accounts) => {
       assert.isTrue(C_ZKTBalance_After.gt(C_ZKTBalance_Before));
     });
 
-    it("withdrawETHGainToTrove(): reverts when depositor has no ETH gain", async () => {
+    it("withdrawNEONGainToTrove(): reverts when depositor has no NEON gain", async () => {
       await openTrove({
         extraZKUSDAmount: toBN(dec(100000, 18)),
         ICR: toBN(dec(10, 18)),
@@ -4658,10 +4669,10 @@ contract("StabilityPool", async (accounts) => {
       });
 
       // A, B, C, D provide to SP
-      await stabilityPool.provideToSP(dec(10, 18),  { from: A });
-      await stabilityPool.provideToSP(dec(20, 18),  { from: B });
-      await stabilityPool.provideToSP(dec(30, 18),  { from: C });
-      await stabilityPool.provideToSP(dec(40, 18),  { from: D });
+      await stabilityPool.provideToSP(dec(10, 18), { from: A });
+      await stabilityPool.provideToSP(dec(20, 18), { from: B });
+      await stabilityPool.provideToSP(dec(30, 18), { from: C });
+      await stabilityPool.provideToSP(dec(40, 18), { from: D });
 
       // fastforward time, and E makes a deposit, creating ZKT rewards for all
       await th.fastForwardTime(
@@ -4673,24 +4684,24 @@ contract("StabilityPool", async (accounts) => {
         ICR: toBN(dec(2, 18)),
         extraParams: { from: E },
       });
-      await stabilityPool.provideToSP(dec(3000, 18),  { from: E });
+      await stabilityPool.provideToSP(dec(3000, 18), { from: E });
 
-      // Confirm A, B, C have zero ETH gain
-      assert.equal(await stabilityPool.getDepositorETHGain(A), "0");
-      assert.equal(await stabilityPool.getDepositorETHGain(B), "0");
-      assert.equal(await stabilityPool.getDepositorETHGain(C), "0");
+      // Confirm A, B, C have zero NEON gain
+      assert.equal(await stabilityPool.getDepositorNEONGain(A), "0");
+      assert.equal(await stabilityPool.getDepositorNEONGain(B), "0");
+      assert.equal(await stabilityPool.getDepositorNEONGain(C), "0");
 
-      // Check withdrawETHGainToTrove reverts for A, B, C
-      const txPromise_A = stabilityPool.withdrawETHGainToTrove(A, A, {
+      // Check withdrawNEONGainToTrove reverts for A, B, C
+      const txPromise_A = stabilityPool.withdrawNEONGainToTrove(A, A, {
         from: A,
       });
-      const txPromise_B = stabilityPool.withdrawETHGainToTrove(B, B, {
+      const txPromise_B = stabilityPool.withdrawNEONGainToTrove(B, B, {
         from: B,
       });
-      const txPromise_C = stabilityPool.withdrawETHGainToTrove(C, C, {
+      const txPromise_C = stabilityPool.withdrawNEONGainToTrove(C, C, {
         from: C,
       });
-      const txPromise_D = stabilityPool.withdrawETHGainToTrove(D, D, {
+      const txPromise_D = stabilityPool.withdrawNEONGainToTrove(D, D, {
         from: D,
       });
 

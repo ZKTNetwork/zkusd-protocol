@@ -31,11 +31,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_ETH",
+        "name": "_NEON",
         "type": "uint256"
       }
     ],
-    "name": "DefaultPoolETHBalanceUpdated",
+    "name": "DefaultPoolNEONBalanceUpdated",
     "type": "event"
   },
   {
@@ -56,19 +56,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "_newBalance",
-        "type": "uint256"
-      }
-    ],
-    "name": "ETHBalanceUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "_to",
         "type": "address"
@@ -81,6 +68,19 @@
       }
     ],
     "name": "EtherSent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newBalance",
+        "type": "uint256"
+      }
+    ],
+    "name": "NEONBalanceUpdated",
     "type": "event"
   },
   {
@@ -182,7 +182,7 @@
   },
   {
     "inputs": [],
-    "name": "getETH",
+    "name": "getNEON",
     "outputs": [
       {
         "internalType": "uint256",
@@ -247,7 +247,7 @@
         "type": "uint256"
       }
     ],
-    "name": "sendETHToActivePool",
+    "name": "sendNEONToActivePool",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
