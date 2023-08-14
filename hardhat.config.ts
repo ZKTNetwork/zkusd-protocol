@@ -6,6 +6,7 @@ import "hardhat-abi-exporter";
 import "hardhat-contract-sizer";
 import "hardhat-deploy";
 import "@typechain/hardhat";
+import "@nomiclabs/hardhat-etherscan"
 import "typechain";
 import "hardhat-gas-reporter";
 import "@matterlabs/hardhat-zksync-chai-matchers";
@@ -103,7 +104,28 @@ const config = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      neontest: "829c4ad07e7afad498c38a85a41e26b4",
+      neondev:"test",
+    },
+    customChains: [
+      {
+        network: "neontest",
+        chainId: 9559,
+        urls: {
+          apiURL: "https://testnet-scan.neonlink.io/api",
+          browserURL: "https://testnet-scan.neonlink.io"
+        },
+      },
+      {
+        network: "neondev",
+        chainId: 245022926,
+        urls: {
+          apiURL: "https://devnet-api.neonscan.org/hardhat/verify",
+          browserURL: "https://devnet.neonscan.org"
+        }
+      }
+    ]
   },
   abiExporter: {
     runOnCompile: true,
